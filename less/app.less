@@ -1,0 +1,66 @@
+@navWidth:200px;
+@navSlideWidth:70px;
+@transTime:0.2s;
+.nav-trans(@transAttr,@transAttrTime){
+  -moz-transition: @transAttr @transAttrTime ease-in;
+  -webkit-transition: @transAttr @transAttrTime ease-in;
+  -o-transition: @transAttr @transAttrTime ease-in;
+  transition: @transAttr @transAttrTime ease-in;
+}
+
+#app{
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  #left{
+    width: @navWidth;
+    height: 1000px;
+    background-color: #475360;
+    color: #fff;
+    overflow: hidden;
+    .nav-trans(width,@transTime);
+    .logo{
+      height:60px;
+      font-size: 18px;
+      font-weight: bold;
+      margin-left: 20px;
+      padding:10px 0;
+      overflow: hidden;
+      width:@navWidth;
+    }
+
+  }
+  #right{
+    position: absolute;
+    left:@navWidth;
+    top:0;
+    right:0;
+    bottom:0;
+    .nav-trans(left,@transTime);
+    .right-top{
+      width: 100%;
+      height: 60px;
+      line-height: 60px;
+      margin: 10px 0;
+      border-bottom: 1px solid #475360;
+      position: relative;
+      .btn{
+        margin-left: 10px;
+        background: #fff;
+        border: 1px solid #475360;
+      }
+    }
+    .content{
+      padding: 20px 10px;
+    }
+  }
+}
+
+
+.slideNav_left{
+  width:@navSlideWidth !important;
+}
+.slideNav_right{
+  left:@navSlideWidth !important;
+}

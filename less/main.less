@@ -1,0 +1,106 @@
+.nav-trans(@transAttr,@transAttrTime){
+  -moz-transition: @transAttr @transAttrTime ease-in;
+  -webkit-transition: @transAttr @transAttrTime ease-in;
+  -o-transition: @transAttr @transAttrTime ease-in;
+  transition: @transAttr @transAttrTime ease-in;
+}
+
+//查询表单的样式
+.row{
+  margin-left: -10px;  //使查询表单的左侧与表格左侧对齐
+  //width: auto;
+  width: 1000px;
+  .field{
+    display: inline-block;
+    margin-left: 10px;
+    label{
+      display: block;
+    }
+  }
+  .more{
+    height: 34px;
+    line-height: 34px;
+    cursor: pointer;
+  }
+}
+.contentInput{
+  display: inline-block;
+}
+
+//表单的显示和隐藏
+@transTime:0.2s;
+.forms-trans(@transAttr,@transAttrTime){
+  -moz-transition: @transAttr @transAttrTime ease-in;
+  -webkit-transition: @transAttr @transAttrTime ease-in;
+  -o-transition: @transAttr @transAttrTime ease-in;
+  transition: @transAttr @transAttrTime ease-in;
+}
+
+.forms{
+  height: 40px;
+  overflow: hidden;
+  .forms-trans(height,@transTime);
+}
+
+.forms-height{
+  height: 80px;
+  .forms-trans(height,@transTime);
+}
+
+//显示内容的表格的样式
+.tableContainer{
+  overflow: auto;
+  position: relative;
+  width: 100%;
+  top: 10px;
+  border:1px solid aliceblue;
+  .table {
+    white-space: nowrap;
+    text-align: center;
+    margin-bottom: 0;
+    border:0 !important;
+    thead {
+      th {
+        text-align: center;
+        border: 0 !important;
+        padding:10px 20px;
+      }
+    }
+    tbody {
+      td {
+        border: 0 !important;
+        padding:10px 20px;
+        a.invisible {
+          visibility: hidden;
+        }
+        a{
+          color: #aaa;
+          font-size: 12px;
+          margin-left: 6px;
+        }
+      }
+    }
+  }
+}
+
+.main-btn{
+  width: 100%;
+  height: auto;
+  padding:20px 0;
+  .btn-right{
+    float: right;
+    margin-right: 20px;
+    .btn{
+      margin-right: 10px;
+    }
+  }
+}
+
+td.table-operation{
+  border-right:0 !important;
+  border-top:0 !important;;
+  border-bottom: 0 !important;
+  input{
+    margin:4px;
+  }
+}

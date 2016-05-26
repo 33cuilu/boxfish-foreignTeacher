@@ -1,0 +1,129 @@
+{
+  "sex" :{
+    "name":"性别",
+    "otherName":"sex",
+    "arr": ["全部","男","女"]
+  },
+  "notPass" :{
+    "name":"不通过类型",
+    "otherName":"notPass",
+    "arr": ["全部","审核不通过","了解app不通过","培训课程不通过"]
+  },
+  "nativeLevel" :{
+    "name":"口语水平",
+    "otherName":"nativeLevel",
+    "arr": ["全部","棉花糖","巧克力","其他","未指定"]
+  },
+  "snacks" :{
+    "name":"零食",
+    "otherName":"snacks",
+    "arr": ["全部","母语水平","稍差","其他","未分配"]
+  },
+  "experience" :{
+    "name":"教学经验",
+    "otherName":"experience",
+    "arr": ["全部","有","无"]
+  },
+  "country" :{
+    "name":"国家",
+    "otherName":"country",
+    "arr": ["全部","America","China","UK"]
+  },
+  "nationalLevel" :{
+    "name":"国家级别",
+    "otherName":"country",
+    "arr": ["全部","美国、加拿大","英国、澳大利亚、南非","非英语欧美国家","其他"]
+  },
+  "city" :{
+    "name":"城市",
+    "otherName":"city",
+    "arr": ["全部","Boston","Landon","Edinburgh"]
+  },
+  "timeZone" :{
+  "name":"时区",
+  "otherName":"timeZone",
+  "arr": ["全部","11","10","9","8","7","6","5","4","3","2","1","0","-11","-10","-9","-8","-7","-6","-5","-4","-3","-2","-1"]
+  },
+  "reservationState" :{
+    "name":"预约状态",
+    "otherName":"reservationState",
+    "arr": ["全部","已预约试讲","未预约试讲"]
+  },
+  "accountStatus" :{
+    "name":"账号状态",
+    "otherName":"accountStatus",
+    "arr": ["全部","激活","冻结"]
+  },
+  "timeSlice" :{
+    "name":"demo课时间",
+    "otherName":"timeSlice",
+    "arr": ["10:00-11:00","11:00-12:00","14:00-15:00","15:00-16:00"]
+  },
+  "course" :{
+    "name":"demo课",
+    "otherName":"course",
+    "arr": ["demo课1","demo课2","demo课3"]
+  },
+  "managementTable" :{
+    "thList" : ["","注册日期","First Name","Last Name","账号","性别","国家","时区","手机号","邮箱","零食","城市","账号状态","综合评分"],
+    "tbodyList" : []
+  },
+  "examineTable" :{
+    "thList" : ["","注册日期","First Name","Last Name","国家","时区","手机号","邮箱","零食","操作"],
+    "tbodyList" : []
+  },
+  "interviewTable" :{
+    "thList" : ["","审核日期","First Name","Last Name","国家","时区","手机号","邮箱","零食","口语水平","教学经验","面试时间"],
+    "tbodyList" : []
+  },
+  "lectureTable" :{
+    "thList" : ["","面试时间","First Name","Last Name","国家","时区","手机号","邮箱","试讲时间"],
+    "tbodyList" : [
+      {
+        "rTime":"2013.09.09",
+        "fName":"David",
+        "lName":"Steven",
+        "country":"印度尼西亚",
+        "timeZone":"太平洋时区",
+        "phoneNumber":"13800138000",
+        "email":"12333@qq.com",
+        "tryTime":"2014.09.09 16:30"
+      },
+      {
+        "rTime":"2013.09.09",
+        "fName":"David",
+        "lName":"Steven",
+        "country":"印度尼西亚",
+        "timeZone":"太平洋时区",
+        "phoneNumber":"13800138000",
+        "email":"12333@qq.com",
+        "tryTime":""
+      },
+      {
+        "rTime":"2013.09.09",
+        "fName":"David",
+        "lName":"Steven",
+        "country":"印度尼西亚",
+        "timeZone":"太平洋时区",
+        "phoneNumber":"13800138000",
+        "email":"12333@qq.com",
+        "tryTime":"2014.09.09 16:30"
+      },
+      {
+        "rTime":"2013.09.09",
+        "fName":"David",
+        "lName":"Steven",
+        "country":"印度尼西亚",
+        "timeZone":"太平洋时区",
+        "phoneNumber":"13800138000",
+        "email":"12333@qq.com",
+        "tryTime":""
+      }
+    ],
+    "displayAttr" : ["rTime","fName","lName","country","timeZone","phoneNumber","email","tryTime"]
+  },
+  "pondTable" :{
+    "thList" : ["","注册日期","审核日期","面试时间","试讲时间","First Name","Last Name","国家","时区","手机号","邮箱","零食","不通过类型"],
+    "tbodyList" : []
+  }
+}
