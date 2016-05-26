@@ -13,6 +13,7 @@ import Nav from './nav.js';
 import '../less/app.less';
 import '../less/main.less';
 import '../less/modal.less';
+import '../less/modalAdopt.less';
 
 var App = React.createClass({
 
@@ -62,9 +63,7 @@ var App = React.createClass({
         }
         $("#left").toggleClass("slideNav_left");
         $("#right").toggleClass("slideNav_right");
-
     }
-
 });
 
 export default App;

@@ -7,7 +7,6 @@
 import React from 'react';
 
 //引入样式
-import "../less/modalAdopts.less";
 
 var ModalAdopts = React.createClass({
     render : function(){

@@ -23,7 +23,7 @@ import './less/index.less';
 ReactDOM.render(
     <Router history = {hashHistory}>
         <Route path="/" component = {app} >
-            <IndexRoute component={signIn} />
+            <IndexRoute component={teacherManagement} />
             <Route path = "teacherManagement" component={teacherManagement} />
             <Route path = "teacherExamine" component={teacherExamine} />
             <Route path = "teacherInterview" component={teacherInterview} />

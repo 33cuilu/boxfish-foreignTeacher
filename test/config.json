@@ -12,12 +12,12 @@
   "nativeLevel" :{
     "name":"口语水平",
     "otherName":"nativeLevel",
-    "arr": ["全部","棉花糖","巧克力","其他","未指定"]
+    "arr": ["全部","母语水平","稍差","其他","未分配"]
   },
   "snacks" :{
     "name":"零食",
     "otherName":"snacks",
-    "arr": ["全部","母语水平","稍差","其他","未分配"]
+    "arr": ["全部","棉花糖","巧克力","其他","未指定"]
   },
   "experience" :{
     "name":"教学经验",
@@ -31,7 +31,7 @@
   },
   "nationalLevel" :{
     "name":"国家级别",
-    "otherName":"country",
+    "otherName":"nationalLevel",
     "arr": ["全部","美国、加拿大","英国、澳大利亚、南非","非英语欧美国家","其他"]
   },
   "city" :{

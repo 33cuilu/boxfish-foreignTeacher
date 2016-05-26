@@ -19,6 +19,10 @@ var Table = React.createClass({
           this.setState({hasTryTime:true});
       }
     },
+    getColumnDetail : function (column){
+        column.style.color = "blue";
+        alert(column.innerHTML);
+    },
     render : function(){
         let thList = this.state.thList.map((v,i) => {
             if(i == 0){

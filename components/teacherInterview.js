@@ -14,6 +14,10 @@ import ContentInput from './contentInput.js';
 import DataPicker from './dataPicker.js';
 import SelectComponent from './selectComponent.js';
 import Table from './table.js';
+import ModalInterviewAdopt from './modalInterviewAdopt.js';
+import ModalInterviewAdopts from './modalInterviewAdopts.js';
+import ModalInPond from './modalInPond.js';
+import ModalInPonds from './modalInPonds.js';
 
 //引入样式
 import "../less/teacherInterview.less";
@@ -29,6 +33,10 @@ var TeacherInterview = React.createClass({
         return(
             <div className="TeacherInterview">
                 <ModalInterview />
+                <ModalInterviewAdopt />
+                <ModalInterviewAdopts />
+                <ModalInPond />
+                <ModalInPonds />
                 <div className="forms" id="forms">
                     <div className="form row">
                         <ContentInput />
@@ -48,16 +56,49 @@ var TeacherInterview = React.createClass({
                     </div>
                 </div>
                 <div className="tableContainer" ref="tableContainer">
-                    <Table contentData={configData.interviewTable} />
+                    <Table contentData={configData.interviewTable} callBackInPond={this._arangePond}
+                           callBackInPond={this._arangePond} />
                 </div>
                 <div className="main-btn">
                     <div className="btn-right">
-                        <button className="btn btn-default">批量入池</button>
-                        <button className="btn btn-default">批量通过</button>
+                        <button className="btn btn-default" onClick={this._arangePonds}>批量入池</button>
+                        <button className="btn btn-default" onClick={this._arangeAdopts}>批量通过</button>
+                        <div className="btn-right-select">
+                            <label>国家级别</label>
+                            <SelectComponent contentData={config.nationalLevel} />
+                            <button className="btn btn-default">确定</button>
+                        </div>
+                        <div className="btn-right-select">
+                            <label>零食</label>
+                            <SelectComponent contentData={config.snacks} />
+                            <button className="btn btn-default">确定</button>
+                        </div>
+                        <div className="btn-right-select">
+                            <label>口语水平</label>
+                            <SelectComponent contentData={config.nativeLevel} />
+                            <button className="btn btn-default">确定</button>
+                        </div>
+                        <div className="btn-right-select">
+                            <label>时区</label>
+                            <SelectComponent contentData={config.timeZone} />
+                            <button className="btn btn-default">确定</button>
+                        </div>
                     </div>
                 </div>
             </div>
         );
+    },
+    _arangeAdopt : function(){
+        $(".modalInterviewAdopt .modal").modal();
+    },
+    _arangeAdopts : function(){
+        $(".modalInterviewAdopts .modal").modal();
+    },
+    _arangePond : function(){
+        $(".modalInPond .modal").modal();
+    },
+    _arangePonds : function(){
+        $(".modalInPonds .modal").modal();
     }
 });
 

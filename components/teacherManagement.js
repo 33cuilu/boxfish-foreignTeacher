@@ -13,6 +13,8 @@ import ContentInput from './contentInput.js';
 import DataPicker from './dataPicker.js';
 import SelectComponent from './selectComponent.js';
 import Table from './table.js';
+import ModalManagementFrozen from "./modalManagementFrozen.js";
+import ModalManagementActivation from './modalManagementActivation.js';
 
 //引入样式
 import "../less/teacherManagement.less";
@@ -28,6 +30,8 @@ var TeacherManagement = React.createClass({
         return(
             <div className="teacherManagement">
                 <ModalManagement />
+                <ModalManagementFrozen />
+                <ModalManagementActivation />
                 <div className="forms" id="forms">
                     <div className="form row">
                         <ContentInput />
@@ -52,8 +56,8 @@ var TeacherManagement = React.createClass({
 
                 <div className="main-btn">
                     <div className="btn-right">
-                        <button className="btn btn-default">冻结</button>
-                        <button className="btn btn-default">激活</button>
+                        <button className="btn btn-default" onClick={this._arangeFrozen}>冻结</button>
+                        <button className="btn btn-default" onClick={this._arangeActivation}>激活</button>
                     </div>
                 </div>
                 <div className="tableContainer" ref="tableContainer">
@@ -66,6 +70,12 @@ var TeacherManagement = React.createClass({
                 </div>
             </div>
         );
+    },
+    _arangeFrozen : function(){
+        $(".modalManagementFrozen .modal").modal();
+    },
+    _arangeActivation : function(){
+        $(".modalManagementActivation .modal").modal();
     }
 });
 

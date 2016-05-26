@@ -13,6 +13,10 @@ import ContentInput from './contentInput.js';
 import DataPicker from './dataPicker.js';
 import SelectComponent from './selectComponent.js';
 import Table from './table.js';
+import ModalExamineAdopt from './modalExamineAdopt.js';
+import ModalExamineAdopts from './modalExamineAdopts.js';
+import ModalInPond from './modalInPond.js';
+import ModalInPonds from './modalInPonds.js';
 
 //引入样式
 import "../less/teacherExamine.less";
@@ -28,6 +32,10 @@ var TeacherExamine = React.createClass({
         return(
             <div className="teacherExamine">
                 <ModalExamine />
+                <ModalExamineAdopt />
+                <ModalExamineAdopts />
+                <ModalInPond />
+                <ModalInPonds />
                 <div className="forms" id="forms">
                     <div className="form row">
                         <ContentInput />
@@ -45,17 +53,34 @@ var TeacherExamine = React.createClass({
                     </div>
                 </div>
                 <div className="tableContainer" ref="tableContainer">
-                    <Table contentData={configData.examineTable} />
+                    <Table contentData={configData.examineTable} callBackAdopt={this._arangeAdopt}
+                           callBackInPond={this._arangePond} />
                 </div>
                 <div className="main-btn">
                     <div className="btn-right">
-                        <button className="btn btn-default">批量入池</button>
-                        <button className="btn btn-default">批量通过</button>
-                        <button className="btn btn-default">确定</button>
+                        <button className="btn btn-default" onClick={this._arangePonds}>批量入池</button>
+                        <button className="btn btn-default" onClick={this._arangeAdopts}>批量通过</button>
+                        <div className="btn-right-select">
+                            <label>零食</label>
+                            <SelectComponent contentData={config.snacks} />
+                            <button className="btn btn-default">确定</button>
+                        </div>
                     </div>
                 </div>
             </div>
         );
+    },
+    _arangeAdopt : function(){
+        $(".modalExamineAdopt .modal").modal();
+    },
+    _arangeAdopts : function(){
+        $(".modalExamineAdopts .modal").modal();
+    },
+    _arangePond : function(){
+        $(".modalInPond .modal").modal();
+    },
+    _arangePonds : function(){
+        $(".modalInPonds .modal").modal();
     }
 });
 
