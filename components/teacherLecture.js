@@ -17,7 +17,7 @@ import TryLesson from './tryLesson.js';
 import ModalAdopt from './modalAdopt.js';
 import ModalAdopts from './modalAdopts.js';
 import ModalInPond from './modalInPond.js';
-import ModalInPonds from './ModalInPonds.js';
+import ModalInPonds from './modalInPonds.js';
 
 //引入样式
 import "../less/teacherLecture.less";
@@ -35,9 +35,9 @@ var TeacherLecture = React.createClass({
                 <ModalLecture />
                 <TryLesson />
                 <ModalAdopt />
+                <ModalAdopts />
                 <ModalInPond />
                 <ModalInPonds />
-                <ModalAdopts />
                 <div className="forms" id="forms">
                     <div className="form row">
                         <ContentInput />
