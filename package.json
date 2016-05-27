@@ -2,7 +2,7 @@
   "name": "boxfish-online-operation-center",
   "private": true,
   "version": "0.0.1",
-  "description": "boxfish 在线运营后台系统-鱼卡中心",
+  "description": "boxfish 在线运营后台系统-外教管理",
   "main": "index.js",
   "scripts": {
     "start": "node server.js --env=dev",
