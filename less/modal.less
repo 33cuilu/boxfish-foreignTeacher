@@ -1,47 +1,48 @@
-.modal-content{
-  background-color: #fff;
-  .modal-top{
-    width: 100%;
-    height: 200px;
-    .modal-left{
-      float: left;
-      .modal-img{
-        width: 200px;
-        height: 200px;
-        border: 1px solid #ccc;
+.modalManagement,
+.modalExamine,
+.modalInterview,
+.modalLecture,
+.modalPond{
+  overflow: auto;
+  .modal-dialog{
+    margin: 10px auto;
+    .modal-content{
+      .modal-body{
+        padding: 10px;
+        select{
+          width: 273px;
+        }
+        .modal-body-header,.modal-body-body,.modal-body-footer{
+          .field{
+            width: 48%;
+            margin: 0 1%;
+            display: inline-block;
+            label{
+              display: block;
+            }
+            .datePicker{
+              width: 273px;
+            }
+          }
+        }
+        .modal-body-body,.modal-body-footer{
+          border: 1px solid #ccc;
+          padding: 10px 0;
+          margin-top: 10px;
+        }
+        .modal-body-remarks{
+          margin-top: 10px;
+          label{
+            display: block;
+          }
+          textarea{
+            width: 100%;
+          }
+        }
       }
-    }
-    .modal-right{
-      float: right;
-      textarea{
-        width: 200px;
-        height: 200px;
+      .modal-footer{
+        padding: 10px;
       }
-    }
-  }
-  .modal-main{
-    width: 100%;
-    height: auto;
-    max-height: 200px;
-    .modal-list{
-      list-style: none;
-      line-height: 30px;
-      margin-left: -30px;
-      margin-top: 15px;
-      float: left;
-      li{
-        width: 200px;
-      }
-    }
-    .list-right{
-      float: right;
-    }
-  }
-  .modal-bottom{
-    margin-top: 10px;
-    width: 100%;
-    .btn{
-      float: right;
     }
   }
 }

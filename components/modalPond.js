@@ -46,7 +46,7 @@ var ModalPond = React.createClass({
                                 </div>
                                 <div className="modal-body-remarks">
                                     <label>备注:</label>
-                                    <textarea></textarea>
+                                    <textarea rows="6"></textarea>
                                 </div>
                             </div>
                             <div className="modal-footer">
@@ -57,7 +57,6 @@ var ModalPond = React.createClass({
                     </div>
                 </div>
             </div>
-
         );
     }
 });
