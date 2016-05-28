@@ -13,7 +13,6 @@ var SubNav = React.createClass({
         let curPath = this.props.curPath;
         subMenu = subMenu.map((v,i) => {
             let linkClassName = (curPath==v.path||curPath=='')?'item active':'item';
-            console.log(v.path)
             return (
                 <li key={i}>
                     <Link className={linkClassName} to={'/'+v.path}>

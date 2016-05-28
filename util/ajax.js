@@ -6,10 +6,10 @@ export function Post({url,headers,data}) {
     return new Promise((resolve,reject)=>{
         $.ajax({
             type:"POST",
-            dataType:"json",
+            contentType: "application/json",
             url:url,
             headers:headers,
-            data:data,
+            data:JSON.stringify(data),
             success:resolve,
             error:reject
         });

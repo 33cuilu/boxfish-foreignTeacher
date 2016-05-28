@@ -7,10 +7,13 @@
 import React from 'react';
 
 var SelectComponent = React.createClass({
+    getInitialState : function () {
+        return {
+            index : 0
+        };
+    },
     render : function(){
-        /*let name = this.props.contentData.name;*/
         let arr = this.props.contentData.arr;
-        let otherName = this.props.contentData.otherName;
         arr = arr.map( (v,i) => {
             return (
                 <option value="">{v}</option>
@@ -18,11 +21,20 @@ var SelectComponent = React.createClass({
         });
         return(
             <div className="field">
-                <select className="form-control" ref={otherName}>
+                <select className="form-control" ref="select" onChange={this._changeSelect}>
                     {arr}
                 </select>
             </div>
         );
+
+    },
+    _changeSelect : function () {
+        this.setState({
+            index : this.refs.select.selectedIndex
+        });
+        if(this.props.onChange){
+            this.props.onChange(this.refs.select.selectedIndex);
+        }
 
     }
 });

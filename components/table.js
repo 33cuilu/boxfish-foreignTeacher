@@ -6,69 +6,51 @@
 import React from 'react';
 
 var Table = React.createClass({
-    getInitialState : function () {
-        return {
-            thList : this.props.contentData.thList,
-            tbodyList : this.props.contentData.tbodyList,
-            displayAttr:this.props.contentData.displayAttr,
-            hasTryTime : false
-        };
-    },
-    componentWillMount : function(){
-      if($.inArray("试讲时间",this.state.thList)){
-          this.setState({hasTryTime:true});
-      }
-    },
-    getColumnDetail : function (column){
-        column.style.color = "blue";
-        alert(column.innerHTML);
-    },
+    //Table组件不需要有自己的state,只是作为一个显示数据的组件
     render : function(){
-        let thList = this.state.thList.map((v,i) => {
-            if(i == 0){
-                return ( <th><input type="checkbox" /></th> );
-            }
-            return ( <th>{v}</th> );
-        });
-        let displayAttr = this.state.displayAttr;
 
-        if(displayAttr){
+        var tableStyle = this.props.tableStyle, //表格显示多少行,是否有复选框,是否有操作
+            thList = this.props.contentData.thList, //表格的表头
+            tbodyList = this.props.contentData.tbodyList,
+            tableData = this.props.list.concat([]);  //表格中应该显示的具体数据对象
 
+        //如果list内容不足tableSize行,则用空行将表格填满
+        let nullNum = tableStyle.tableSize - tableData.length;
+        for (let i = 0; i < nullNum; i++) {
+            tableData.push(this.props.contentData.nullEntry);
         }
-        let len = displayAttr? displayAttr.length:0;
-        let tbodyList = this.state.tbodyList.map((v,i) => {
-            let displayAttrs =  displayAttr.map( (val,index) =>{
-                if(this.state.hasTryTime&&index==(len-1)&&v[val]==""){
-                    return(
-                        <td><input type="button" className="btn btn-default btn-xs" value="安排试讲" onClick={this.props.callBackFunc}/></td>
-                    );
-                }
-                return(
-                    <td>{v[val]}</td>
-                );
+        //console.log(tableData);
 
-            });
-            return (
-                <tr>
-                    <td><input type="checkbox" /></td>
-                    {displayAttrs}
-                    <td className="table-operation">
-                        <input className="btn btn-default btn-xs" type="button" value="通过" onClick={this.props.callBackAdopt} />
-                        <input className="btn btn-default btn-xs" type="button" value="入池" onClick={this.props.callBackInPond} />
-                        <a onClick={this.props.callBackMore}>详情</a>
+        //填写表头
+        thList = thList.map((v, i) => {
+            return (<th>{v}</th>);
+        });
+        if (tableStyle.hasCheckBox) {
+            thList = <tr> <th><input type="checkbox"/></th> {thList}  </tr>;
+        }else{
+            thList = <tr>{thList}</tr>
+        }
+
+        //填写表体
+        tableData = tableData.map((v,i) => {
+            let entry=null;
+            entry = tbodyList.map((attr,j) =>{
+                let temp = v[attr]?v[attr]:<div className="invisible">空</div>;
+                return (
+                    <td>
+                        {temp}
                     </td>
-                </tr>
-            );
+                );
+            });
+            return <tr key={i} >{entry}</tr>;
         });
         return (
             <table className="table table-striped" ref="table">
                 <thead>
-                <tr>
                     {thList}
-                </tr>
                 </thead>
                 <tbody>
-                {tbodyList}
+                    {tableData}
                 </tbody>
             </table>
         );

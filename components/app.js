@@ -25,7 +25,6 @@ var App = React.createClass({
 
     render : function () {
         let Children = this.props.children;
-        console.log(Children);
         let curPath = this.props.location.pathname.slice(1);
         let mainClassName = "main";
         mainClassName += (this.state.bigMenu)?'':' leftmove';

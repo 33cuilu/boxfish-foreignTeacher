@@ -21,6 +21,16 @@ var configData = require('../test/config.json');
 var config = require('../test/config.json');
 
 var TeacherPond = React.createClass({
+    getInitialState : function () {
+        return {
+            tableStyle: {
+                tableSize : 10,
+                hasCheckBox : true,
+                hasOperate : true
+            },
+            list: []
+        };
+    },
     _changeForm : function(event) {
         $("#forms").toggleClass("forms-height");
     },
@@ -47,7 +57,7 @@ var TeacherPond = React.createClass({
                     </div>
                 </div>
                 <div className="tableContainer" ref="tableContainer">
-                    <Table contentData={configData.pondTable} />
+                    <Table contentData={configData.pondTable} list={this.state.list} tableStyle={this.state.tableStyle}/>
                 </div>
             </div>
         );

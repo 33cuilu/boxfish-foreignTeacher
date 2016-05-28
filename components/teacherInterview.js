@@ -26,6 +26,16 @@ var configData = require('../test/config.json');
 var config = require('../test/config.json');
 
 var TeacherInterview = React.createClass({
+    getInitialState : function () {
+        return {
+            tableStyle: {
+                tableSize : 10,
+                hasCheckBox : true,
+                hasOperate : true
+            },
+            list: []
+        };
+    },
     _changeForm : function(event) {
         $("#forms").toggleClass("forms-height");
     },
@@ -57,7 +67,7 @@ var TeacherInterview = React.createClass({
                 </div>
                 <div className="tableContainer" ref="tableContainer">
                     <Table contentData={configData.interviewTable} callBackInPond={this._arangePond}
-                           callBackInPond={this._arangePond} />
+                           callBackInPond={this._arangePond} list={this.state.list} tableStyle={this.state.tableStyle}/>
                 </div>
                 <div className="main-btn">
                     <div className="btn-right">

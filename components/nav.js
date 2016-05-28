@@ -31,7 +31,6 @@ var Nav = React.createClass({
         let curPath = this.props.curPath;
         menu = menu.map((v,i) => {
             let linkClassName = (curPath==v.path||curPath=='')?'item active':'item';
-            console.log(linkClassName);
             if(v.subMenus&&v.subMenus.length!=0){
                 //let subMenuList = <subMenus curPath={v.path} childrenArr={v.subMenus}/>;
                 return (
@@ -46,7 +45,6 @@ var Nav = React.createClass({
                     </li>
                 );
             }else{
-                console.log(v.path);
                 return (
                     <li key={i}>
                         <div className="link">

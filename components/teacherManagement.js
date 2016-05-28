@@ -23,6 +23,16 @@ var configData = require('../test/config.json');
 var config = require('../test/config.json');
 
 var TeacherManagement = React.createClass({
+    getInitialState : function () {
+        return {
+            tableStyle: {
+                tableSize : 10,
+                hasCheckBox : true,
+                hasOperate : true
+            },
+            list: []
+        };
+    },
     _changeForm : function(event) {
         $("#forms").toggleClass("forms-height");
     },
@@ -61,7 +71,7 @@ var TeacherManagement = React.createClass({
                     </div>
                 </div>
                 <div className="tableContainer" ref="tableContainer">
-                    <Table contentData={configData.managementTable} />
+                    <Table contentData={configData.managementTable} list={this.state.list} tableStyle={this.state.tableStyle}/>
                 </div>
                 <div className="main-btn">
                     <div className="btn-right">
