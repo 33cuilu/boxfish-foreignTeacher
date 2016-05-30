@@ -7,7 +7,7 @@
 import React from 'react'
 
 //引入样式
-import '../less/page.less';
+import '../../less/page.less';
 
 var PageList = React.createClass({
   render : function(){

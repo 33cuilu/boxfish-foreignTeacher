@@ -5,13 +5,13 @@
 
 //引入插件
 import React from 'react'
-import {Post,Get,transformArrayToObj} from '../util/ajax.js';
+import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
 
 //引入组件
 import DataPicker from './dataPicker.js';
 import SelectComponent from './selectComponent.js';
 
-var config = require("../test/config.json");
+var config = require("../../test/config.json");
 
 var ModalInfoComponent = React.createClass({
     render : function(){

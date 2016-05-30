@@ -11,11 +11,11 @@ import {Router, Route, browserHistory,hashHistory,IndexRoute} from 'react-router
 //引入组件
 import app from './components/app.js';
 import signIn from './components/signIn.js';
-import teacherManagement from './components/teacherManagement.js';
-import teacherExamine from './components/teacherExamine.js';
-import teacherInterview from './components/teacherInterview.js';
-import teacherLecture from './components/teacherLecture.js';
-import teacherPond from './components/teacherPond.js';
+import teacherManagement from './components/teacherManagement/teacherManagement.js';
+import teacherExamine from './components/teacherExamine/teacherExamine.js';
+import teacherInterview from './components/teacherInterview/teacherInterview.js';
+import teacherLecture from './components/teacherLecture/teacherLecture.js';
+import teacherPond from './components/teacherPond/teacherPond.js';
 
 //引入样式
 import './less/index.less';

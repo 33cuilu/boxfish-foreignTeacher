@@ -1,30 +1,31 @@
 /**
  * Created by cuilu on 16/5/18.
- * 审核页
+ * 面试页
  */
+
 
 //引入插件
 import React from 'react';
-import {Post,Get,transformArrayToObj} from '../util/ajax.js';
+import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
 
 //引入组件
-import ModalExamine from './ModalExamine.js';
-import ContentInput from './contentInput.js';
-import DataPicker from './dataPicker.js';
-import SelectComponent from './selectComponent.js';
-import Table from './table.js';
-import ModalExamineAdopt from './modalExamineAdopt.js';
-import ModalExamineAdopts from './modalExamineAdopts.js';
-import ModalInPond from './modalInPond.js';
-import ModalInPonds from './modalInPonds.js';
+import ModalInterview from './modalInterview.js';
+import ContentInput from './../commons/contentInput.js';
+import DataPicker from './../commons/dataPicker.js';
+import SelectComponent from './../commons/selectComponent.js';
+import Table from './../commons/table.js';
+import ModalInterviewAdopt from './modalInterviewAdopt.js';
+import ModalInterviewAdopts from './modalInterviewAdopts.js';
+import ModalInPond from './../commons/modalInPond.js';
+import ModalInPonds from './../commons/modalInPonds.js';
 
 //引入样式
-import "../less/teacherExamine.less";
+import "../../less/teacherInterview.less";
 
-var configData = require('../test/config.json');
-var config = require('../test/config.json');
+var configData = require('../../test/config.json');
+var config = require('../../test/config.json');
 
-var TeacherExamine = React.createClass({
+var TeacherInterview = React.createClass({
     getInitialState : function () {
         return {
             tableStyle: {
@@ -40,10 +41,10 @@ var TeacherExamine = React.createClass({
     },
     render : function(){
         return(
-            <div className="teacherExamine">
-                <ModalExamine />
-                <ModalExamineAdopt />
-                <ModalExamineAdopts />
+            <div className="TeacherInterview">
+                <ModalInterview />
+                <ModalInterviewAdopt />
+                <ModalInterviewAdopts />
                 <ModalInPond />
                 <ModalInPonds />
                 <div className="forms" id="forms">
@@ -56,14 +57,16 @@ var TeacherExamine = React.createClass({
                     <div className="form row">
                         <DataPicker />
                         <SelectComponent contentData={config.snacks} />
+                        <SelectComponent contentData={config.nativeLevel} />
                         <SelectComponent contentData={config.experience} />
+                        <SelectComponent contentData={config.reservationState} />
                         <div className="field">
                             <button className="btn btn-default">筛选</button>
                         </div>
                     </div>
                 </div>
                 <div className="tableContainer" ref="tableContainer">
-                    <Table contentData={configData.examineTable} callBackAdopt={this._arangeAdopt}
+                    <Table contentData={configData.interviewTable} callBackInPond={this._arangePond}
                            callBackInPond={this._arangePond} list={this.state.list} tableStyle={this.state.tableStyle}/>
                 </div>
                 <div className="main-btn">
@@ -71,8 +74,23 @@ var TeacherExamine = React.createClass({
                         <button className="btn btn-default" onClick={this._arangePonds}>批量入池</button>
                         <button className="btn btn-default" onClick={this._arangeAdopts}>批量通过</button>
                         <div className="btn-right-select">
+                            <label>国家级别</label>
+                            <SelectComponent contentData={config.nationalLevel} />
+                            <button className="btn btn-default">确定</button>
+                        </div>
+                        <div className="btn-right-select">
                             <label>零食</label>
                             <SelectComponent contentData={config.snacks} />
+                            <button className="btn btn-default">确定</button>
+                        </div>
+                        <div className="btn-right-select">
+                            <label>口语水平</label>
+                            <SelectComponent contentData={config.nativeLevel} />
+                            <button className="btn btn-default">确定</button>
+                        </div>
+                        <div className="btn-right-select">
+                            <label>时区</label>
+                            <SelectComponent contentData={config.timeZone} />
                             <button className="btn btn-default">确定</button>
                         </div>
                     </div>
@@ -81,10 +99,10 @@ var TeacherExamine = React.createClass({
         );
     },
     _arangeAdopt : function(){
-        $(".modalExamineAdopt .modal").modal();
+        $(".modalInterviewAdopt .modal").modal();
     },
     _arangeAdopts : function(){
-        $(".modalExamineAdopts .modal").modal();
+        $(".modalInterviewAdopts .modal").modal();
     },
     _arangePond : function(){
         $(".modalInPond .modal").modal();
@@ -94,4 +112,4 @@ var TeacherExamine = React.createClass({
     }
 });
 
-export default TeacherExamine;
+export default TeacherInterview;

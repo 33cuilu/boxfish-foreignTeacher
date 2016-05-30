@@ -1,18 +1,18 @@
 /**
  * Created by cuilu on 16/5/25.
- * 批量入池模态框
+ * 入池模态框
  */
 
 //引入插件
 import React from 'react';
 
 //引入样式
-import "../less/modalInPonds.less";
+import "../../less/modalInPond.less";
 
-var ModalInPonds = React.createClass({
+var ModalInPond = React.createClass({
     render : function(){
         return(
-            <div className="modalInPonds">
+            <div className="modalInPond">
                 <div className="modal fade">
                     <div className="modal-dialog">
                         <div className="modal-content">
@@ -31,4 +31,4 @@ var ModalInPonds = React.createClass({
     }
 });
 
-export default ModalInPonds;
+export default ModalInPond;

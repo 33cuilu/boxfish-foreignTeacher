@@ -5,16 +5,16 @@
 
 //引入插件
 import React from 'react';
-import {Post,Get,transformArrayToObj} from '../util/ajax.js';
+import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
 
 //引入组件
-import SingleDataPicker from './singleDataPicker.js';
-import SelectComponent from './selectComponent.js';
+import SingleDataPicker from './../commons/singleDataPicker.js';
+import SelectComponent from './../commons/selectComponent.js';
 
 //引入样式
-import "../less/tryLesson.less";
+import "../../less/tryLesson.less";
 
-var config = require("../test/config.json");
+var config = require("../../test/config.json");
 var teacherAccountsUrl = 'http://192.168.0.247:8099/web/common/trialTeacherList';
 var studentAccountsUrl = 'http://192.168.0.247:8099/web/common/trialStudentList';
 var timeSlotUrl = 'http://192.168.0.247:8099/timeslot/list/0';

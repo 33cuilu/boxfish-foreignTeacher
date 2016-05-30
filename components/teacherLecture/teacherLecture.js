@@ -5,25 +5,25 @@
 
 //引入插件
 import React from 'react';
-import {Post,Get,transformArrayToObj} from '../util/ajax.js';
+import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
 
 //引入组件
 import ModalLecture from './modalLecture.js';
-import ContentInput from './contentInput.js';
-import DataPicker from './dataPicker.js';
-import SelectComponent from './selectComponent.js';
-import Table from './table.js';
+import ContentInput from './../commons/contentInput.js';
+import DataPicker from './../commons/dataPicker.js';
+import SelectComponent from './../commons/selectComponent.js';
+import Table from './../commons/table.js';
 import TryLesson from './tryLesson.js';
 import ModalAdopt from './modalAdopt.js';
 import ModalAdopts from './modalAdopts.js';
-import ModalInPond from './modalInPond.js';
-import ModalInPonds from './modalInPonds.js';
+import ModalInPond from './../commons/modalInPond.js';
+import ModalInPonds from './../commons/modalInPonds.js';
 
 //引入样式
-import "../less/teacherLecture.less";
+import "../../less/teacherLecture.less";
 
-var configData = require('../test/config.json');
-var config = require("../test/config.json");
+var configData = require('../../test/config.json');
+var config = require("../../test/config.json");
 var urlApi = 'http://192.168.0.247:8099/web/teacherOralEn/teacherStepList?';
 
 var TeacherLecture = React.createClass({
@@ -109,7 +109,7 @@ var TeacherLecture = React.createClass({
                 <div className="main-btn">
                     <div className="btn-right">
                         <button className="btn btn-default" onClick={this._arangeInPonds}>批量入池</button>
-                        <button className="btn btn-default"ick={this._arangeAdopts}>批量通过</button>
+                        <button className="btn btn-default" onClick={this._arangeAdopts}>批量通过</button>
                     </div>
                 </div>
             </div>

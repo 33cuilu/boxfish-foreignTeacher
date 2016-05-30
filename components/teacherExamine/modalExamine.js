@@ -5,19 +5,19 @@
 
 //引入插件
 import React from 'react'
-import {Post,Get,transformArrayToObj} from '../util/ajax.js';
+import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
 
 //引入组件
-import DataPicker from './dataPicker.js';
-import SelectComponent from './selectComponent.js';
-import ModalComponent from './modalComponent.js';
-import ModalContentComponent from './modalContentComponent';
-import ModalInfoComponent from './modalInfoComponent.js';
+import DataPicker from './../commons/dataPicker.js';
+import SelectComponent from './../commons/selectComponent.js';
+import ModalComponent from './../commons/modalComponent.js';
+import ModalContentComponent from './../commons/modalContentComponent';
+import ModalInfoComponent from './../commons/modalInfoComponent.js';
 
 //引入样式
-import '../less/modalExamine.less';
+import '../../less/modalExamine.less';
 
-var config = require("../test/config.json");
+var config = require("../../test/config.json");
 
 var ModalExamine = React.createClass({
     render : function(){

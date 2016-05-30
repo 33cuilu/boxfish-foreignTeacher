@@ -5,20 +5,20 @@
 
 //引入插件
 import React from 'react';
-import {Post,Get,transformArrayToObj} from '../util/ajax.js';
+import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
 
 //引入组件
 import ModalPond from './modalPond.js';
-import ContentInput from './contentInput.js';
-import DataPicker from './dataPicker.js';
-import SelectComponent from './selectComponent.js';
-import Table from './table.js';
+import ContentInput from './../commons/contentInput.js';
+import DataPicker from './../commons/dataPicker.js';
+import SelectComponent from './../commons/selectComponent.js';
+import Table from './../commons/table.js';
 
 //引入样式
-import "../less/teacherPond.less";
+import "../../less/teacherPond.less";
 
-var configData = require('../test/config.json');
-var config = require('../test/config.json');
+var configData = require('../../test/config.json');
+var config = require('../../test/config.json');
 
 var TeacherPond = React.createClass({
     getInitialState : function () {

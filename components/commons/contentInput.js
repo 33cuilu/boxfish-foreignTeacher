@@ -9,7 +9,7 @@ import React from 'react';
 //引入组件
 import SelectComponent from './selectComponent.js';
 
-var config = require("../test/config.json");
+var config = require("../../test/config.json");
 
 var ContentInput = React.createClass({
     getInitialState : function () {

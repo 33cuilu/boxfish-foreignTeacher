@@ -4,16 +4,16 @@ import React from 'react';
 import {Link} from 'react-router';
 
 //引入样式
-import '../less/nav.less';
+import '../../less/nav.less';
 
 //引入组件
 import SubNav from './subNav.js';
 
 //引入折叠菜单插件
-import Accordion from '../util/accordition.js';
+import Accordion from '../../util/accordition.js';
 
 //引入配置数据
-var configData = require('../test/nav.json');
+var configData = require('../../test/nav.json');
 
 
 var Nav = React.createClass({

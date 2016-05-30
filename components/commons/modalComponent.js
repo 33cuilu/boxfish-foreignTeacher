@@ -10,7 +10,7 @@ import React from 'react';
 import DataPicker from './dataPicker.js';
 import SelectComponent from './selectComponent.js';
 
-var config = require("../test/config.json");
+var config = require("../../test/config.json");
 
 var ModalComponent = React.createClass({
     render : function(){

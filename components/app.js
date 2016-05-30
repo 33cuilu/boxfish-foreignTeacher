@@ -7,7 +7,7 @@
 import React from 'react';
 
 //引入组件
-import Nav from './nav.js';
+import Nav from './commons/nav.js';
 
 //引入样式
 import '../less/app.less';

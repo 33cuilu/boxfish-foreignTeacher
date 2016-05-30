@@ -5,22 +5,22 @@
 
 //引入插件
 import React from 'react';
-import {Post,Get,transformArrayToObj} from '../util/ajax.js';
+import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
 
 //引入组件
 import ModalManagement from './modalManagement.js';
-import ContentInput from './contentInput.js';
-import DataPicker from './dataPicker.js';
-import SelectComponent from './selectComponent.js';
-import Table from './table.js';
+import ContentInput from './../commons/contentInput.js';
+import DataPicker from './../commons/dataPicker.js';
+import SelectComponent from './../commons/selectComponent.js';
+import Table from './../commons/table.js';
 import ModalManagementFrozen from "./modalManagementFrozen.js";
 import ModalManagementActivation from './modalManagementActivation.js';
 
 //引入样式
-import "../less/teacherManagement.less";
+import "../../less/teacherManagement.less";
 
-var configData = require('../test/config.json');
-var config = require('../test/config.json');
+var configData = require('../../test/config.json');
+var config = require('../../test/config.json');
 
 var TeacherManagement = React.createClass({
     getInitialState : function () {
