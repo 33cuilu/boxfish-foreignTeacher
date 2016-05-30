@@ -125,7 +125,7 @@ var TeacherLecture = React.createClass({
             telNum = this.refs.contentInput.state.telNum,
             email = this.refs.contentInput.state.email,
             interviewTime = this.refs.interviewTime.state.value.trim(),
-            demoTime = this.refs.tryLessonTime.state.value,
+            demoTime = this.refs.tryLessonTime.state.value.trim(),
             statu = this.state.reservationStatus.arr[this.refs.reservationStatus.state.index],
             myurl = `${urlApi}page=0&size=${this.state.pageSize}`;
 
