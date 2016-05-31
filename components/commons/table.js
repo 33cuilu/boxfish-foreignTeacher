@@ -23,7 +23,7 @@ var Table = React.createClass({
 
         //填写表头
         thList = thList.map((v, i) => {
-            return (<th>{v}</th>);
+            return (<th key={i} >{v}</th>);
         });
         if (tableStyle.hasCheckBox) {
             thList = <tr> <th><input type="checkbox"/></th> {thList}  </tr>;
@@ -37,7 +37,7 @@ var Table = React.createClass({
             entry = tbodyList.map((attr,j) =>{
                 let temp = v[attr]?v[attr]:<div className="invisible">空</div>;
                 return (
-                    <td>
+                    <td >
                         {temp}
                     </td>
                 );

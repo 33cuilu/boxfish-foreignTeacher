@@ -9,7 +9,7 @@
 .row{
   margin-left: -10px;  //使查询表单的左侧与表格左侧对齐
   //width: auto;
-  width: 1000px;
+  width: 950px;
   .field{
     display: inline-block;
     margin-left: 10px;
@@ -40,6 +40,13 @@
   height: 40px;
   overflow: hidden;
   .forms-trans(height,@transTime);
+  .input{
+    float: left;
+  }
+  .search{
+    float: left;
+    margin-left: 20px;
+  }
 }
 
 .forms-height{
@@ -47,8 +54,11 @@
   .forms-trans(height,@transTime);
 }
 
+
+
 //显示内容的表格的样式
 .tableContainer{
+  clear : left;
   overflow: auto;
   position: relative;
   width: 100%;
@@ -77,6 +87,9 @@
           color: #aaa;
           font-size: 12px;
           margin-left: 6px;
+        }
+        button{
+          margin-right:10px;
         }
       }
     }

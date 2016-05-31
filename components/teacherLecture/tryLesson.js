@@ -15,11 +15,11 @@ import SelectComponent from './../commons/selectComponent.js';
 import "../../less/tryLesson.less";
 
 var config = require("../../test/config.json");
-var teacherAccountsUrl = 'http://192.168.0.247:8099/web/common/trialTeacherList';
-var studentAccountsUrl = 'http://192.168.0.247:8099/web/common/trialStudentList';
-var timeSlotUrl = 'http://192.168.0.247:8099/timeslot/list/0';
-var demoCourseUrl = 'http://192.168.0.247:8099/web/common/demoCourses';
-var submitUrl = 'http://192.168.0.247:8099/web/common/chooseTriallecture';
+var teacherAccountsUrl = 'http://101.201.237.252:8099/web/common/trialTeacherList';
+var studentAccountsUrl = 'http://101.201.237.252:8099/web/common/trialStudentList';
+var timeSlotUrl = 'http://101.201.237.252:8099/timeslot/list/0';
+var demoCourseUrl = 'http://101.201.237.252:8099/web/common/demoCourses';
+var submitUrl = 'http://101.201.237.252:8099/web/common/chooseTriallecture';
 
 var TryLesson = React.createClass({
     getInitialState : function () {
@@ -181,7 +181,6 @@ var TryLesson = React.createClass({
         });
     },
     _submit : function () {
-
         let teacherOralEnId = this.props.row.teacherId,
             teacherId = this.state.teacherAccounts.id[this.refs.teacherAccounts.state.index],
             studentId = this.state.studentAccounts.id[this.refs.studentAccounts.state.index],
@@ -214,6 +213,9 @@ var TryLesson = React.createClass({
         }).catch((err) => {
             console.log(err);
         });
+
+        //显示更改后的时间
+        this.props.callback(`${startTime} - ${endTime}`);
 
         /*Post({
             url : submitUrl,

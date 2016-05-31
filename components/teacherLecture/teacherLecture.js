@@ -23,8 +23,8 @@ import ModalInPonds from './../commons/modalInPonds.js';
 import "../../less/teacherLecture.less";
 
 var configData = require('../../test/config.json');
-var config = require("../../test/config.json");
-var urlApi = 'http://192.168.0.247:8099/web/teacherOralEn/teacherStepList?';
+
+var urlApi = 'http://101.201.237.252:8099/web/teacherOralEn/teacherStepList?';
 
 var TeacherLecture = React.createClass({
     getInitialState : function () {
@@ -80,7 +80,7 @@ var TeacherLecture = React.createClass({
         return(
             <div className="TeacherLecture">
                 <ModalLecture />
-                <TryLesson row={rowContent}/>
+                <TryLesson row={rowContent} callback={this.updateTime}/>
                 <ModalAdopt />
                 <ModalAdopts />
                 <ModalInPond />
@@ -95,7 +95,7 @@ var TeacherLecture = React.createClass({
                     <div className="form row">
                         <DataPicker ref="interviewTime" />
                         <DataPicker ref="tryLessonTime" />
-                        <SelectComponent ref="reservationStatus" contentData={config.reservationState} />
+                        <SelectComponent ref="reservationStatus" contentData={configData.reservationState} />
                         <div className="field">
                             <button className="btn btn-default" onClick={this._search}>筛选</button>
                         </div>
@@ -163,6 +163,15 @@ var TeacherLecture = React.createClass({
             console.log(err);
         });
 
+    },
+    updateTime : function (time) {
+        let index = this.state.curRow;
+        let line = this.state.list[index];
+        line.triallectureTime = time;
+        let newList = [].concat(this.state.list.slice(0,index), line, this.state.list.slice(index + 1));
+        this.setState({
+            list : newList
+        });
     },
     _getPage : function (page) {
         let myurl = this.state.curURL.replace(/page=0/,`page=${page-1}`);

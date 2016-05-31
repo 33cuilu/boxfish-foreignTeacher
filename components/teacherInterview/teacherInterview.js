@@ -40,34 +40,61 @@ var TeacherInterview = React.createClass({
         $("#forms").toggleClass("forms-height");
     },
     render : function(){
+        let tableList = this.state.list.map((v,i) => {
+            return {
+                "checkbox" : <input type="checkbox" />,
+                "checkDate" : "",
+                "firstName" : v.firstName,
+                "lastName" : v.lastName,
+                "country" : v.nationality,
+                "timeZone" : v.timezone,
+                "telNum" : v.cellphoneNumber,
+                "email" : v.email,
+                "level" : "",
+                "gender" : <SelectComponent ref="tableGender" contentData={config.sex} />,
+                "snack" : v.snack,
+                "spokenLevel" : v.spokenLevel,
+                "teachingExperience" : v.teachingExperience,
+                "interviewTime" : <DataPicker ref=""/>,
+                "operate" : (
+                    <div>
+                        <button className="btn btn-default btn-xs" onClick={this._arangeAdopt}>通过</button>
+                        <button className="btn btn-default btn-xs" onClick={this._arangeInPond}>入池</button>
+                        <a onClick={this._arangeMore}>详情</a>
+                    </div>
+                )
+            };
+        });
         return(
             <div className="TeacherInterview">
                 <ModalInterview />
-                <ModalInterviewAdopt />
-                <ModalInterviewAdopts />
-                <ModalInPond />
-                <ModalInPonds />
+                <ModalInterviewAdopt ref="adopt"/>
+                <ModalInterviewAdopts ref="adopts"/>
+                <ModalInPond ref="inPond"/>
+                <ModalInPonds ref="inPonds"/>
                 <div className="forms" id="forms">
-                    <div className="form row">
-                        <ContentInput />
-                        <div className="field more">
-                            <span className="glyphicon glyphicon-triangle-bottom" onClick={this._changeForm}></span>
+                    <div className="input">
+                        <div className="form row">
+                            <ContentInput ref="contentInput"/>
+                            <div className="field more">
+                                <span className="glyphicon glyphicon-triangle-bottom" onClick={this._changeForm}></span>
+                            </div>
+                        </div>
+                        <div className="form row">
+                            <DataPicker ref="checkDate"/>
+                            <SelectComponent contentData={config.snacks} />
+                            <SelectComponent contentData={config.nativeLevel} />
+                            <SelectComponent contentData={config.experience} />
+                            <SelectComponent contentData={config.reservationState} />
+
                         </div>
                     </div>
-                    <div className="form row">
-                        <DataPicker />
-                        <SelectComponent contentData={config.snacks} />
-                        <SelectComponent contentData={config.nativeLevel} />
-                        <SelectComponent contentData={config.experience} />
-                        <SelectComponent contentData={config.reservationState} />
-                        <div className="field">
-                            <button className="btn btn-default">筛选</button>
-                        </div>
+                    <div className="search">
+                        <button className="btn btn-default">筛选</button>
                     </div>
                 </div>
                 <div className="tableContainer" ref="tableContainer">
-                    <Table contentData={configData.interviewTable} callBackInPond={this._arangePond}
-                           callBackInPond={this._arangePond} list={this.state.list} tableStyle={this.state.tableStyle}/>
+                    <Table contentData={configData.interviewTable} list={tableList} tableStyle={this.state.tableStyle}/>
                 </div>
                 <div className="main-btn">
                     <div className="btn-right">

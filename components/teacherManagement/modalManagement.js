@@ -46,7 +46,7 @@ var ModalManagement = React.createClass({
                                     </div>
                                     <ModalComponent />
                                     <div className="field">
-                                        <label>职业:</label>
+                                        <label>性别:</label>
                                         <input type="text" className="form-control" />
                                     </div>
                                     <div className="field">

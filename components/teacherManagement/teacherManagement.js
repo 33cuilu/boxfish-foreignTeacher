@@ -37,30 +37,50 @@ var TeacherManagement = React.createClass({
         $("#forms").toggleClass("forms-height");
     },
     render : function(){
+        let tableList = this.state.list.map((v,i) => {
+            return {
+                "checkbox" : <input type="checkbox" />,
+                "" : "",
+                "firstName" : v.firstName,
+                "lastName" : v.lastName,
+                "nickName" : v.nickName,
+                "gender" : v.gender,
+                "country" : v.nationality,
+                "timezone" : v.timezone,
+                "cellphoneNumber" : v.cellphoneNumber,
+                "email" : v.email,
+                "snack" : v.snack,
+                "occupation" : v.occupation,
+                "state" : "",
+                "score" : ""
+            };
+        });
         return(
             <div className="teacherManagement">
                 <ModalManagement />
-                <ModalManagementFrozen />
-                <ModalManagementActivation />
+                <ModalManagementFrozen ref="freeze"/>
+                <ModalManagementActivation ref="unfreeze"/>
                 <div className="forms" id="forms">
-                    <div className="form row">
-                        <ContentInput />
-                        <div className="field more">
-                            <span className="glyphicon glyphicon-triangle-bottom" id="btn" onClick={this._changeForm}></span>
+                    <div className="input">
+                        <div className="form row">
+                            <ContentInput />
+                            <div className="field more">
+                                <span className="glyphicon glyphicon-triangle-bottom" id="btn" onClick={this._changeForm}></span>
+                            </div>
+                        </div>
+                        <div className="form row" >
+                            <DataPicker ref="loginDate" name="注册日期"/>
+                            <div className="field">
+                                <input type="text" className="form-control" placeholder="账号" />
+                            </div>
+                            <SelectComponent ref="gender" contentData={config.sex} />
+                            <SelectComponent ref="snack" contentData={config.snacks} />
+                            <SelectComponent ref="city" contentData={config.city} />
+                            <SelectComponent ref="statu" contentData={config.accountStatus} />
                         </div>
                     </div>
-                    <div className="form row" >
-                        <DataPicker />
-                        <div className="field">
-                            <input type="text" className="form-control" placeholder="账号" />
-                        </div>
-                        <SelectComponent contentData={config.sex} />
-                        <SelectComponent contentData={config.snacks} />
-                        <SelectComponent contentData={config.city} />
-                        <SelectComponent contentData={config.accountStatus} />
-                        <div className="field">
-                            <button className="btn btn-default">筛选</button>
-                        </div>
+                    <div className="search">
+                        <button className="btn btn-primary">筛选</button>
                     </div>
                 </div>
 
@@ -71,7 +91,7 @@ var TeacherManagement = React.createClass({
                     </div>
                 </div>
                 <div className="tableContainer" ref="tableContainer">
-                    <Table contentData={configData.managementTable} list={this.state.list} tableStyle={this.state.tableStyle}/>
+                    <Table contentData={configData.managementTable} list={tableList} tableStyle={this.state.tableStyle}/>
                 </div>
                 <div className="main-btn">
                     <div className="btn-right">

@@ -39,27 +39,50 @@ var TeacherExamine = React.createClass({
         $("#forms").toggleClass("forms-height");
     },
     render : function(){
+        let tableList = this.state.list.map((v,i) => {
+            return {
+                "checkbox" : <input type="checkbox" />,
+                "loginDate" : "",
+                "firstName" : v.firstName,
+                "lastName" : v.lastName,
+                "country" : v.nationality,
+                "timeZone" : v.timezone,
+                "telNum" : v.cellphoneNumber,
+                "email" : v.email,
+                "snack" : v.snack,
+                "teachingExperience" : v.teachingExperience,
+                "operate" : (
+                    <div>
+                        <button className="btn btn-default btn-xs" onClick={this._arangeAdopt}>通过</button>
+                        <button className="btn btn-default btn-xs" onClick={this._arangeInPond}>入池</button>
+                        <a onClick={this._arangeMore}>详情</a>
+                    </div>
+                )
+            };
+        });
         return(
             <div className="teacherExamine">
                 <ModalExamine />
-                <ModalExamineAdopt />
-                <ModalExamineAdopts />
-                <ModalInPond />
-                <ModalInPonds />
+                <ModalExamineAdopt ref="adopt"/>
+                <ModalExamineAdopts ref="adopts"/>
+                <ModalInPond ref="inPond"/>
+                <ModalInPonds ref="inPonds"/>
                 <div className="forms" id="forms">
-                    <div className="form row">
-                        <ContentInput />
-                        <div className="field more">
-                            <span className="glyphicon glyphicon-triangle-bottom" onClick={this._changeForm}></span>
+                    <div className="input">
+                        <div className="form row">
+                            <ContentInput ref="contentInput"/>
+                            <div className="field more">
+                                <span className="glyphicon glyphicon-triangle-bottom" onClick={this._changeForm}></span>
+                            </div>
+                        </div>
+                        <div className="form row">
+                            <DataPicker ref="loginDate" name="注册日期"/>
+                            <SelectComponent ref="snack" contentData={config.snacks} />
+                            <SelectComponent ref="experience" contentData={config.experience} />
                         </div>
                     </div>
-                    <div className="form row">
-                        <DataPicker />
-                        <SelectComponent contentData={config.snacks} />
-                        <SelectComponent contentData={config.experience} />
-                        <div className="field">
-                            <button className="btn btn-default">筛选</button>
-                        </div>
+                    <div className="search">
+                        <button className="btn btn-primary">筛选</button>
                     </div>
                 </div>
                 <div className="tableContainer" ref="tableContainer">
@@ -71,8 +94,8 @@ var TeacherExamine = React.createClass({
                         <button className="btn btn-default" onClick={this._arangePonds}>批量入池</button>
                         <button className="btn btn-default" onClick={this._arangeAdopts}>批量通过</button>
                         <div className="btn-right-select">
-                            <label>零食</label>
-                            <SelectComponent contentData={config.snacks} />
+                            <label>零食:</label>
+                            <SelectComponent ref="bottomSnack" contentData={config.snacks} />
                             <button className="btn btn-default">确定</button>
                         </div>
                     </div>

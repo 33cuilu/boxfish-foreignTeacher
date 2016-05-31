@@ -33,7 +33,7 @@ var ModalLecture = React.createClass({
                                         <DataPicker />
                                     </div>
                                     <div className="field">
-                                        <label>职业:</label>
+                                        <label>性别:</label>
                                         <input type="text" className="form-control" />
                                     </div>
                                     <ModalComponent />

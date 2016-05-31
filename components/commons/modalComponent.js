@@ -33,7 +33,7 @@ var ModalComponent = React.createClass({
                     <input type="text" className="form-control" />
                 </div>
                 <div className="field">
-                    <label>性别:</label>
+                    <label>职业:</label>
                     <input type="text" className="form-control" />
                 </div>
                 <div className="field">
