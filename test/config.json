@@ -101,7 +101,7 @@
     "tbodyList" : []
   },
   "lectureTable" :{
-    "thList" : ["面试时间","First Name","Last Name","国家","时区","手机号","邮箱","试讲时间","操作"],
+    "thList" : ["教师ID","First Name","Last Name","国家","时区","手机号","邮箱","试讲时间","操作"],
     "tbodyList" : ["checkbox","teacherId","firstName","lastName","country","timeZone","telNum","email","triallectureTime","operate"],
     "nullEntry" : {"checkbox": null,"teacherId":null,"firstName":null,"lastName":null,"country":null,"timeZone":null,"telNum":null,"email":null,"triallectureTime":null,"operate":null}
   },
