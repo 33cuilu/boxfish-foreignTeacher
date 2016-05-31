@@ -22,8 +22,8 @@ var SingleDataPicker = React.createClass({
         return (
             <div className="field" >
                 <div style={{position:'relative', width:'220px'}}>
-                    <input type="text" className="form-control singleDatePicker" value={this.state.value} ref="dateInput"
-                           style={{paddingLeft:'30px'}} />
+                    <input type="text" className="form-control singleDatePicker" placeholder={this.props.name}
+                           value={this.state.value} ref="dateInput" style={{paddingLeft:'30px'}} />
                     <i className="glyphicon glyphicon-calendar"  style={{position:'absolute',left:'10px',top:'8px'}}></i>
                 </div>
             </div>

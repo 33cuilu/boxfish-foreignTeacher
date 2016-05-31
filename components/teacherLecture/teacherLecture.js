@@ -10,7 +10,7 @@ import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
 //引入组件
 import ModalLecture from './modalLecture.js';
 import ContentInput from './../commons/contentInput.js';
-import DataPicker from './../commons/dataPicker.js';
+import TimePicker from './../commons/timePicker.js';
 import SelectComponent from './../commons/selectComponent.js';
 import Table from './../commons/table.js';
 import TryLesson from './tryLesson.js';
@@ -26,6 +26,7 @@ var configData = require('../../test/config.json');
 
 var urlApi = 'http://101.201.237.252:8099/web/teacherOralEn/teacherStepList?';
 
+
 var TeacherLecture = React.createClass({
     getInitialState : function () {
         return {
@@ -35,7 +36,7 @@ var TeacherLecture = React.createClass({
             curRow : 0,
             reservationStatus : {
                 //cur : "全部",
-                arr : ["全部","已预约试讲","未预约试讲"], //预约状态
+                arr : ["预约状态","已预约试讲","未预约试讲"], //预约状态
                 id : ["","",""]  //国家ID
             },
             tableStyle: {
@@ -86,19 +87,21 @@ var TeacherLecture = React.createClass({
                 <ModalInPond />
                 <ModalInPonds />
                 <div className="forms" id="forms">
-                    <div className="form row">
-                        <ContentInput ref="contentInput"/>
-                        <div className="field more">
-                            <span className="glyphicon glyphicon-triangle-bottom" onClick={this._changeForm}></span>
+                    <div className="input">
+                        <div className="form row">
+                            <ContentInput ref="contentInput"/>
+                            <div className="field more">
+                                <span className="glyphicon glyphicon-triangle-bottom" onClick={this._changeForm}></span>
+                            </div>
+                        </div>
+                        <div className="form row extend">
+                            <TimePicker ref="interviewTime" name="面试时间"/>
+                            <TimePicker ref="tryLessonTime" name="试讲时间"/>
+                            <SelectComponent ref="reservationStatus" contentData={configData.reservationState} />
                         </div>
                     </div>
-                    <div className="form row">
-                        <DataPicker ref="interviewTime" />
-                        <DataPicker ref="tryLessonTime" />
-                        <SelectComponent ref="reservationStatus" contentData={configData.reservationState} />
-                        <div className="field">
-                            <button className="btn btn-default" onClick={this._search}>筛选</button>
-                        </div>
+                    <div className="search">
+                        <button className="btn btn-primary" onClick={this._search}>筛选</button>
                     </div>
                 </div>
 
@@ -164,14 +167,16 @@ var TeacherLecture = React.createClass({
         });
 
     },
-    updateTime : function (time) {
+    updateTime : function (start,end) {
         let index = this.state.curRow;
         let line = this.state.list[index];
-        line.triallectureTime = time;
+        line.triallectureStartTime = start;
+        line.triallectureEndTime = end.substr(-8,8);
         let newList = [].concat(this.state.list.slice(0,index), line, this.state.list.slice(index + 1));
         this.setState({
             list : newList
         });
+        console.log(this.state.list);
     },
     _getPage : function (page) {
         let myurl = this.state.curURL.replace(/page=0/,`page=${page-1}`);

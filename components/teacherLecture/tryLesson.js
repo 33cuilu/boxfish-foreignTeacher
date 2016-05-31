@@ -195,7 +195,7 @@ var TryLesson = React.createClass({
             courseType = this.state.demoCourse.type[this.refs.course.state.index],
             timeSlotId = this.state.timeSlot.id[this.refs.timeSlot.state.index];
 
-        Post({
+        /*Post({
             url : submitUrl,
             data : {
                 "teacherOralEnId" : teacherOralEnId,
@@ -204,23 +204,19 @@ var TryLesson = React.createClass({
                 "courseId": courseId,
                 "courseName": courseName,
                 "startTime": startTime,
-                "endTime": endTime,  /*"2017-05-06 12:12:55"*/
+                "endTime": endTime,
                 "courseType": courseType,
                 "timeSlotId": timeSlotId
             }
         }).then(({data}) => {
-            console.log(data);
+            //console.log(data);
         }).catch((err) => {
             console.log(err);
-        });
-
-        //显示更改后的时间
-        this.props.callback(`${startTime} - ${endTime}`);
-
-        /*Post({
+        });*/
+         Post({
             url : submitUrl,
             data : {
-                "teacherOralEnId" : "11061",
+                "teacherOralEnId" : "129644",
                 "teacherId": "1399500",
                 "studentId": "1399576",
                 "courseId": "L3NoYXJlL3N2bi9NT1ZJRSBUSU1FIDIvMDA0LlNocmVr5LmL552h576O5Lq66buR56ul6K-dLnhsc3g",
@@ -232,7 +228,11 @@ var TryLesson = React.createClass({
             }
         }).then(({code,data}) => {
             console.log(data);
-        }).catch();*/
+        }).catch();
+        //显示更改后的时间
+        this.props.callback(`${startTime}`, `${endTime}`);
+
+
     }
 });
 

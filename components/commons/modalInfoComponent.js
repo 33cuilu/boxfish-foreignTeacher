@@ -19,6 +19,7 @@ var ModalInfoComponent = React.createClass({
             <div className="ModalInfoComponent">
                 <div className="field">
                     <label>试讲账号:</label>
+
                     <input type="text" className="form-control" />
                 </div>
                 <div className="field">

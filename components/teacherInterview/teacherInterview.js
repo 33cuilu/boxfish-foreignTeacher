@@ -12,6 +12,7 @@ import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
 import ModalInterview from './modalInterview.js';
 import ContentInput from './../commons/contentInput.js';
 import DataPicker from './../commons/dataPicker.js';
+import TimePicker from './../commons/timePicker.js';
 import SelectComponent from './../commons/selectComponent.js';
 import Table from './../commons/table.js';
 import ModalInterviewAdopt from './modalInterviewAdopt.js';
@@ -81,7 +82,8 @@ var TeacherInterview = React.createClass({
                             </div>
                         </div>
                         <div className="form row">
-                            <DataPicker ref="checkDate"/>
+                            <DataPicker ref="checkDate" name="审核日期"/>
+                            <TimePicker ref="interviewTime" name="面试时间"/>
                             <SelectComponent contentData={config.snacks} />
                             <SelectComponent contentData={config.nativeLevel} />
                             <SelectComponent contentData={config.experience} />
@@ -90,7 +92,7 @@ var TeacherInterview = React.createClass({
                         </div>
                     </div>
                     <div className="search">
-                        <button className="btn btn-default">筛选</button>
+                        <button className="btn btn-primary">筛选</button>
                     </div>
                 </div>
                 <div className="tableContainer" ref="tableContainer">

@@ -23,7 +23,7 @@ var DataPicker = React.createClass({
         return (
             <div className="field" >
                 <div style={{position:'relative', width:'220px'}}>
-                    <input type="text" className="form-control datePicker" data-date-format="yyyy-mm-dd"
+                    <input type="text" className="form-control datePicker" placeholder={this.props.name}
                            style={{paddingLeft:'30px'}} ref="dateInput"/>
                     <i className="glyphicon glyphicon-calendar"  style={{position:'absolute',left:'10px',top:'8px'}}></i>
                 </div>
