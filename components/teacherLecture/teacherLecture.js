@@ -13,6 +13,7 @@ import ContentInput from './../commons/contentInput.js';
 import TimePicker from './../commons/timePicker.js';
 import SelectComponent from './../commons/selectComponent.js';
 import Table from './../commons/table.js';
+import PageList from './../commons/page.js';
 import TryLesson from './tryLesson.js';
 import ModalAdopt from './modalAdopt.js';
 import ModalAdopts from './modalAdopts.js';
@@ -30,8 +31,9 @@ var urlApi = 'http://101.201.237.252:8099/web/teacherOralEn/teacherStepList?';
 var TeacherLecture = React.createClass({
     getInitialState : function () {
         return {
-            pageSize: 10,
-            totalPages: 1,
+            pageSize : 10,
+            totalPages : 1,
+            curPage : 1,
             curURL : '',
             curRow : 0,
             reservationStatus : {
@@ -39,12 +41,12 @@ var TeacherLecture = React.createClass({
                 arr : ["预约状态","已预约试讲","未预约试讲"], //预约状态
                 id : ["","",""]  //国家ID
             },
-            tableStyle: {
+            tableStyle : {
                 tableSize : 10,
                 hasCheckBox : true,
                 hasOperate : true
             },
-            list: []
+            list : []
         };
     },
     _changeForm : function(event) {
@@ -111,10 +113,11 @@ var TeacherLecture = React.createClass({
 
                 <div className="main-btn">
                     <div className="btn-right">
-                        <button className="btn btn-default" onClick={this._arangeInPonds}>批量入池</button>
-                        <button className="btn btn-default" onClick={this._arangeAdopts}>批量通过</button>
+                        <button className="btn btn-default btn-sm" onClick={this._arangeInPonds}>批量入池</button>
+                        <button className="btn btn-default btn-sm" onClick={this._arangeAdopts}>批量通过</button>
                     </div>
                 </div>
+                <PageList curPage={this.state.curPage} totalPages={this.state.totalPages} onPre={this._prePage} onFirst={this._firstPage} onLast={this._lastPage} onNext={this._nextPage}/>
             </div>
         );
     },
@@ -192,6 +195,18 @@ var TeacherLecture = React.createClass({
         }).catch((err)=>{
             console.log(err);
         });
+    },
+    _prePage : function () {
+
+    },
+    _firstPage : function () {
+
+    },
+    _lastPage : function () {
+
+    },
+    _nextPage : function () {
+
     },
     _arangeTryLesson : function(i){
         this.setState({

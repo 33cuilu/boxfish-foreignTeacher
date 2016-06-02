@@ -7,17 +7,23 @@
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   list-style: none;
-  margin-left: -25px;
+  padding-left: 0;
   overflow: hidden;
   li{
     position: relative;
     &:last-child {
       border-bottom: 0;
     }
+    &:hover {
+      background-color: rgb(100,100,100);
+      a {
+        font-size: 16px;
+      }
+    }
     i{
       position: absolute;
       top: 16px;
-      left: 12px;
+      left: 25px;
       font-size: 18px;
       color: #fff;
       -webkit-transition: all 0.4s ease;
@@ -26,10 +32,16 @@
     }
     width: 200px;
   }
+  li.active{
+    background-color: rgb(100,100,100);
+    a {
+      font-size: 16px;
+    }
+  }
   .link {
     cursor: pointer;
     display: block;
-    padding: 15px 15px 15px 42px;
+    padding: 15px 15px 15px 55px;
     color: #fff;
     font-size: 14px;
     font-weight: 700;
@@ -86,5 +98,6 @@
 }
 .link a{
   color: #fff;
+  text-decoration: none;
 }
 

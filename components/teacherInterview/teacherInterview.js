@@ -15,6 +15,7 @@ import DataPicker from './../commons/dataPicker.js';
 import TimePicker from './../commons/timePicker.js';
 import SelectComponent from './../commons/selectComponent.js';
 import Table from './../commons/table.js';
+import PageList from './../commons/page.js';
 import ModalInterviewAdopt from './modalInterviewAdopt.js';
 import ModalInterviewAdopts from './modalInterviewAdopts.js';
 import ModalInPond from './../commons/modalInPond.js';
@@ -29,6 +30,11 @@ var config = require('../../test/config.json');
 var TeacherInterview = React.createClass({
     getInitialState : function () {
         return {
+            pageSize : 10,
+            totalPages : 1,
+            curPage : 1,
+            curURL : '',
+            curRow : 0,
             tableStyle: {
                 tableSize : 10,
                 hasCheckBox : true,
@@ -100,32 +106,60 @@ var TeacherInterview = React.createClass({
                 </div>
                 <div className="main-btn">
                     <div className="btn-right">
-                        <button className="btn btn-default" onClick={this._arangePonds}>批量入池</button>
-                        <button className="btn btn-default" onClick={this._arangeAdopts}>批量通过</button>
+                        <button className="btn btn-default btn-sm" onClick={this._arangePonds}>批量入池</button>
+                        <button className="btn btn-default btn-sm" onClick={this._arangeAdopts}>批量通过</button>
                         <div className="btn-right-select">
                             <label>国家级别</label>
-                            <SelectComponent contentData={config.nationalLevel} />
-                            <button className="btn btn-default">确定</button>
+                            <SelectComponent size="small" contentData={config.nationalLevel} />
+                            <button className="btn btn-default btn-sm">确定</button>
                         </div>
                         <div className="btn-right-select">
                             <label>零食</label>
-                            <SelectComponent contentData={config.snacks} />
-                            <button className="btn btn-default">确定</button>
+                            <SelectComponent size="small" contentData={config.snacks} />
+                            <button className="btn btn-default btn-sm">确定</button>
                         </div>
                         <div className="btn-right-select">
                             <label>口语水平</label>
-                            <SelectComponent contentData={config.nativeLevel} />
-                            <button className="btn btn-default">确定</button>
+                            <SelectComponent size="small" contentData={config.nativeLevel} />
+                            <button className="btn btn-default btn-sm">确定</button>
                         </div>
                         <div className="btn-right-select">
                             <label>时区</label>
-                            <SelectComponent contentData={config.timeZone} />
-                            <button className="btn btn-default">确定</button>
+                            <SelectComponent size="small" contentData={config.timeZone} />
+                            <button className="btn btn-default btn-sm">确定</button>
                         </div>
                     </div>
                 </div>
+                <PageList curPage={this.state.curPage} totalPages={this.state.totalPages} onPre={this._prePage} onFirst={this._firstPage} onLast={this._lastPage} onNext={this._nextPage}/>
             </div>
         );
+    },
+    _getPage : function (page) {
+        let myurl = this.state.curURL.replace(/page=0/,`page=${page-1}`);
+        Get({
+            url : myurl
+        }).then(({data})=>{
+            if(data == null )
+                return;
+            this.setState({
+                curPage : page,
+                list : data.content
+            });
+        }).catch((err)=>{
+            console.log(err);
+        });
+    },
+    _prePage : function () {
+
+    },
+    _firstPage : function () {
+
+    },
+    _lastPage : function () {
+
+    },
+    _nextPage : function () {
+
     },
     _arangeAdopt : function(){
         $(".modalInterviewAdopt .modal").modal();

@@ -29,24 +29,25 @@ var Nav = React.createClass({
     render : function () {
         let menu = this.state.content;
         let curPath = this.props.curPath;
+        console.log(curPath);
         menu = menu.map((v,i) => {
+            let liClassName = (curPath == v.path)? "active":"";
             let linkClassName = (curPath==v.path||curPath=='')?'item active':'item';
             if(v.subMenus&&v.subMenus.length!=0){
                 //let subMenuList = <subMenus curPath={v.path} childrenArr={v.subMenus}/>;
                 return (
-                    <li key={i}>
+                    <li key={i} className={liClassName}>
                         <div className="link">
                             <i className={'glyphicon '+v.menuIcon}></i>
                             &nbsp;{v.menuName}
                             <i className="glyphicon glyphicon-triangle-right"></i>
                         </div>
-
                         <SubNav curPath={v.path} childrenArr={v.subMenus}/>
                     </li>
                 );
             }else{
                 return (
-                    <li key={i}>
+                    <li key={i} className={liClassName}>
                         <div className="link">
                             <Link className={linkClassName} to={'/'+v.path} >
                                 <i className={'glyphicon '+v.menuIcon}></i>

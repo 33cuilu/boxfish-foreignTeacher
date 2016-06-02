@@ -17,18 +17,9 @@ import '../less/modalAdopt.less';
 
 var App = React.createClass({
 
-    getInitialState : function(){
-        return {
-            bigMenu : true
-        };
-    },
-
     render : function () {
         let Children = this.props.children;
         let curPath = this.props.location.pathname.slice(1);
-        let mainClassName = "main";
-        mainClassName += (this.state.bigMenu)?'':' leftmove';
-
         return (
             <div>
                 <div id="left">
@@ -38,7 +29,7 @@ var App = React.createClass({
                     </div>
                     <Nav curPath={curPath}/>
                 </div>
-                <div className={mainClassName} id="right">
+                <div className="main" id="right">
                     <div className="right-top" style={{marginBottom : 0}}>
                         <div className="item">
                             <button className="btn" onClick={this._changeMenu}>
