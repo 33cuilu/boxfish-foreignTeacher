@@ -13,10 +13,12 @@ var SelectComponent = React.createClass({
         };
     },
     render : function(){
-        let arr = this.props.contentData.arr;
+        let arr = this.props.contentData.arr ;
+        let id = this.props.contentData.id ;
+
         arr = arr.map( (v,i) => {
             return (
-                <option key={i} value="">{v}</option>
+                <option key={i} value={id[i]} >{v}</option>
             );
         });
         let selectClassName = (this.props.size == "small")? "form-control select-sm" : "form-control";
@@ -36,7 +38,20 @@ var SelectComponent = React.createClass({
         if(this.props.onChange){
             this.props.onChange(this.refs.select.selectedIndex);
         }
-
+    },
+    set : function(key){
+        for(let i = 0; i < this.refs.select.length; i++){
+            if(this.refs.select.option[i].value == key){
+                this.refs.select.option[i].selected = true;
+            }
+        }
+    },
+    get : function () {
+        return {
+            index : this.stqte.index,
+            value : this.refs.select.option[this.state.index].value,
+            name : this.refs.select.option[this.state.index].text
+        }
     }
 });
 

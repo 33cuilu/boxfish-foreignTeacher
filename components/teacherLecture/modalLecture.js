@@ -9,7 +9,7 @@ import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
 
 //引入组件
 import DataPicker from './../commons/dataPicker.js';
-import TimePicker from './../commons/timePicker.js';
+import SingleDataPicker from './../commons/singleDataPicker.js';
 import SelectComponent from './../commons/selectComponent.js';
 import BasicInfo from './../commons/basicInfo.js';
 import AbilityInfo from './../commons/abilityInfo';
@@ -21,6 +21,7 @@ var config = require("../../test/config.json");
 
 var ModalLecture = React.createClass({
     render : function(){
+        let {interviewTime,gender} = this.props.info;
         return(
             <div className="modalLecture">
                 <div className="modal fade">
@@ -30,32 +31,36 @@ var ModalLecture = React.createClass({
                                 <div className="modal-body-header">
                                     <div className="field">
                                         <label>面试时间:</label>
-                                        <DataPicker />
+                                        <DataPicker ref="interviewTime" value={interviewTime}/>
                                     </div>
                                     <div className="field">
                                         <label>性别:</label>
-                                        <input type="text" className="form-control" />
+                                        <SelectComponent ref="gender" value={gender} contentData={config.sex} />
                                     </div>
                                     <div className="field">
                                         <label>试讲账号:</label>
-                                        <input type="text" className="form-control" />
+                                        <SelectComponent ref="teacherAccounts" contentData={this.props.teacher}/>
                                     </div>
                                     <div className="field">
                                         <label>学生账号:</label>
-                                        <input type="text" className="form-control" />
+                                        <SelectComponent ref="studentAccounts" contentData={this.props.student}/>
                                     </div>
                                     <div className="field">
                                         <label>demo 课:</label>
-                                        <SelectComponent contentData={config.timeSlice} />
+                                        <SelectComponent ref="course" contentData={this.props.course}/>
+                                    </div>
+                                    <div className="field">
+                                        <label>试讲日期:</label>
+                                        <SingleDataPicker ref="date" />
                                     </div>
                                     <div className="field">
                                         <label>试讲时间:</label>
-                                        <TimePicker ref="tryTime"/>
+                                        <SelectComponent ref="timeSlot" contentData={this.props.time}/>
                                     </div>
-                                    <BasicInfo ref="basicInfo" />
+                                    <BasicInfo {...this.props.info} ref="basicInfo" />
                                     <div className="field">
                                         <label>综合评分:</label>
-                                        <input type="text" className="form-control" />
+                                        <input type="text" ref="score" className="form-control" />
                                     </div>
                                     <AbilityInfo ref="abilityInfo"/>
                                 </div>
@@ -68,8 +73,42 @@ var ModalLecture = React.createClass({
                     </div>
                 </div>
             </div>
-
         );
+    },
+    /*_initial : function () {
+        let {a,b,c,d} = this.props.info;
+        let info = this.props.info,
+            interviewTime = info.interviewTime,
+            gender = info.gender,
+            tryID = info.triallectureTeacher,
+            studentID = info.triallectureStudent,
+            demoCourse = info.demoCourse,
+            triallectureDate = info.triallectureStartTime,
+            triallectureTime = `${info.triallectureStartTime} - ${info.triallectureEndTime}`,
+            basicInfo = {
+                firstName : info.firstName,
+                tel : info.cellphoneNumber,
+                lastName : info.lastName,
+                email : info.email,
+                occupation : info.occupation,
+                skype : info.skype,
+                timezone : info.timezone,
+                city : info.city,
+                degree : info.degree,
+                school : info.school,
+                schoolCountry : info.schoolCountry,
+                specialty : info.specialty
+            },
+            score = info.score,
+            abilityInfo = {
+                countryLevel : info.nationalLevel,
+                snack : info.snack,
+                spokenLevel : info.spokenLevel,
+                teachingExperience : info. teachingExperience
+            };
+    },*/
+    _submit : function () {
+        
     }
 });
 

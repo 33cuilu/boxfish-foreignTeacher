@@ -12,7 +12,6 @@ var Table = React.createClass({
             thList = this.props.contentData.thList, //表格的表头
             tbodyList = this.props.contentData.tbodyList,
             tableData = this.props.list.concat([]);  //表格中应该显示的具体数据对象
-
         //如果list内容不足tableSize行,则用空行将表格填满
         let nullNum = tableStyle.tableSize - tableData.length;
         for (let i = 0; i < nullNum; i++) {

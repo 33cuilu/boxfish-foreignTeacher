@@ -58,7 +58,13 @@ var TeacherManagement = React.createClass({
                 "snack" : v.snack,
                 "occupation" : v.occupation,
                 "state" : "",
-                "score" : ""
+                "score" : "",
+                "operate" : (
+                    <div>
+                        <button className="btn btn-default btn-xs" onClick={(e)=>{this._arrangeAccount(i)}}>分配账号</button>
+                        <a onClick={(e)=>{this._arrangeMore(i)}}>详情</a>
+                    </div>
+                )
             };
         });
         return(
@@ -79,9 +85,11 @@ var TeacherManagement = React.createClass({
                             <div className="field">
                                 <input type="text" className="form-control" placeholder="账号" />
                             </div>
+                            <div className="field">
+                                <input type="text" className="form-control" placeholder="城市" ref="city"/>
+                            </div>
                             <SelectComponent ref="gender" contentData={config.sex} />
                             <SelectComponent ref="snack" contentData={config.snacks} />
-                            <SelectComponent ref="city" contentData={config.city} />
                             <SelectComponent ref="statu" contentData={config.accountStatus} />
                         </div>
                     </div>
@@ -92,8 +100,8 @@ var TeacherManagement = React.createClass({
 
                 <div className="main-btn">
                     <div className="btn-right">
-                        <button className="btn btn-default btn-sm" onClick={this._arangeFrozen}>冻结</button>
-                        <button className="btn btn-default btn-sm" onClick={this._arangeActivation}>激活</button>
+                        <button className="btn btn-default btn-sm" onClick={this._arrangeFrozen}>冻结</button>
+                        <button className="btn btn-default btn-sm" onClick={this._arrangeActivation}>激活</button>
                     </div>
                 </div>
                 <div className="tableContainer" ref="tableContainer">
@@ -112,7 +120,7 @@ var TeacherManagement = React.createClass({
         let myurl = this.state.curURL.replace(/page=0/,`page=${page-1}`);
         Get({
             url : myurl
-        }).then(({data})=>{
+        }).then(({code,message,data})=>{
             if(data == null )
                 return;
             this.setState({
@@ -124,22 +132,41 @@ var TeacherManagement = React.createClass({
         });
     },
     _prePage : function () {
-
+        if(this.state.curPage == 1)
+            return;
+        this._getPage(this.state.curPage - 1);
     },
     _firstPage : function () {
-
+        if(this.state.curPage == 1)
+            return;
+        this._getPage(1);
     },
     _lastPage : function () {
-
+        if(this.state.curPage == this.state.totalPages)
+            return;
+        this._getPage(this.state.totalPages);
     },
     _nextPage : function () {
-
+        if(this.state.curPage == this.state.totalPages)
+            return;
+        this._getPage(this.state.curPage + 1);
     },
-    _arangeFrozen : function(){
+    _arrangeFrozen : function(){
         $(".modalManagementFrozen .modal").modal();
     },
-    _arangeActivation : function(){
+    _arrangeActivation : function(){
         $(".modalManagementActivation .modal").modal();
+    },
+    _arrangeAccount : function (i) {
+        this.setState({
+            curRow : i
+        });
+    },
+    _arrangeMore : function (i) {
+        this.setState({
+            curRow : i
+        });
+        $(".teacherManagement .modal").modal();
     }
 });
 

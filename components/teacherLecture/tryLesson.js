@@ -15,52 +15,9 @@ import SelectComponent from './../commons/selectComponent.js';
 import "../../less/tryLesson.less";
 
 var config = require("../../test/config.json");
-var teacherAccountsUrl = 'http://101.201.237.252:8099/web/common/trialTeacherList';
-var studentAccountsUrl = 'http://101.201.237.252:8099/web/common/trialStudentList';
-var timeSlotUrl = 'http://101.201.237.252:8099/timeslot/list/0';
-var demoCourseUrl = 'http://101.201.237.252:8099/web/common/demoCourses';
-var submitUrl = 'http://101.201.237.252:8099/web/common/chooseTriallecture';
+var submitUrl = `http://${config.ip}/web/common/chooseTriallecture`;
 
 var TryLesson = React.createClass({
-    getInitialState : function () {
-        return {
-            teacherUrl : teacherAccountsUrl,
-            teacherAccounts :{
-                arr : [], //教师名字
-                id : []  //教师ID
-            },
-            studentUrl : studentAccountsUrl,
-            studentAccounts : {
-                arr: [], //学生名字
-                id: []  //学生ID
-            },
-            timeUrl : timeSlotUrl,
-            timeSlot : {
-                arr: [], //具体时间范围
-                id: []  //时间区间的ID
-            },
-            courseUrl : demoCourseUrl,
-            demoCourse : {
-                index : 0,
-                arr: [],  //课程名称
-                id: [],  //课程ID
-                type: []  //课程类型
-            }
-        };
-    },
-    componentDidMount : function () { //也可以写在update里面
-        //获取试讲账号列表
-        this._getTeacherAccounts(this.state.teacherUrl);
-
-        //获取学生账号列表
-        this._getStudentAccounts(this.state.studentUrl);
-
-        //获取试讲时间列表
-        this._getTimeSlot(this.state.timeUrl);
-
-        //获取demo课列表
-        this._getCourse(this.state.courseUrl);
-    },
     render : function(){
         return(
             <div className="tryLesson">
@@ -70,21 +27,21 @@ var TryLesson = React.createClass({
                             <div className="modal-body">
                                 <div className="element">
                                     <label>试讲账号:</label>
-                                    <SelectComponent ref="teacherAccounts" contentData={this.state.teacherAccounts}/>
+                                    <SelectComponent ref="teacherAccounts" contentData={this.props.teacher}/>
                                 </div>
                                 <div className="element">
                                     <label>学生账号:</label>
-                                    <SelectComponent ref="studentAccounts" contentData={this.state.studentAccounts}/>
+                                    <SelectComponent ref="studentAccounts" contentData={this.props.student}/>
                                 </div>
                                 <div className="element">
                                     <label>demo 课:</label>
-                                    <SelectComponent ref="course" contentData={this.state.demoCourse}/>
+                                    <SelectComponent ref="course" contentData={this.props.course}/>
                                 </div>
                                 <div className="element" style={{height:"65px"}}>
                                     <label>试讲时间:</label>
                                     <div className="try-time">
                                         <SingleDataPicker ref="date" style={{width:"170px"}} />
-                                        <SelectComponent ref="timeSlot" contentData={this.state.timeSlot}/>
+                                        <SelectComponent ref="timeSlot" contentData={this.props.time}/>
                                     </div>
                                 </div>
                             </div>
@@ -97,108 +54,26 @@ var TryLesson = React.createClass({
             </div>
         );
     },
-    _getTeacherAccounts : function (myUrl) {
-        Get({
-            url : myUrl
-        }).then(({data}) =>{
-            let newTeacherArr = [],
-                newTeacherId = [];
-            for(let i=0 ; i<data.length; i++){
-                newTeacherArr[i] = data[i].nickName;
-                newTeacherId[i] = data[i].teacherId;
-            }
-            this.setState({
-                teacherAccounts: {
-                    arr : newTeacherArr,
-                    id : newTeacherId
-                }
-            });
-        }).catch((err) => {
-            console.log(err);
-        });
-    },
-    _getStudentAccounts : function (myUrl) {
-        Get({
-            url : myUrl
-        }).then(({data}) =>{
-            let newStudentArr = [],
-                newStudentId = [];
-            for(let i=0 ; i<data.length; i++){
-                newStudentArr[i] = data[i].nickName;
-                newStudentId[i] = data[i].studentId;
-            }
-            this.setState({
-                studentAccounts: {
-                    arr : newStudentArr,
-                    id : newStudentId
-                }
-            });
-        }).catch((err) => {
-            console.log(err);
-        });
-    },
-    _getCourse : function (myUrl) {
-        Get({
-            url : myUrl
-        }).then(({data}) =>{
-            let newCourseArr = [],
-                newCourseId = [],
-                newCourseType = [];
-            for(let i=0 ; i<data.length; i++){
-                newCourseArr[i] = data[i].name;
-                newCourseId[i] = data[i].courseId;
-                newCourseType[i] = data[i].courseType;
-            }
-            this.setState({
-                demoCourse: {
-                    arr: newCourseArr,
-                    id : newCourseId,
-                    type : newCourseType
-                }
-            });
-        }).catch((err) => {
-            console.log(err);
-        });
-    },
-    _getTimeSlot : function (myUrl) {
-        Get({
-            url : myUrl
-        }).then(({data}) =>{
-            let newTimeArr = [],
-                newTimeId = [];
-            for(let i=0 ; i<data.length; i++){
-                newTimeArr[i] = `${data[i].startTime} - ${data[i].endTime}`;
-                newTimeId[i] = data[i].slotId;
-            }
-            this.setState({
-                timeSlot: {
-                    arr: newTimeArr,
-                    id : newTimeId
-                }
-            });
-        }).catch((err) => {
-            console.log(err);
-        });
-    },
     _submit : function () {
-        let teacherOralEnId = this.props.row.teacherId,
-            teacherId = this.state.teacherAccounts.id[this.refs.teacherAccounts.state.index],
-            studentId = this.state.studentAccounts.id[this.refs.studentAccounts.state.index],
-            courseId = this.state.demoCourse.id[this.refs.course.state.index],
-            courseName = this.state.demoCourse.arr[this.refs.course.state.index],
+        console.log(this.props.course);
+        let email = this.props.row.email,
+            teacherId = this.props.teacher.id[this.refs.teacherAccounts.state.index],
+            studentId = this.props.student.id[this.refs.studentAccounts.state.index],
+            courseId = this.props.course.id[this.refs.course.state.index],
+            courseName = this.props.course.arr[this.refs.course.state.index],
             date = this.refs.date.state.value,
-            hour = this.state.timeSlot.arr[this.refs.timeSlot.state.index],
+            hour = this.props.time.arr[this.refs.timeSlot.state.index],
             startHour = hour.substr(0,8),
             endHour = hour.substr(-8,8),
             startTime = `${date} ${startHour}`,
             endTime = `${date} ${endHour}`,
-            courseType = this.state.demoCourse.type[this.refs.course.state.index],
-            timeSlotId = this.state.timeSlot.id[this.refs.timeSlot.state.index];
+            courseType = this.props.course.type[this.refs.course.state.index],
+            timeSlotId = this.props.time.id[this.refs.timeSlot.state.index];
 
         Post({
             url : submitUrl,
             data : {
-                "teacherOralEnId" : teacherOralEnId,
+                "email" : email,
                 "teacherId": teacherId,
                 "studentId": studentId,
                 "courseId": courseId,
@@ -208,9 +83,15 @@ var TryLesson = React.createClass({
                 "courseType": courseType,
                 "timeSlotId": timeSlotId
             }
-        }).then(({data}) => {
-            //console.log(data);
-        }).catch((err) => {
+        }).then(
+            ({data}) => {
+            //显示更改后的时间
+                this.props.callback(`${startTime}`, `${endTime}`);
+            },
+            ()=>{
+                alert("安排试讲失败,可能因为网络原因,也可能是安排出现冲突!");
+            }
+        ).catch((err) => {
             console.log(err);
         });
         /*Post({
@@ -229,10 +110,6 @@ var TryLesson = React.createClass({
         }).then(({code,data}) => {
             console.log(data);
         }).catch();*/
-        //显示更改后的时间
-        this.props.callback(`${startTime}`, `${endTime}`);
-
-
     }
 });
 

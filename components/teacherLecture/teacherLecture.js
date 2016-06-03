@@ -25,7 +25,12 @@ import "../../less/teacherLecture.less";
 
 var configData = require('../../test/config.json');
 
-var urlApi = 'http://192.168.0.162:8099/web/teacherOralEn/teacherStepList?';
+var teacherAccountsUrl = `http://${configData.ip}/web/common/trialTeacherList`;
+var studentAccountsUrl = `http://${configData.ip}/web/common/trialStudentList`;
+var timeSlotUrl = `http://${configData.ip}/timeslot/list/0`;
+var demoCourseUrl = `http://${configData.ip}/web/common/demoCourses`;
+var searchUrl = `http://${configData.ip}/web/teacherOralEn/teacherStepList?`;
+var infoUrl = `http://${configData.ip}/web/teacherOralEn/teacherDetail?`;
 
 
 var TeacherLecture = React.createClass({
@@ -36,9 +41,27 @@ var TeacherLecture = React.createClass({
             curPage : 1,
             curURL : '',
             curRow : 0,
+            curInfo : {},
+            teacherAccounts :{
+                arr : [], //教师名字
+                id : []  //教师ID
+            },
+            studentAccounts : {
+                arr: [], //学生名字
+                id: []  //学生ID
+            },
+            timeSlot : {
+                arr: [], //具体时间范围
+                id: []  //时间区间的ID
+            },
+            demoCourse : {
+                arr: [],  //课程名称
+                id: [],  //课程ID
+                type: []  //课程类型
+            },
             reservationStatus : {
                 arr : ["预约状态","已预约试讲","未预约试讲"], //预约状态
-                id : ["","",""]  //国家ID
+                id : ["-1","1","0"]  //国家ID
             },
             tableStyle : {
                 tableSize : 10,
@@ -48,6 +71,19 @@ var TeacherLecture = React.createClass({
             list : [],
             selected : []
         };
+    },
+    componentDidMount : function () {
+        //获取试讲账号列表
+        this._getTeacherAccounts(teacherAccountsUrl);
+
+        //获取学生账号列表
+        this._getStudentAccounts(studentAccountsUrl);
+
+        //获取试讲时间列表
+        this._getTimeSlot(timeSlotUrl);
+
+        //获取demo课列表
+        this._getCourse(demoCourseUrl);
     },
     render : function(){
         let rowContent = this.state.list[this.state.curRow];
@@ -71,16 +107,17 @@ var TeacherLecture = React.createClass({
                         <div>
                             <button className="btn btn-default btn-xs" onClick={this._arangeAdopt}>通过</button>
                             <button className="btn btn-default btn-xs" onClick={this._arangeInPond}>入池</button>
-                            <a onClick={this._arangeMore}>详情</a>
+                            <a onClick={(e)=>{this._arangeMore(i)}}>详情</a>
                         </div>
                     )
                 };
             });
-
         return(
             <div className="TeacherLecture">
-                <ModalLecture />
-                <TryLesson row={rowContent} callback={this.updateTime}/>
+                <ModalLecture info={this.state.curInfo} teacher={this.state.teacherAccounts} student={this.state.studentAccounts}
+                              time={this.state.timeSlot} course={this.state.demoCourse} callback={this.updateList}/>
+                <TryLesson row={rowContent} teacher={this.state.teacherAccounts} student={this.state.studentAccounts}
+                           time={this.state.timeSlot} course={this.state.demoCourse} callback={this.updateTime}/>
                 <ModalAdopt />
                 <ModalAdopts />
                 <ModalInPond />
@@ -119,7 +156,90 @@ var TeacherLecture = React.createClass({
         );
     },
 
-    _changeForm : function(event) {
+    _getTeacherAccounts : function (myUrl) {
+        Get({
+            url : myUrl
+        }).then(({data}) =>{
+            let newTeacherArr = [],
+                newTeacherId = [];
+            for(let i=0 ; i<data.length; i++){
+                newTeacherArr.push(data[i].nickName);
+                newTeacherId.push(data[i].teacherId);
+            }
+            this.setState({
+                teacherAccounts: {
+                    arr : newTeacherArr,
+                    id : newTeacherId
+                }
+            });
+        }).catch((err) => {
+            console.log(err);
+        });
+    },
+    _getStudentAccounts : function (myUrl) {
+        Get({
+            url : myUrl
+        }).then(({data}) =>{
+            let newStudentArr = [],
+                newStudentId = [];
+            for(let i=0 ; i<data.length; i++){
+                newStudentArr.push(data[i].nickName);
+                newStudentId.push(data[i].studentId);
+            }
+            this.setState({
+                studentAccounts: {
+                    arr : newStudentArr,
+                    id : newStudentId
+                }
+            });
+        }).catch((err) => {
+            console.log(err);
+        });
+    },
+    _getCourse : function (myUrl) {
+        Get({
+            url : myUrl
+        }).then(({data}) =>{
+            let newCourseArr = [],
+                newCourseId = [],
+                newCourseType = [];
+            for(let i=0 ; i<data.length; i++){
+                newCourseArr.push(data[i].name);
+                newCourseId.push(data[i].courseId);
+                newCourseType.push(data[i].courseType);
+            }
+            this.setState({
+                demoCourse: {
+                    arr: newCourseArr,
+                    id : newCourseId,
+                    type : newCourseType
+                }
+            });
+        }).catch((err) => {
+            console.log(err);
+        });
+    },
+    _getTimeSlot : function (myUrl) {
+        Get({
+            url : myUrl
+        }).then(({data}) =>{
+            let newTimeArr = [],
+                newTimeId = [];
+            for(let i=0 ; i<data.length; i++){
+                newTimeArr.push(`${data[i].startTime} - ${data[i].endTime}`);
+                newTimeId.push(data[i].slotId);
+            }
+            this.setState({
+                timeSlot: {
+                    arr: newTimeArr,
+                    id : newTimeId
+                }
+            });
+        }).catch((err) => {
+            console.log(err);
+        });
+    },
+    _changeForm : function() {
         $("#forms").toggleClass("forms-height");
     },
     select : function (e,index) {
@@ -135,6 +255,18 @@ var TeacherLecture = React.createClass({
             select : selectList
         });
     },
+    updateList : function () {
+    },
+    updateTime : function (start,end) {
+        let index = this.state.curRow;
+        let line = this.state.list[index];
+        line.triallectureStartTime = start;
+        line.triallectureEndTime = end.substr(-8,8);
+        let newList = [].concat(this.state.list.slice(0,index), line, this.state.list.slice(index + 1));
+        this.setState({
+            list : newList
+        });
+    },
     _search : function () {
 
          let firstName = this.refs.contentInput.state.firstName,
@@ -145,8 +277,8 @@ var TeacherLecture = React.createClass({
             email = this.refs.contentInput.state.email,
             interviewTime = this.refs.interviewTime.state.value.trim(),
             demoTime = this.refs.tryLessonTime.state.value.trim(),
-            statu = this.state.reservationStatus.arr[this.refs.reservationStatus.state.index],
-            myurl = `${urlApi}page=0&size=${this.state.pageSize}`;
+            statu = this.state.reservationStatus.id[this.refs.reservationStatus.state.index],
+            myurl = `${searchUrl}page=0&size=${this.state.pageSize}`;
 
         myurl += (firstName.length >0) ? `&firstName=${firstName}` : '';
         myurl += (lastName.length >0) ? `&lastName=${lastName}` : '';
@@ -156,10 +288,10 @@ var TeacherLecture = React.createClass({
         myurl += (email.length >0) ? `&email=${email}`: '';
         myurl += (interviewTime.length >0) ? `&interviewTime=${interviewTime}`: '';
         myurl += (demoTime.length >0) ? `&demoTime=${demoTime}`: '';
-        myurl += (statu.length >0) ? `&reservationStatu=${statu}`: '';
+        myurl += (statu.length != -1) ? `&reservationStatu=${statu}`: '';
 
         console.log(myurl);
-        let testurl = `${urlApi}page=0&size=10`;
+        let testurl = `${searchUrl}page=0&size=10`;
         Get({
             url : testurl
         }).then(({code,message,data})=> {
@@ -187,17 +319,6 @@ var TeacherLecture = React.createClass({
             console.log(err);
         });
 
-    },
-    updateTime : function (start,end) {
-        let index = this.state.curRow;
-        let line = this.state.list[index];
-        line.triallectureStartTime = start;
-        line.triallectureEndTime = end.substr(-8,8);
-        let newList = [].concat(this.state.list.slice(0,index), line, this.state.list.slice(index + 1));
-        this.setState({
-            list : newList
-        });
-        console.log(this.state.list);
     },
     _getPage : function (page) {
         let myurl = this.state.curURL.replace(/page=0/,`page=${page-1}`);
@@ -246,8 +367,30 @@ var TeacherLecture = React.createClass({
     _arangeInPond : function(){
         $(".modalInPond .modal").modal();
     },
-    _arangeMore : function(){
-        $(".modalLecture .modal").modal();
+    _arangeMore : function(i){
+        this.setState({
+            curRow : i
+        });
+        let curEmail = this.state.list[i].email;
+        Get({
+            url : `${infoUrl}email=${curEmail}`
+        }).then(
+            ({data})=>{
+                if(data){
+                    this.setState({
+                        curInfo : data
+                    });
+                    $(".modalLecture .modal").modal();
+                }else{
+                    alert("该用户的信息为空!");
+            }
+        },
+            ()=>{
+                alert("获取该用户的信息失败!")
+            }
+        ).catch((err)=>{
+            console.log(err);
+        });
     },
     _arangeInPonds : function(){
         $(".modalInPonds .modal").modal();

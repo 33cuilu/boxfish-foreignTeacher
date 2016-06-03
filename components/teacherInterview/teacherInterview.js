@@ -138,7 +138,7 @@ var TeacherInterview = React.createClass({
         let myurl = this.state.curURL.replace(/page=0/,`page=${page-1}`);
         Get({
             url : myurl
-        }).then(({data})=>{
+        }).then(({code,message,data})=>{
             if(data == null )
                 return;
             this.setState({
@@ -150,16 +150,24 @@ var TeacherInterview = React.createClass({
         });
     },
     _prePage : function () {
-
+        if(this.state.curPage == 1)
+            return;
+        this._getPage(this.state.curPage - 1);
     },
     _firstPage : function () {
-
+        if(this.state.curPage == 1)
+            return;
+        this._getPage(1);
     },
     _lastPage : function () {
-
+        if(this.state.curPage == this.state.totalPages)
+            return;
+        this._getPage(this.state.totalPages);
     },
     _nextPage : function () {
-
+        if(this.state.curPage == this.state.totalPages)
+            return;
+        this._getPage(this.state.curPage + 1);
     },
     _arangeAdopt : function(){
         $(".modalInterviewAdopt .modal").modal();

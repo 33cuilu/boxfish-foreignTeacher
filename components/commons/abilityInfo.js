@@ -34,6 +34,12 @@ var AbilityInfo = React.createClass({
                 </div>
             </div>
         );
+    },
+    set : function (abilityInfo) {
+        
+    },
+    get : function () {
+        return {};
     }
 });
 

@@ -33,6 +33,16 @@ var TimePicker = React.createClass({
                 </div>
             </div>
         );
+    },
+    set : function (date) {
+        this.refs.dateInput.value = date;
+    },
+    get : function () {
+        return {
+            start : this.state.start,
+            end : this.state.end,
+            value: this.state.value
+        }
     }
 });
 

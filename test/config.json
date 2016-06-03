@@ -1,38 +1,39 @@
 {
+  "ip" : "101.201.66.32:8099",
   "sex" :{
     "name":"性别",
     "arr": ["性别","男","女"],
-    "value": []
+    "id": ["-1","1","0"]
   },
   "notPass" :{
     "name":"不通过类型",
     "otherName":"notPass",
     "arr": ["不通过类型","审核不通过","了解app不通过","培训课程不通过"],
-    "value": []
+    "id": ["-1","0","1","2"]
   },
   "nativeLevel" :{
     "name":"口语水平",
     "otherName":"nativeLevel",
     "arr": ["口语水平","母语水平","稍差","其他","未分配"],
-    "value": ["-1","1","2","3"]
+    "id": ["-1","1","2","3"]
   },
   "snacks" :{
     "name":"零食",
     "otherName":"snacks",
     "arr": ["零食","棉花糖","巧克力","其他","未指定"],
-    "value": ["-1","1","2","3",""]
+    "id": ["-1","1","2","3",""]
   },
   "experience" :{
     "name":"教学经验",
     "otherName":"experience",
     "arr": ["教学经验","有","无"],
-    "value": ["-1","1","0"]
+    "id": ["-1","1","0"]
   },
   "experienceDetail" :{
     "name":"教学经验",
     "otherName":"experienceDetail",
     "arr":["无","1年以下","1~3年","4~8年"],
-    "value":["0","1","3","8"]
+    "id":["0","1","3","8"]
   },
   "country" :{
     "name":"国家",
@@ -72,61 +73,61 @@
       "Wallis and Futuna", "Western Sahara", "Yemen", "Zambia", "Zimbabwe", "Serbia", "Asia / Pacific Region",
       "Montenegro", "Aland Islands", "Bonaire, Sint Eustatius and Saba", "Curacao", "Guernsey", "Isle of Man", "Jersey",
       "Kosovo", "Saint Barthelemy", "Saint Martin", "Sint Maarten", "South Sudan"],
-    "value": []
+    "id": []
   },
   "nationalLevel" :{
     "name":"国家级别",
     "otherName":"nationalLevel",
     "arr": ["国家级别","美国、加拿大","英国、澳大利亚、南非","非英语欧美国家","其他"],
-    "value": ["0","1","2","3","4"]
+    "id": ["0","1","2","3","4"]
   },
   "city" :{
     "name":"城市",
     "otherName":"city",
     "arr": ["城市","Boston","Landon","Edinburgh"],
-    "value": []
+    "id": []
   },
   "timeZone" :{
   "name":"时区",
   "otherName":"timeZone",
   "arr": ["时区","11","10","9","8","7","6","5","4","3","2","1","0","-11","-10","-9","-8","-7","-6","-5","-4","-3","-2","-1"],
-  "value": []
+  "id": []
   },
   "reservationState" :{
     "name":"预约状态",
     "otherName":"reservationState",
     "arr": ["预约状态","已预约试讲","未预约试讲"],
-    "value": ["0","1","2"]
+    "id": ["0","1","2"]
   },
   "accountStatus" :{
     "name":"账号状态",
     "otherName":"accountStatus",
     "arr": ["账号状态","激活","冻结"],
-    "value": []
+    "id": []
   },
   "demoTeacherId" :{
     "name": "试讲账号",
     "otherName": "demoTeacherID",
     "arr": [],
-    "value": []
+    "id": []
   },
   "demoStudentId" :{
     "name": "学生账号",
     "otherName": "demoStudentId",
     "arr": [],
-    "value": []
+    "id": []
   },
   "timeSlice" :{
     "name":"demo课时间",
     "otherName":"timeSlice",
     "arr": ["10:00-11:00","11:00-12:00","14:00-15:00","15:00-16:00"],
-    "value": []
+    "id": []
   },
   "course" :{
     "name":"demo课",
     "otherName":"course",
     "arr": ["demo课1","demo课2","demo课3"],
-    "value": []
+    "id": []
   },
   "managementTable" :{
     "thList" : ["","注册日期","First Name","Last Name","账号","性别","国家","时区","手机号","邮箱","零食","城市","账号状态","综合评分"],

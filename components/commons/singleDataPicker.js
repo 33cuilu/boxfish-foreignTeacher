@@ -7,7 +7,7 @@ import React from 'react';
 var SingleDataPicker = React.createClass({
     getInitialState : function () {
         return {
-            value : '2016-05-26'
+            value : '2016-05-29'
         };
     },
     componentDidMount : function () {
@@ -23,7 +23,7 @@ var SingleDataPicker = React.createClass({
             <div className="field" >
                 <div style={{position:'relative', width:'220px'}}>
                     <input type="text" className="form-control singleDatePicker" placeholder={this.props.name}
-                            ref="dateInput" style={{paddingLeft:'30px'}} />
+                            value={this.state.value} ref="dateInput" style={{paddingLeft:'30px'}} />
                     <i className="glyphicon glyphicon-calendar"  style={{position:'absolute',left:'10px',top:'8px'}}></i>
                 </div>
             </div>

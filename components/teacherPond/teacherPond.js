@@ -58,8 +58,8 @@ var TeacherPond = React.createClass({
                 "triallectureTime" : tryTime,
                 "operate" : (
                     <div>
-                        <button className="btn btn-default btn-xs" onClick={this._arangeAdopt}>捕捞</button>
-                        <a onClick={this._arangeMore}>详情</a>
+                        <button className="btn btn-default btn-xs" onClick={(e)=>{this._arangeAdopt(i)}}>捕捞</button>
+                        <a onClick={(e)=>{this._arangeMore(i)}}>详情</a>
                     </div>
                 )
             };
@@ -85,7 +85,7 @@ var TeacherPond = React.createClass({
                         </div>
                     </div>
                     <div className="search">
-                        <button className="btn btn-primary">筛选</button>
+                        <button className="btn btn-primary" onClick={this._search}>筛选</button>
                     </div>
                 </div>
                 <div className="tableContainer" ref="tableContainer">
@@ -95,8 +95,10 @@ var TeacherPond = React.createClass({
             </div>
         );
     },
-    _changeForm : function(event) {
-        $("#forms").toggleClass("forms-height");
+    _changeForm : function (event) {
+        $("#forms").toggleClass("forms-extern-more");
+    },
+    _search : function () {
     },
     _getPage : function (page) {
         let myurl = this.state.curURL.replace(/page=0/,`page=${page-1}`);
@@ -114,15 +116,28 @@ var TeacherPond = React.createClass({
         });
     },
     _prePage : function () {
-
+        if(this.state.curPage == 1)
+            return;
+        this._getPage(this.state.curPage - 1);
     },
     _firstPage : function () {
-
+        if(this.state.curPage == 1)
+            return;
+        this._getPage(1);
     },
     _lastPage : function () {
-
+        if(this.state.curPage == this.state.totalPages)
+            return;
+        this._getPage(this.state.totalPages);
     },
     _nextPage : function () {
+        if(this.state.curPage == this.state.totalPages)
+            return;
+        this._getPage(this.state.curPage + 1);
+    },
+    _arangeAdopt : function (i) {
+    },
+    _arangeMore : function (i) {
 
     }
 });

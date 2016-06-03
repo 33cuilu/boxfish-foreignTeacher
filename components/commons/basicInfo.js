@@ -17,7 +17,7 @@ var BasicInfo = React.createClass({
             <div className="basicInfo">
                 <div className="field">
                     <label>First Name:</label>
-                    <input type="text" className="form-control" />
+                    <input type="text" ref="firstName" className="form-control" />
                 </div>
                 <div className="field">
                     <label>手机号:</label>
@@ -65,6 +65,14 @@ var BasicInfo = React.createClass({
                 </div>
             </div>
         );
+    },
+    set : function (info) {
+        this.refs.firstName.value = info.firstName;
+    },
+    get : function () {
+        return {
+            
+        }
     }
 });
 
