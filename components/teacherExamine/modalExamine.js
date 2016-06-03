@@ -10,9 +10,7 @@ import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
 //引入组件
 import DataPicker from './../commons/dataPicker.js';
 import SelectComponent from './../commons/selectComponent.js';
-import ModalComponent from './../commons/modalComponent.js';
-import ModalContentComponent from './../commons/modalContentComponent';
-import ModalInfoComponent from './../commons/modalInfoComponent.js';
+import BasicInfo from './../commons/basicInfo.js';
 
 //引入样式
 import '../../less/modalExamine.less';
@@ -36,7 +34,15 @@ var ModalExamine = React.createClass({
                                         <label>性别:</label>
                                         <input type="text" className="form-control" />
                                     </div>
-                                    <ModalComponent />
+                                    <BasicInfo ref="basicInfo"/>
+                                    <div className="field">
+                                        <label>在校时间:</label>
+                                        <DataPicker ref="schoolingTime"/>
+                                    </div>
+                                    <div className="field">
+                                        <label>教学经验:</label>
+                                        <SelectComponent ref="teachingExperience" contentData={config.experienceDetail} />
+                                    </div>
                                     <div className="field">
                                         <label>国家:</label>
                                         <SelectComponent contentData={config.country} />

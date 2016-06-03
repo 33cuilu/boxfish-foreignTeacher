@@ -9,10 +9,10 @@ import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
 
 //引入组件
 import DataPicker from './../commons/dataPicker.js';
+import TimePicker from './../commons/timePicker.js';
 import SelectComponent from './../commons/selectComponent.js';
-import ModalComponent from './../commons/modalComponent.js';
-import ModalContentComponent from './../commons/modalContentComponent';
-import ModalInfoComponent from './../commons/modalInfoComponent.js';
+import BasicInfo from './../commons/basicInfo.js';
+import AbilityInfo from './../commons/abilityInfo';
 
 //引入样式
 import '../../less/modalLecture.less';
@@ -36,17 +36,28 @@ var ModalLecture = React.createClass({
                                         <label>性别:</label>
                                         <input type="text" className="form-control" />
                                     </div>
-                                    <ModalComponent />
+                                    <div className="field">
+                                        <label>试讲账号:</label>
+                                        <input type="text" className="form-control" />
+                                    </div>
+                                    <div className="field">
+                                        <label>学生账号:</label>
+                                        <input type="text" className="form-control" />
+                                    </div>
+                                    <div className="field">
+                                        <label>demo 课:</label>
+                                        <SelectComponent contentData={config.timeSlice} />
+                                    </div>
+                                    <div className="field">
+                                        <label>试讲时间:</label>
+                                        <TimePicker ref="tryTime"/>
+                                    </div>
+                                    <BasicInfo ref="basicInfo" />
                                     <div className="field">
                                         <label>综合评分:</label>
                                         <input type="text" className="form-control" />
                                     </div>
-                                </div>
-                                <div className="modal-body-body">
-                                    <ModalContentComponent />
-                                </div>
-                                <div className="modal-body-footer">
-                                    <ModalInfoComponent />
+                                    <AbilityInfo ref="abilityInfo"/>
                                 </div>
                             </div>
                             <div className="modal-footer">

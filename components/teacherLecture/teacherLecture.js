@@ -25,7 +25,7 @@ import "../../less/teacherLecture.less";
 
 var configData = require('../../test/config.json');
 
-var urlApi = 'http://101.201.237.252:8099/web/teacherOralEn/teacherStepList?';
+var urlApi = 'http://192.168.0.162:8099/web/teacherOralEn/teacherStepList?';
 
 
 var TeacherLecture = React.createClass({
@@ -37,7 +37,6 @@ var TeacherLecture = React.createClass({
             curURL : '',
             curRow : 0,
             reservationStatus : {
-                //cur : "全部",
                 arr : ["预约状态","已预约试讲","未预约试讲"], //预约状态
                 id : ["","",""]  //国家ID
             },
@@ -46,11 +45,9 @@ var TeacherLecture = React.createClass({
                 hasCheckBox : true,
                 hasOperate : true
             },
-            list : []
+            list : [],
+            selected : []
         };
-    },
-    _changeForm : function(event) {
-        $("#forms").toggleClass("forms-height");
     },
     render : function(){
         let rowContent = this.state.list[this.state.curRow];
@@ -61,7 +58,7 @@ var TeacherLecture = React.createClass({
                         安排试讲
                     </button> ;
                 return {
-                    "checkbox" : <input type="checkbox" />,
+                    "checkbox" : <input type="checkbox" onChange={(e)=>{this.select(e,i)}}/>,
                     "teacherId" : v.teacherId,
                     "firstName" : v.firstName,
                     "lastName" : v.lastName,
@@ -108,7 +105,7 @@ var TeacherLecture = React.createClass({
                 </div>
 
                 <div className="tableContainer" ref="tableContainer">
-                    <Table contentData={configData.lectureTable} list={tableList} tableStyle={this.state.tableStyle} />
+                    <Table contentData={configData.lectureTable} list={tableList} tableStyle={this.state.tableStyle} selectAll={this.selectAll}/>
                 </div>
 
                 <div className="main-btn">
@@ -122,6 +119,22 @@ var TeacherLecture = React.createClass({
         );
     },
 
+    _changeForm : function(event) {
+        $("#forms").toggleClass("forms-height");
+    },
+    select : function (e,index) {
+        let selectList = this.state.select;
+        selectList[index] = e.target.checked;
+        this.setState({
+            select : selectList
+        });
+    },
+    selectAll : function (state) {
+        let selectList = this.state.select.map(() => {return (state);});
+        this.setState({
+            select : selectList
+        });
+    },
     _search : function () {
 
          let firstName = this.refs.contentInput.state.firstName,
@@ -158,11 +171,16 @@ var TeacherLecture = React.createClass({
                     list: []
                 });
             } else {
+                let selectList = new Array(data.content.length);
+                for(let i=0; i<selectList.length; i++){
+                    selectList[i] = false;
+                }
                 this.setState({
                     curURL: myurl,
                     curPage: 1,
                     totalPages: data.totalPages,
-                    list: data.content
+                    list: data.content,
+                    select : selectList
                 });
             }
         }).catch((err)=>{
@@ -197,16 +215,24 @@ var TeacherLecture = React.createClass({
         });
     },
     _prePage : function () {
-
+        if(this.state.curPage == 1)
+            return;
+        this._getPage(this.state.curPage - 1);
     },
     _firstPage : function () {
-
+        if(this.state.curPage == 1)
+            return;
+        this._getPage(1);
     },
     _lastPage : function () {
-
+        if(this.state.curPage == this.state.totalPages)
+            return;
+        this._getPage(this.state.totalPages);
     },
     _nextPage : function () {
-
+        if(this.state.curPage == this.state.totalPages)
+            return;
+        this._getPage(this.state.curPage + 1);
     },
     _arangeTryLesson : function(i){
         this.setState({

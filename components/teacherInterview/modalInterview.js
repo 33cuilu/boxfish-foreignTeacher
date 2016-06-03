@@ -10,14 +10,12 @@ import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
 //引入组件
 import DataPicker from './../commons/dataPicker.js';
 import SelectComponent from './../commons/selectComponent.js';
-import ModalComponent from './../commons/modalComponent.js';
-import ModalContentComponent from './../commons/modalContentComponent';
-import ModalInfoComponent from './../commons/modalInfoComponent.js';
+import BasicInfo from './../commons/basicInfo.js';
 
 //引入样式
 import '../../less/modalInterview.less';
 
-var config = require("../../test/config.json");
+var configData = require("../../test/config.json");
 
 var ModalInterview = React.createClass({
     render : function(){
@@ -30,13 +28,17 @@ var ModalInterview = React.createClass({
                                 <div className="modal-body-header">
                                     <div className="field">
                                         <label>审核日期:</label>
-                                        <DataPicker />
+                                        <DataPicker ref="checkDate"/>
                                     </div>
                                     <div className="field">
                                         <label>性别:</label>
-                                        <input type="text" className="form-control" />
+                                        <SelectComponent contentData={configData.sex} />
                                     </div>
-                                    <ModalComponent />
+                                    <BasicInfo ref="basicInfo"/>
+                                    <div className="field">
+                                        <label>教学经验:</label>
+                                        <SelectComponent ref="teachingExperience" contentData={configData.experienceDetail} />
+                                    </div>
                                 </div>
                             </div>
                             <div className="modal-footer">

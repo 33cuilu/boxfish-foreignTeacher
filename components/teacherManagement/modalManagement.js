@@ -9,10 +9,10 @@ import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
 
 //引入组件
 import DataPicker from './../commons/dataPicker.js';
+import TimePicker from './../commons/timePicker.js';
 import SelectComponent from './../commons/selectComponent.js';
-import ModalComponent from './../commons/modalComponent.js';
-import ModalContentComponent from './../commons/modalContentComponent';
-import ModalInfoComponent from './../commons/modalInfoComponent.js';
+import BasicInfo from './../commons/basicInfo.js';
+import AbilityInfo from './../commons/abilityInfo';
 
 //引入样式
 import '../../less/modalLecture.less';
@@ -29,25 +29,29 @@ var ModalManagement = React.createClass({
                             <div className="modal-body">
                                 <div className="modal-body-header">
                                     <div className="field">
-                                        <label>注册日期:</label>
-                                        <DataPicker />
+                                        <label>报名日期:</label>
+                                        <DataPicker ref="loginDate"/>
                                     </div>
                                     <div className="field">
-                                        <label>审核时间:</label>
-                                        <DataPicker />
+                                        <label>审核日期:</label>
+                                        <DataPicker ref="checkDate"/>
                                     </div>
                                     <div className="field">
                                         <label>面试时间:</label>
-                                        <DataPicker />
+                                        <TimePicker ref="interviewTime"/>
                                     </div>
                                     <div className="field">
                                         <label>试讲时间:</label>
-                                        <DataPicker />
+                                        <TimePicker ref="tryTime"/>
                                     </div>
-                                    <ModalComponent />
+                                    <BasicInfo ref="basicInfo"/>
+                                    <div className="field">
+                                        <label>在校时间:</label>
+                                        <DataPicker ref="schoolingTime"/>
+                                    </div>
                                     <div className="field">
                                         <label>性别:</label>
-                                        <input type="text" className="form-control" />
+                                        <SelectComponent ref="gender" contentData={config.sex} />
                                     </div>
                                     <div className="field">
                                         <label>综合评分:</label>
@@ -55,7 +59,7 @@ var ModalManagement = React.createClass({
                                     </div>
                                 </div>
                                 <div className="modal-body-body">
-                                    <ModalContentComponent />
+                                    <AbilityInfo ref="abilityInfo"/>
                                 </div>
                             </div>
                             <div className="modal-footer">

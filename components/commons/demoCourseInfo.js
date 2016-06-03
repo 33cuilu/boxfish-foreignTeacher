@@ -8,18 +8,17 @@ import React from 'react'
 import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
 
 //引入组件
-import DataPicker from './dataPicker.js';
+import TimePicker from './timePicker.js';
 import SelectComponent from './selectComponent.js';
 
 var config = require("../../test/config.json");
 
-var ModalInfoComponent = React.createClass({
+var ModalCourseInfo = React.createClass({
     render : function(){
         return(
             <div className="ModalInfoComponent">
                 <div className="field">
                     <label>试讲账号:</label>
-
                     <input type="text" className="form-control" />
                 </div>
                 <div className="field">
@@ -32,11 +31,11 @@ var ModalInfoComponent = React.createClass({
                 </div>
                 <div className="field">
                     <label>试讲时间:</label>
-                    <DataPicker />
+                    <TimePicker ref="tryTime"/>
                 </div>
             </div>
         );
     }
 });
 
-export default ModalInfoComponent;
+export default ModalCourseInfo;

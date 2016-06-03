@@ -12,10 +12,10 @@ import SelectComponent from './selectComponent.js';
 
 var config = require("../../test/config.json");
 
-var ModalContentComponent = React.createClass({
+var AbilityInfo = React.createClass({
     render : function(){
         return(
-            <div className="modalContentComponent">
+            <div className="abilityInfo">
                 <div className="field">
                     <label>国家级别:</label>
                     <SelectComponent contentData={config.country} />
@@ -30,11 +30,11 @@ var ModalContentComponent = React.createClass({
                 </div>
                 <div className="field">
                     <label>教学经验:</label>
-                    <SelectComponent contentData={config.experience} />
+                    <SelectComponent ref="teachingExperience" contentData={config.experienceDetail} />
                 </div>
             </div>
         );
     }
 });
 
-export default ModalContentComponent;
+export default AbilityInfo;

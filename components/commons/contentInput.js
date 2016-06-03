@@ -42,7 +42,7 @@ var ContentInput = React.createClass({
                 <SelectComponent contentData={config.country} ref="country" onChange={(index)=>{this._getCountry(index)}}/>
                 <SelectComponent contentData={config.timeZone} ref="timeZone" onChange={(index)=>{this._getTimeZone(index)}}/>
                 <div className="field">
-                    <input type="text" className="form-control" ref="telNum" onChange={this._getTelNum} placeholder="手机号"/>
+                    <input type="text" className="form-control" ref="telNum" onChange={this._getTelNum} style={{width:"150px"}} placeholder="手机号"/>
                 </div>
                 <div className="field">
                     <input type="text" className="form-control" ref="email" onChange={this._getEmail} placeholder="邮箱"/>

@@ -7,13 +7,6 @@
 import React from 'react'
 import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
 
-//引入组件
-import DataPicker from './../commons/dataPicker.js';
-import SelectComponent from './../commons/selectComponent.js';
-import ModalComponent from './../commons/modalComponent.js';
-import ModalContentComponent from './../commons/modalContentComponent';
-import ModalInfoComponent from './../commons/modalInfoComponent.js';
-
 //引入样式
 import '../../less/modalPond.less';
 
@@ -30,28 +23,108 @@ var ModalPond = React.createClass({
                                 <div className="modal-body-header">
                                     <div className="field">
                                         <label>审核时间:</label>
-                                        <DataPicker />
+                                        <p></p>
                                     </div>
                                     <div className="field">
                                         <label>性别:</label>
-                                        <input type="text" className="form-control" />
+                                        <p></p>
                                     </div>
-                                    <ModalComponent />
+                                    <div className="field">
+                                        <label>First Name:</label>
+                                        <p></p>
+                                    </div>
+                                    <div className="field">
+                                        <label>手机号:</label>
+                                        <p></p>
+                                    </div>
+                                    <div className="field">
+                                        <label>Last Name:</label>
+                                        <p></p>
+                                    </div>
+                                    <div className="field">
+                                        <label>邮箱:</label>
+                                        <p></p>
+                                    </div>
+                                    <div className="field">
+                                        <label>职业:</label>
+                                        <p></p>
+                                    </div>
+                                    <div className="field">
+                                        <label>Skype ID:</label>
+                                        <p></p>
+                                    </div>
+                                    <div className="field">
+                                        <label>时区:</label>
+                                        <p></p>
+                                    </div>
+                                    <div className="field">
+                                        <label>城市:</label>
+                                        <p></p>
+                                    </div>
+                                    <div className="field">
+                                        <label>学历:</label>
+                                        <p></p>
+                                    </div>
+                                    <div className="field">
+                                        <label>学校名称:</label>
+                                        <p></p>
+                                    </div>
+                                    <div className="field">
+                                        <label>学校所在国家:</label>
+                                        <p></p>
+                                    </div>
+                                    <div className="field">
+                                        <label>专业:</label>
+                                        <p></p>
+                                    </div>
+                                    <div className="field">
+                                        <label>在校时间:</label>
+                                        <p></p>
+                                    </div>
                                 </div>
                                 <div className="modal-body-body">
-                                    <ModalContentComponent />
+                                    <div className="field">
+                                        <label>国家级别:</label>
+                                        <p></p>
+                                    </div>
+                                    <div className="field">
+                                        <label>零食:</label>
+                                        <p></p>
+                                    </div>
+                                    <div className="field">
+                                        <label>口语水平:</label>
+                                        <p></p>
+                                    </div>
+                                    <div className="field">
+                                        <label>教学经验:</label>
+                                        <p></p>
+                                    </div>
                                 </div>
                                 <div className="modal-body-footer">
-                                    <ModalInfoComponent />
+                                    <div className="field">
+                                        <label>试讲账号:</label>
+                                        <p></p>
+                                    </div>
+                                    <div className="field">
+                                        <label>学生账号:</label>
+                                        <p></p>
+                                    </div>
+                                    <div className="field">
+                                        <label>demo 课:</label>
+                                        <p></p>
+                                    </div>
+                                    <div className="field">
+                                        <label>试讲时间:</label>
+                                        <p></p>
+                                    </div>
                                 </div>
                                 <div className="modal-body-remarks">
-                                    <label>备注:</label>
-                                    <textarea rows="6"></textarea>
+                                    <label>入池理由:</label>
+                                    <textarea rows="4" readOnly="readonly"></textarea>
                                 </div>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-default" data-dismiss="modal">取消</button>
-                                <button type="button" className="btn btn-primary">保存</button>
+                                <button type="button" className="btn btn-default" data-dismiss="modal">关闭</button>
                             </div>
                         </div>
                     </div>

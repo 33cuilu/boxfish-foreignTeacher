@@ -16,7 +16,7 @@ var SelectComponent = React.createClass({
         let arr = this.props.contentData.arr;
         arr = arr.map( (v,i) => {
             return (
-                <option value="">{v}</option>
+                <option key={i} value="">{v}</option>
             );
         });
         let selectClassName = (this.props.size == "small")? "form-control select-sm" : "form-control";

@@ -14,6 +14,7 @@ import DataPicker from './../commons/dataPicker.js';
 import TimePicker from './../commons/timePicker.js';
 import SelectComponent from './../commons/selectComponent.js';
 import Table from './../commons/table.js';
+import PageList from './../commons/page.js';
 
 //引入样式
 import "../../less/teacherPond.less";
@@ -24,16 +25,19 @@ var config = require('../../test/config.json');
 var TeacherPond = React.createClass({
     getInitialState : function () {
         return {
+            pageSize : 10,
+            totalPages : 1,
+            curPage : 1,
+            curURL : '',
+            curRow : 0,
             tableStyle: {
                 tableSize : 10,
                 hasCheckBox : true,
                 hasOperate : true
             },
-            list: []
+            list: [],
+            selected : []
         };
-    },
-    _changeForm : function(event) {
-        $("#forms").toggleClass("forms-height");
     },
     render : function(){
         let tableList = this.state.list.map((v,i) => {
@@ -87,8 +91,39 @@ var TeacherPond = React.createClass({
                 <div className="tableContainer" ref="tableContainer">
                     <Table contentData={configData.pondTable} list={tableList} tableStyle={this.state.tableStyle}/>
                 </div>
+                <PageList curPage={this.state.curPage} totalPages={this.state.totalPages} onPre={this._prePage} onFirst={this._firstPage} onLast={this._lastPage} onNext={this._nextPage}/>
             </div>
         );
+    },
+    _changeForm : function(event) {
+        $("#forms").toggleClass("forms-height");
+    },
+    _getPage : function (page) {
+        let myurl = this.state.curURL.replace(/page=0/,`page=${page-1}`);
+        Get({
+            url : myurl
+        }).then(({code,message,data})=>{
+            if(data == null )
+                return;
+            this.setState({
+                curPage : page,
+                list : data.content
+            });
+        }).catch((err)=>{
+            console.log(err);
+        });
+    },
+    _prePage : function () {
+
+    },
+    _firstPage : function () {
+
+    },
+    _lastPage : function () {
+
+    },
+    _nextPage : function () {
+
     }
 });
 

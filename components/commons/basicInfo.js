@@ -7,15 +7,14 @@
 import React from 'react';
 
 //引入组件
-import DataPicker from './dataPicker.js';
 import SelectComponent from './selectComponent.js';
 
 var config = require("../../test/config.json");
 
-var ModalComponent = React.createClass({
+var BasicInfo = React.createClass({
     render : function(){
         return(
-            <div className="modalComponent">
+            <div className="basicInfo">
                 <div className="field">
                     <label>First Name:</label>
                     <input type="text" className="form-control" />
@@ -58,23 +57,15 @@ var ModalComponent = React.createClass({
                 </div>
                 <div className="field">
                     <label>学校所在国家:</label>
-                    <input type="text" className="form-control" />
+                    <SelectComponent ref="schoolCountry" contentData={config.country} />
                 </div>
                 <div className="field">
                     <label>专业:</label>
                     <input type="text" className="form-control" />
-                </div>
-                <div className="field">
-                    <label>在校时间:</label>
-                    <DataPicker />
-                </div>
-                <div className="field">
-                    <label>教学经验:</label>
-                    <SelectComponent contentData={config.experience} />
                 </div>
             </div>
         );
     }
 });
 
-export default ModalComponent;
+export default BasicInfo;
