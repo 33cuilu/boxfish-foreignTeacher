@@ -15,7 +15,9 @@ import BasicInfo from './../commons/basicInfo.js';
 import AbilityInfo from './../commons/abilityInfo';
 
 //引入样式
+import '../../less/modalManagement.less';
 import '../../less/modalLecture.less';
+
 
 var config = require("../../test/config.json");
 
@@ -23,7 +25,7 @@ var ModalManagement = React.createClass({
     render : function(){
         return(
             <div className="modalManagement">
-                <div className="modal fade">
+                <div className="">
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">
                             <div className="modal-body">
