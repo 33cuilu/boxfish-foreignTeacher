@@ -27,7 +27,7 @@ var ModalExamine = React.createClass({
                             <div className="modal-body">
                                 <div className="modal-body-header">
                                     <div className="field">
-                                        <label>注册日期:</label>
+                                        <label>报名日期:</label>
                                         <DataPicker />
                                     </div>
                                     <div className="field">
@@ -46,10 +46,6 @@ var ModalExamine = React.createClass({
                                     <div className="field">
                                         <label>国家:</label>
                                         <SelectComponent contentData={config.country} />
-                                    </div>
-                                    <div className="field">
-                                        <label>零食:</label>
-                                        <SelectComponent contentData={config.snacks} />
                                     </div>
                                 </div>
                             </div>

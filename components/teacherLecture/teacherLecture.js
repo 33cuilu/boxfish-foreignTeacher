@@ -59,7 +59,7 @@ var TeacherLecture = React.createClass({
                 id: [],  //课程ID
                 type: []  //课程类型
             },
-            reservationStatus : {
+            reservationTry : {
                 arr : ["预约状态","已预约试讲","未预约试讲"], //预约状态
                 id : ["-1","1","0"]  //国家ID
             },
@@ -133,7 +133,7 @@ var TeacherLecture = React.createClass({
                         <div className="form row extend">
                             <TimePicker ref="interviewTime" name="面试时间"/>
                             <TimePicker ref="tryLessonTime" name="试讲时间"/>
-                            <SelectComponent ref="reservationStatus" contentData={configData.reservationState} />
+                            <SelectComponent ref="reservationTry" contentData={configData.reservationTry} />
                         </div>
                     </div>
                     <div className="search">
@@ -277,7 +277,7 @@ var TeacherLecture = React.createClass({
             email = this.refs.contentInput.state.email,
             interviewTime = this.refs.interviewTime.state.value.trim(),
             demoTime = this.refs.tryLessonTime.state.value.trim(),
-            statu = this.state.reservationStatus.id[this.refs.reservationStatus.state.index],
+            statu = this.state.reservationTry.id[this.refs.reservationTry.state.index],
             myurl = `${searchUrl}page=0&size=${this.state.pageSize}`;
 
         myurl += (firstName.length >0) ? `&firstName=${firstName}` : '';

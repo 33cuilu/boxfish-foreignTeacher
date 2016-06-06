@@ -107,11 +107,6 @@ var TeacherManagement = React.createClass({
                 <div className="tableContainer" ref="tableContainer">
                     <Table contentData={configData.managementTable} list={tableList} tableStyle={this.state.tableStyle}/>
                 </div>
-                <div className="main-btn">
-                    <div className="btn-right">
-                        <button className="btn btn-default btn-sm">分配账号</button>
-                    </div>
-                </div>
                 <PageList curPage={this.state.curPage} totalPages={this.state.totalPages} onPre={this._prePage} onFirst={this._firstPage} onLast={this._lastPage} onNext={this._nextPage}/>
             </div>
         );

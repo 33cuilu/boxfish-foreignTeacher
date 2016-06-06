@@ -46,10 +46,6 @@ var ModalManagement = React.createClass({
                                     </div>
                                     <BasicInfo ref="basicInfo"/>
                                     <div className="field">
-                                        <label>在校时间:</label>
-                                        <DataPicker ref="schoolingTime"/>
-                                    </div>
-                                    <div className="field">
                                         <label>性别:</label>
                                         <SelectComponent ref="gender" contentData={config.sex} />
                                     </div>
@@ -60,6 +56,16 @@ var ModalManagement = React.createClass({
                                 </div>
                                 <div className="modal-body-body">
                                     <AbilityInfo ref="abilityInfo"/>
+                                </div>
+                                <div className="modal-body-body">
+                                    <div className="field">
+                                        <label>创意和表达:</label>
+                                        <SelectComponent ref="creative" contentData={config.creative} />
+                                    </div>
+                                    <div className="field">
+                                        <label>适应和引导:</label>
+                                        <SelectComponent ref="adaptation" contentData={config.adaptation} />
+                                    </div>
                                 </div>
                             </div>
                             <div className="modal-footer">

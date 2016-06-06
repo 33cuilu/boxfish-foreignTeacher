@@ -7,6 +7,9 @@
 import React from 'react'
 import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
 
+//引入插件
+import SelectComponent from './../commons/selectComponent.js';
+
 //引入样式
 import '../../less/modalPond.less';
 
@@ -79,6 +82,16 @@ var ModalPond = React.createClass({
                                     </div>
                                     <div className="field">
                                         <label>在校时间:</label>
+                                        <p></p>
+                                    </div>
+                                </div>
+                                <div className="modal-body-body">
+                                    <div className="field">
+                                        <label>创意和表达:</label>
+                                        <p></p>
+                                    </div>
+                                    <div className="field">
+                                        <label>适应和引导:</label>
                                         <p></p>
                                     </div>
                                 </div>

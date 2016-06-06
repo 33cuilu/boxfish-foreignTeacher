@@ -11,7 +11,7 @@
     "arr": ["不通过类型","审核不通过","了解app不通过","培训课程不通过"],
     "id": ["-1","0","1","2"]
   },
-  "nativeLevel" :{
+  "spokenLevel" :{
     "name":"口语水平",
     "otherName":"nativeLevel",
     "arr": ["口语水平","母语水平","稍差","其他","未分配"],
@@ -79,7 +79,7 @@
     "name":"国家级别",
     "otherName":"nationalLevel",
     "arr": ["国家级别","美国、加拿大","英国、澳大利亚、南非","非英语欧美国家","其他"],
-    "id": ["0","1","2","3","4"]
+    "id": ["-1","1","2","3","4"]
   },
   "city" :{
     "name":"城市",
@@ -91,19 +91,31 @@
   "name":"时区",
   "otherName":"timeZone",
   "arr": ["时区","11","10","9","8","7","6","5","4","3","2","1","0","-11","-10","-9","-8","-7","-6","-5","-4","-3","-2","-1"],
-  "id": []
+  "id": ["-1","11","10","9","8","7","6","5","4","3","2","1","0","-11","-10","-9","-8","-7","-6","-5","-4","-3","-2","-1"]
   },
-  "reservationState" :{
+  "degree" :{
+    "name":"学历",
+    "otherName": "degree",
+    "arr": ["high school","bachelor","master","doctor"],
+    "id": []
+  },
+  "reservationInterview" :{
     "name":"预约状态",
-    "otherName":"reservationState",
+    "otherName":"reservationInterview",
+    "arr": ["预约状态","已预约面试","未预约面试"],
+    "id": ["-1","1","0"]
+  },
+  "reservationTry" :{
+    "name":"预约状态",
+    "otherName":"reservationTry",
     "arr": ["预约状态","已预约试讲","未预约试讲"],
-    "id": ["0","1","2"]
+    "id": ["-1","1","0"]
   },
   "accountStatus" :{
     "name":"账号状态",
     "otherName":"accountStatus",
     "arr": ["账号状态","激活","冻结"],
-    "id": []
+    "id": ["-1","1","0"]
   },
   "demoTeacherId" :{
     "name": "试讲账号",
@@ -120,34 +132,46 @@
   "timeSlice" :{
     "name":"demo课时间",
     "otherName":"timeSlice",
-    "arr": ["10:00-11:00","11:00-12:00","14:00-15:00","15:00-16:00"],
+    "arr": [],
     "id": []
   },
   "course" :{
     "name":"demo课",
     "otherName":"course",
-    "arr": ["demo课1","demo课2","demo课3"],
+    "arr": [],
     "id": []
   },
+  "creative" :{
+    "name":"创意和表达",
+    "otherName":"creative",
+    "arr": ["60","80","100","0"],
+    "id": []
+  },
+  "adaptation" :{
+    "name":"适应和引导",
+    "otherName":"adaptation",
+    "arr":["60","80","100","0"],
+    "id":[]
+  },
   "managementTable" :{
-    "thList" : ["","注册日期","First Name","Last Name","账号","性别","国家","时区","手机号","邮箱","零食","城市","账号状态","综合评分"],
+    "thList" : ["","报名日期","First Name","Last Name","账号","性别","国家","时区","手机号","邮箱","零食","城市","面试评分","试讲评分","综合评分","账户状态"],
     "tbodyList" : []
   },
   "examineTable" :{
-    "thList" : ["","注册日期","First Name","Last Name","国家","时区","手机号","邮箱","零食","操作"],
+    "thList" : ["","报名日期","First Name","Last Name","国家","时区","手机号","邮箱","零食","教学经验","操作"],
     "tbodyList" : []
   },
   "interviewTable" :{
-    "thList" : ["","审核日期","First Name","Last Name","国家","时区","手机号","邮箱","零食","口语水平","教学经验","面试时间"],
+    "thList" : ["","审核日期","First Name","Last Name","国家","时区","手机号","邮箱","国家级别","性别","零食","口语水平","教学经验","面试时间","操作"],
     "tbodyList" : []
   },
   "lectureTable" :{
-    "thList" : ["教师ID","First Name","Last Name","国家","时区","手机号","邮箱","试讲时间","操作"],
-    "tbodyList" : ["checkbox","teacherId","firstName","lastName","country","timeZone","telNum","email","triallectureTime","operate"],
-    "nullEntry" : {"checkbox": null,"teacherId":null,"firstName":null,"lastName":null,"country":null,"timeZone":null,"telNum":null,"email":null,"triallectureTime":null,"operate":null}
+    "thList" : ["面试时间","First Name","Last Name","国家","时区","手机号","邮箱","面试评分","试讲评分","综合评分","安排试讲","操作"],
+    "tbodyList" : ["checkbox","teacherId","firstName","lastName","country","timeZone","telNum","email","interviewScore","trialScore","score","triallectureTime","operate"],
+    "nullEntry" : {"checkbox": null,"teacherId":null,"firstName":null,"lastName":null,"country":null,"timeZone":null,"telNum":null,"email":null,"interviewScore":null,"trialScore":null,"score":null,"triallectureTime":null,"operate":null}
   },
   "pondTable" :{
-    "thList" : ["","注册日期","审核日期","面试时间","试讲时间","First Name","Last Name","国家","时区","手机号","邮箱","零食","不通过类型"],
+    "thList" : ["","报名日期","审核日期","面试时间","试讲时间","First Name","Last Name","国家","时区","手机号","邮箱","零食","面试评分","试讲评分","综合评分","不通过类型","操作"],
     "tbodyList" : []
   }
 }

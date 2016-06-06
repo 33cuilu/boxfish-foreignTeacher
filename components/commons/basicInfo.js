@@ -8,6 +8,7 @@ import React from 'react';
 
 //引入组件
 import SelectComponent from './selectComponent.js';
+import DataPicker from './dataPicker.js';
 
 var config = require("../../test/config.json");
 
@@ -32,6 +33,26 @@ var BasicInfo = React.createClass({
                     <input type="text" className="form-control" />
                 </div>
                 <div className="field">
+                    <label>学历:</label>
+                    <SelectComponent contentData={config.degree} />
+                </div>
+                <div className="field">
+                    <label>学校名称:</label>
+                    <input type="text" className="form-control" />
+                </div>
+                <div className="field">
+                    <label>在校时间:</label>
+                    <DataPicker ref="schoolingTime"/>
+                </div>
+                <div className="field">
+                    <label>学校所在国家:</label>
+                    <SelectComponent ref="schoolCountry" contentData={config.country} />
+                </div>
+                <div className="field">
+                    <label>专业:</label>
+                    <input type="text" className="form-control" />
+                </div>
+                <div className="field">
                     <label>职业:</label>
                     <input type="text" className="form-control" />
                 </div>
@@ -40,27 +61,15 @@ var BasicInfo = React.createClass({
                     <input type="text" className="form-control" />
                 </div>
                 <div className="field">
+                    <label>国家:</label>
+                    <SelectComponent contentData={config.country} />
+                </div>
+                <div className="field">
                     <label>时区:</label>
                     <SelectComponent contentData={config.timeZone} />
                 </div>
                 <div className="field">
                     <label>城市:</label>
-                    <SelectComponent contentData={config.city} />
-                </div>
-                <div className="field">
-                    <label>学历:</label>
-                    <input type="text" className="form-control" />
-                </div>
-                <div className="field">
-                    <label>学校名称:</label>
-                    <input type="text" className="form-control" />
-                </div>
-                <div className="field">
-                    <label>学校所在国家:</label>
-                    <SelectComponent ref="schoolCountry" contentData={config.country} />
-                </div>
-                <div className="field">
-                    <label>专业:</label>
                     <input type="text" className="form-control" />
                 </div>
             </div>

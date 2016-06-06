@@ -30,10 +30,6 @@ var ModalInterview = React.createClass({
                                         <label>审核日期:</label>
                                         <DataPicker ref="checkDate"/>
                                     </div>
-                                    <div className="field">
-                                        <label>性别:</label>
-                                        <SelectComponent contentData={configData.sex} />
-                                    </div>
                                     <BasicInfo ref="basicInfo"/>
                                     <div className="field">
                                         <label>教学经验:</label>

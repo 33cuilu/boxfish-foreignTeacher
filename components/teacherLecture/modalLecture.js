@@ -58,11 +58,6 @@ var ModalLecture = React.createClass({
                                         <SelectComponent ref="timeSlot" contentData={this.props.time}/>
                                     </div>
                                     <BasicInfo {...this.props.info} ref="basicInfo" />
-                                    <div className="field">
-                                        <label>综合评分:</label>
-                                        <input type="text" ref="score" className="form-control" />
-                                    </div>
-                                    <AbilityInfo ref="abilityInfo"/>
                                 </div>
                             </div>
                             <div className="modal-footer">

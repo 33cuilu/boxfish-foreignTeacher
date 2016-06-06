@@ -43,9 +43,6 @@ var TeacherInterview = React.createClass({
             list: []
         };
     },
-    _changeForm : function(event) {
-        $("#forms").toggleClass("forms-height");
-    },
     render : function(){
         let tableList = this.state.list.map((v,i) => {
             return {
@@ -88,13 +85,14 @@ var TeacherInterview = React.createClass({
                             </div>
                         </div>
                         <div className="form row">
+                            <SelectComponent contentData={config.sex} />
+                            <SelectComponent contentData={config.spokenLevel} />
+                            <SelectComponent contentData={config.snacks} />
+                            <SelectComponent contentData={config.nationalLevel} />
                             <DataPicker ref="checkDate" name="审核日期"/>
                             <TimePicker ref="interviewTime" name="面试时间"/>
-                            <SelectComponent contentData={config.snacks} />
-                            <SelectComponent contentData={config.nativeLevel} />
                             <SelectComponent contentData={config.experience} />
-                            <SelectComponent contentData={config.reservationState} />
-
+                            <SelectComponent contentData={config.reservationInterview} />
                         </div>
                     </div>
                     <div className="search">
@@ -120,7 +118,7 @@ var TeacherInterview = React.createClass({
                         </div>
                         <div className="btn-right-select">
                             <label>口语水平</label>
-                            <SelectComponent size="small" contentData={config.nativeLevel} />
+                            <SelectComponent size="small" contentData={config.spokenLevel} />
                             <button className="btn btn-default btn-sm">确定</button>
                         </div>
                         <div className="btn-right-select">
@@ -133,6 +131,9 @@ var TeacherInterview = React.createClass({
                 <PageList curPage={this.state.curPage} totalPages={this.state.totalPages} onPre={this._prePage} onFirst={this._firstPage} onLast={this._lastPage} onNext={this._nextPage}/>
             </div>
         );
+    },
+    _changeForm : function(event) {
+        $("#forms").toggleClass("forms-extern-more");
     },
     _getPage : function (page) {
         let myurl = this.state.curURL.replace(/page=0/,`page=${page-1}`);

@@ -18,28 +18,22 @@ var AbilityInfo = React.createClass({
             <div className="abilityInfo">
                 <div className="field">
                     <label>国家级别:</label>
-                    <SelectComponent contentData={config.country} />
+                    <SelectComponent contentData={config.country} /> <span>100</span>
                 </div>
                 <div className="field">
                     <label>零食:</label>
-                    <SelectComponent contentData={config.snacks} />
+                    <SelectComponent contentData={config.snacks} /> <span>100</span>
                 </div>
                 <div className="field">
                     <label>口语水平:</label>
-                    <SelectComponent contentData={config.nativeLevel} />
+                    <SelectComponent contentData={config.spokenLevel} /> <span>100</span>
                 </div>
                 <div className="field">
                     <label>教学经验:</label>
-                    <SelectComponent ref="teachingExperience" contentData={config.experienceDetail} />
+                    <SelectComponent ref="teachingExperience" contentData={config.experienceDetail}/> <span>100</span>
                 </div>
             </div>
         );
-    },
-    set : function (abilityInfo) {
-        
-    },
-    get : function () {
-        return {};
     }
 });
 
