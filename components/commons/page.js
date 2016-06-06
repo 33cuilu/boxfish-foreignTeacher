@@ -16,7 +16,7 @@ var PageList = React.createClass({
           <a className="icon item page-page page1" onClick={this.props.onPre}>
               <i className="glyphicon glyphicon-menu-left"></i>
           </a>
-          <a className="item page-page page2" onClick={this.props.onFisrt}>首页</a>
+          <a className="item page-page page2" onClick={this.props.onFirst}>首页</a>
           <a className="item page-page page3" >{this.props.curPage}/{this.props.totalPages}</a>
           <a className="item page-page page2" onClick={this.props.onLast}>尾页</a>
           <a className="icon item page-page page-page1 page1" onClick={this.props.onNext}>

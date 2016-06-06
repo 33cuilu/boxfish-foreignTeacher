@@ -17,7 +17,9 @@ import AbilityInfo from './../commons/abilityInfo';
 //引入样式
 import '../../less/modalLecture.less';
 
-var config = require("../../test/config.json");
+var configData = require("../../test/config.json");
+
+var submitUrl = `http://${configData.ip}/web/teacherOralEn/updateTeacher`;
 
 var ModalLecture = React.createClass({
     render : function(){
@@ -35,27 +37,7 @@ var ModalLecture = React.createClass({
                                     </div>
                                     <div className="field">
                                         <label>性别:</label>
-                                        <SelectComponent ref="gender" value={gender} contentData={config.sex} />
-                                    </div>
-                                    <div className="field">
-                                        <label>试讲账号:</label>
-                                        <SelectComponent ref="teacherAccounts" contentData={this.props.teacher}/>
-                                    </div>
-                                    <div className="field">
-                                        <label>学生账号:</label>
-                                        <SelectComponent ref="studentAccounts" contentData={this.props.student}/>
-                                    </div>
-                                    <div className="field">
-                                        <label>demo 课:</label>
-                                        <SelectComponent ref="course" contentData={this.props.course}/>
-                                    </div>
-                                    <div className="field">
-                                        <label>试讲日期:</label>
-                                        <SingleDataPicker ref="date" />
-                                    </div>
-                                    <div className="field">
-                                        <label>试讲时间:</label>
-                                        <SelectComponent ref="timeSlot" contentData={this.props.time}/>
+                                        <SelectComponent ref="gender" value={gender} contentData={configData.sex} />
                                     </div>
                                     <BasicInfo {...this.props.info} ref="basicInfo" />
                                 </div>
@@ -70,38 +52,6 @@ var ModalLecture = React.createClass({
             </div>
         );
     },
-    /*_initial : function () {
-        let {a,b,c,d} = this.props.info;
-        let info = this.props.info,
-            interviewTime = info.interviewTime,
-            gender = info.gender,
-            tryID = info.triallectureTeacher,
-            studentID = info.triallectureStudent,
-            demoCourse = info.demoCourse,
-            triallectureDate = info.triallectureStartTime,
-            triallectureTime = `${info.triallectureStartTime} - ${info.triallectureEndTime}`,
-            basicInfo = {
-                firstName : info.firstName,
-                tel : info.cellphoneNumber,
-                lastName : info.lastName,
-                email : info.email,
-                occupation : info.occupation,
-                skype : info.skype,
-                timezone : info.timezone,
-                city : info.city,
-                degree : info.degree,
-                school : info.school,
-                schoolCountry : info.schoolCountry,
-                specialty : info.specialty
-            },
-            score = info.score,
-            abilityInfo = {
-                countryLevel : info.nationalLevel,
-                snack : info.snack,
-                spokenLevel : info.spokenLevel,
-                teachingExperience : info. teachingExperience
-            };
-    },*/
     _submit : function () {
         
     }

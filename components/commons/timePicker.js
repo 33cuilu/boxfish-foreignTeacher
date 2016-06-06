@@ -14,35 +14,30 @@ var TimePicker = React.createClass({
         $(this.refs.dateInput).daterangepicker({
             timePicker: true,
             timePickerIncrement: 10,
-            format: 'YYYY-MM-DD h:mm'
+            format: 'YYYY-MM-DD h:mm:ss'
         },(start, end)=>{
             this.setState({ //每次将新的日期赋给状态
-                start: start.format("YYYY-MM-DD h:mm"),
-                end: end.format("YYYY-MM-DD h:mm"),
-                value: `${start.format("YYYY-MM-DD h:mm")} - ${end.format("YYYY-MM-DD h:mm")}`
+                start: start.format("YYYY-MM-DD h:mm:ss"),
+                end: end.format("YYYY-MM-DD h:mm:ss"),
+                value: `${start.format("YYYY-MM-DD h:mm:ss")} - ${end.format("YYYY-MM-DD h:mm:ss")}`
             });
         });
     },
     render : function () {
         return (
             <div className="field" >
-                <div style={{position:'relative', width:'300px'}}>
+                <div style={{position:'relative', width:'320px'}}>
                     <input type="text" className="form-control datePicker" placeholder={this.props.name}
-                           style={{paddingLeft:'30px'}} ref="dateInput"/>
+                           style={{paddingLeft:'30px'}} ref="dateInput" onChange={this._change}/>
                     <i className="glyphicon glyphicon-calendar"  style={{position:'absolute',left:'10px',top:'8px'}}></i>
                 </div>
             </div>
         );
     },
-    set : function (date) {
-        this.refs.dateInput.value = date;
-    },
-    get : function () {
-        return {
-            start : this.state.start,
-            end : this.state.end,
-            value: this.state.value
-        }
+    _change : function () {
+        this.setState({
+            value : this.refs.dateInput.value
+        });
     }
 });
 

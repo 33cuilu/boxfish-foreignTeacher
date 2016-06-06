@@ -15,6 +15,7 @@ import SelectComponent from './../commons/selectComponent.js';
 import Table from './../commons/table.js';
 import PageList from './../commons/page.js';
 import TryLesson from './tryLesson.js';
+import ModalScore from './modalScore.js';
 import ModalAdopt from './modalAdopt.js';
 import ModalAdopts from './modalAdopts.js';
 import ModalInPond from './../commons/modalInPond.js';
@@ -29,9 +30,9 @@ var teacherAccountsUrl = `http://${configData.ip}/web/common/trialTeacherList`;
 var studentAccountsUrl = `http://${configData.ip}/web/common/trialStudentList`;
 var timeSlotUrl = `http://${configData.ip}/timeslot/list/0`;
 var demoCourseUrl = `http://${configData.ip}/web/common/demoCourses`;
+
 var searchUrl = `http://${configData.ip}/web/teacherOralEn/teacherStepList?`;
 var infoUrl = `http://${configData.ip}/web/teacherOralEn/teacherDetail?`;
-
 
 var TeacherLecture = React.createClass({
     getInitialState : function () {
@@ -59,10 +60,6 @@ var TeacherLecture = React.createClass({
                 id: [],  //课程ID
                 type: []  //课程类型
             },
-            reservationTry : {
-                arr : ["预约状态","已预约试讲","未预约试讲"], //预约状态
-                id : ["-1","1","0"]  //国家ID
-            },
             tableStyle : {
                 tableSize : 10,
                 hasCheckBox : true,
@@ -89,7 +86,8 @@ var TeacherLecture = React.createClass({
         let rowContent = this.state.list[this.state.curRow];
         let tableList = this.state.list.map((v,i) => {
                 let tryTime = v.triallectureStartTime ?
-                    `${v.triallectureStartTime} - ${v.triallectureEndTime}`:
+                    <div>{v.triallectureStartTime} - {v.triallectureEndTime}
+                        <button className="btn btn-default btn-xs" onClick={(e)=>{this._arangeTryLesson(i)}}>修改</button></div> :
                     <button key={i} className="btn btn-default btn-xs" onClick={(e)=>{this._arangeTryLesson(i)}}>
                         安排试讲
                     </button> ;
@@ -105,6 +103,7 @@ var TeacherLecture = React.createClass({
                     "triallectureTime" : tryTime,
                     "operate" : (
                         <div>
+                            <button className="btn btn-default btn-xs" onClick={this._score}>评分</button>
                             <button className="btn btn-default btn-xs" onClick={this._arangeAdopt}>通过</button>
                             <button className="btn btn-default btn-xs" onClick={this._arangeInPond}>入池</button>
                             <a onClick={(e)=>{this._arangeMore(i)}}>详情</a>
@@ -118,6 +117,7 @@ var TeacherLecture = React.createClass({
                               time={this.state.timeSlot} course={this.state.demoCourse} callback={this.updateList}/>
                 <TryLesson row={rowContent} teacher={this.state.teacherAccounts} student={this.state.studentAccounts}
                            time={this.state.timeSlot} course={this.state.demoCourse} callback={this.updateTime}/>
+                <ModalScore creative={configData.creative} adaptation={configData.adaptation}/>
                 <ModalAdopt />
                 <ModalAdopts />
                 <ModalInPond />
@@ -155,7 +155,6 @@ var TeacherLecture = React.createClass({
             </div>
         );
     },
-
     _getTeacherAccounts : function (myUrl) {
         Get({
             url : myUrl
@@ -268,32 +267,31 @@ var TeacherLecture = React.createClass({
         });
     },
     _search : function () {
-
          let firstName = this.refs.contentInput.state.firstName,
             lastName = this.refs.contentInput.state.lastName,
-            country = this.refs.contentInput.state.country.cur,
-            timeZone = this.refs.contentInput.state.timeZone.cur,
+            country = this.refs.contentInput.state.country,
+            timeZone = this.refs.contentInput.state.timeZone,
             telNum = this.refs.contentInput.state.telNum,
             email = this.refs.contentInput.state.email,
             interviewTime = this.refs.interviewTime.state.value.trim(),
-            demoTime = this.refs.tryLessonTime.state.value.trim(),
-            statu = this.state.reservationTry.id[this.refs.reservationTry.state.index],
+            tryTime = this.refs.tryLessonTime.state.value.trim(),
+            statu = configData.reservationTry.id[this.refs.reservationTry.state.index],
             myurl = `${searchUrl}page=0&size=${this.state.pageSize}`;
 
         myurl += (firstName.length >0) ? `&firstName=${firstName}` : '';
         myurl += (lastName.length >0) ? `&lastName=${lastName}` : '';
-        myurl += (country != "全部") ? `&nationality=${country}` : '';
-        myurl += (timeZone != "全部") ? `&timeZone=${timeZone}` : '';
+        myurl += (country != "国家") ? `&nationality=${country}` : '';
+        myurl += (timeZone != "时区") ? `&timeZone=${timeZone}` : '';
         myurl += (telNum.length >0) ? `&cellphoneNumber=${telNum}`: '';
         myurl += (email.length >0) ? `&email=${email}`: '';
-        myurl += (interviewTime.length >0) ? `&interviewTime=${interviewTime}`: '';
-        myurl += (demoTime.length >0) ? `&demoTime=${demoTime}`: '';
-        myurl += (statu.length != -1) ? `&reservationStatu=${statu}`: '';
+        myurl += (interviewTime.length >0) ? `&interviewTimeStart=${interviewTime.substr(0,19)}&interviewTimeEnd=${interviewTime.substr(-19,19)}`: '';
+        myurl += (tryTime.length >0) ? `&triallectureStartTimeStart=${tryTime.substr(0,19)}&triallectureStartTimeEnd=${tryTime.substr(-19,19)}`: '';
+        myurl += (statu != -1) ? `&isHasTriallectureTime=${statu}`: '';
 
         console.log(myurl);
-        let testurl = `${searchUrl}page=0&size=10`;
+        //let testurl = `${searchUrl}page=0&size=10`;
         Get({
-            url : testurl
+            url : myurl
         }).then(({code,message,data})=> {
             if (data == null) {
                 this.setState({
@@ -360,6 +358,9 @@ var TeacherLecture = React.createClass({
             curRow : i
         });
         $(".tryLesson .modal").modal();
+    },
+    _score : function () {
+        $(".modalScore .modal").modal();
     },
     _arangeAdopt : function(){
         $(".modalAdopt .modal").modal();
