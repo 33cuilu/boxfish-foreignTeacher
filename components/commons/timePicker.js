@@ -36,7 +36,9 @@ var TimePicker = React.createClass({
     },
     _change : function () {
         this.setState({
-            value : this.refs.dateInput.value
+            value : this.refs.dateInput.value,
+            start : this.refs.dateInput.value.substr(0,19),
+            end : this.refs.dateInput.value.substr(-19,19)
         });
     }
 });

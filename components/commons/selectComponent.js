@@ -33,7 +33,7 @@ var SelectComponent = React.createClass({
     },
     _changeSelect : function () {
         this.setState({
-            index : this.refs.select.selectedIndex,
+            index : this.refs.select.selectedIndex
         });
         if(this.props.onChange){
             this.props.onChange(this.refs.select.selectedIndex);

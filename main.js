@@ -27698,10 +27698,17 @@
 	                'div',
 	                { style: { position: 'relative', width: '220px' } },
 	                _react2.default.createElement('input', { type: 'text', className: 'form-control datePicker', placeholder: this.props.name,
-	                    style: { paddingLeft: '30px' }, value: this.props.value, ref: 'dateInput' }),
+	                    style: { paddingLeft: '30px' }, value: this.props.value, ref: 'dateInput', onChange: this._change }),
 	                _react2.default.createElement('i', { className: 'glyphicon glyphicon-calendar', style: { position: 'absolute', left: '10px', top: '8px' } })
 	            )
 	        );
+	    },
+	    _change: function _change() {
+	        this.setState({
+	            value: this.refs.dateInput.value,
+	            start: this.refs.dateInput.value.substr(0, 10),
+	            end: this.refs.dateInput.value.substr(-10, 10)
+	        });
 	    }
 	});
 
@@ -27764,7 +27771,9 @@
 	    },
 	    _change: function _change() {
 	        this.setState({
-	            value: this.refs.dateInput.value
+	            value: this.refs.dateInput.value,
+	            start: this.refs.dateInput.value.substr(0, 19),
+	            end: this.refs.dateInput.value.substr(-19, 19)
 	        });
 	    }
 	});
@@ -27874,23 +27883,38 @@
 	    displayName: 'BasicInfo',
 
 	    getInitialState: function getInitialState() {
-	        var info = this.props.value || {};
 	        return {
-	            firstName: info.firstName,
-	            LastName: info.lastName,
-	            tel: info.cellphoneNumber,
-	            email: info.email,
-	            degree: info.degree,
-	            schoolName: info.schoolName,
-	            schoolingTime: info.schoolingTime,
-	            schoolCountry: info.schoolCountry,
-	            specialty: info.specialty,
-	            occupation: info.occupation,
-	            skype: info.skype,
-	            nationality: info.nationality,
-	            timezone: info.timezone,
-	            city: info.city
+	            firstName: '',
+	            LastName: '',
+	            tel: '',
+	            email: '',
+	            degree: '',
+	            schoolName: '',
+	            schoolingTime: '',
+	            schoolCountry: '',
+	            specialty: '',
+	            occupation: '',
+	            skype: '',
+	            nationality: '',
+	            timezone: '',
+	            city: ''
 	        };
+	        /*{
+	            firstName : info.firstName,
+	            LastName : info.lastName,
+	            tel : info.cellphoneNumber,
+	            email : info.email,
+	            degree : info.degree,
+	            schoolName : info.schoolName,
+	            schoolingTime : info.schoolingTime,
+	            schoolCountry : info.schoolCountry,
+	            specialty : info.specialty,
+	            occupation : info.occupation,
+	            skype : info.skype,
+	            nationality : info.nationality,
+	            timezone : info.timezone,
+	            city : info.city
+	        }*/
 	    },
 	    render: function render() {
 	        var _this = this;
@@ -28120,9 +28144,9 @@
 	        });
 	    },
 	    _changeTimeZone: function _changeTimeZone(index) {
-	        var timezone = configData.timezone.id[index];
+	        var timezone = configData.timeZone.id[index];
 	        this.setState({
-	            timeZone: timezone
+	            timezone: timezone
 	        });
 	    },
 	    _changeCity: function _changeCity() {
@@ -31217,10 +31241,6 @@
 
 	var _modalAdopt2 = _interopRequireDefault(_modalAdopt);
 
-	var _modalAdopts = __webpack_require__(298);
-
-	var _modalAdopts2 = _interopRequireDefault(_modalAdopts);
-
 	var _modalInPond = __webpack_require__(275);
 
 	var _modalInPond2 = _interopRequireDefault(_modalInPond);
@@ -31233,11 +31253,6 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var configData = __webpack_require__(256);
-
-	//引入样式
-
-
 	//引入组件
 	/**
 	 * Created by cuilu on 16/5/18.
@@ -31245,6 +31260,11 @@
 	 */
 
 	//引入插件
+
+
+	var configData = __webpack_require__(256);
+
+	//引入样式
 
 
 	var teacherAccountsUrl = 'http://' + configData.ip + '/web/common/trialTeacherList';
@@ -31255,6 +31275,7 @@
 	var searchUrl = 'http://' + configData.ip + '/web/teacherOralEn/teacherStepList?';
 	var infoUrl = 'http://' + configData.ip + '/web/teacherOralEn/teacherDetail?';
 	var inPondsUrl = 'http://' + configData.ip + '/web/teacherOralEn/putPond';
+	var passUrl = 'http://' + configData.ip + '/web/teacherOralEn/updateStatePass';
 
 	var TeacherLecture = _react2.default.createClass({
 	    displayName: 'TeacherLecture',
@@ -31309,8 +31330,8 @@
 	                });
 	            } else {
 	                var selectList = new Array(data.content.length);
-	                for (var _i = 0; _i < selectList.length; _i++) {
-	                    selectList[_i] = false;
+	                for (var i = 0; i < selectList.length; i++) {
+	                    selectList[i] = false;
 	                }
 	                _this.setState({
 	                    curURL: myurl,
@@ -31413,12 +31434,13 @@
 	        return _react2.default.createElement(
 	            'div',
 	            { className: 'TeacherLecture' },
-	            _react2.default.createElement(_modalLecture2.default, { info: this.state.curInfo, callback: this.updateList }),
+	            _react2.default.createElement(_modalLecture2.default, { info: this.state.curInfo, callback: function callback(e) {
+	                    _this2._getPage(_this2.state.curPage);
+	                } }),
 	            _react2.default.createElement(_tryLesson2.default, { row: rowContent, teacher: this.state.teacherAccounts, student: this.state.studentAccounts,
 	                time: this.state.timeSlot, course: this.state.demoCourse, callback: this.updateTime }),
 	            _react2.default.createElement(_modalTryScore2.default, { value: this.state.list[this.state.curRow] }),
-	            _react2.default.createElement(_modalAdopt2.default, { callback: this.adopts }),
-	            _react2.default.createElement(_modalAdopts2.default, { callback: this.adopts }),
+	            _react2.default.createElement(_modalAdopt2.default, { callback: this.adopt }),
 	            _react2.default.createElement(_modalInPond2.default, { callback: this.inPonds }),
 	            _react2.default.createElement(_modalInPonds2.default, { callback: this.inPonds }),
 	            _react2.default.createElement(
@@ -31470,11 +31492,6 @@
 	                        'button',
 	                        { className: 'btn btn-default btn-sm', onClick: this._arangeInPonds },
 	                        '批量入池'
-	                    ),
-	                    _react2.default.createElement(
-	                        'button',
-	                        { className: 'btn btn-default btn-sm', onClick: this._arangeAdopts },
-	                        '批量通过'
 	                    )
 	                )
 	            ),
@@ -31491,9 +31508,9 @@
 
 	            var newTeacherArr = [],
 	                newTeacherId = [];
-	            for (var _i2 = 0; _i2 < data.length; _i2++) {
-	                newTeacherArr.push(data[_i2].nickName);
-	                newTeacherId.push(data[_i2].teacherId);
+	            for (var i = 0; i < data.length; i++) {
+	                newTeacherArr.push(data[i].nickName);
+	                newTeacherId.push(data[i].teacherId);
 	            }
 	            _this3.setState({
 	                teacherAccounts: {
@@ -31515,9 +31532,9 @@
 
 	            var newStudentArr = [],
 	                newStudentId = [];
-	            for (var _i3 = 0; _i3 < data.length; _i3++) {
-	                newStudentArr.push(data[_i3].nickName);
-	                newStudentId.push(data[_i3].studentId);
+	            for (var i = 0; i < data.length; i++) {
+	                newStudentArr.push(data[i].nickName);
+	                newStudentId.push(data[i].studentId);
 	            }
 	            _this4.setState({
 	                studentAccounts: {
@@ -31540,10 +31557,10 @@
 	            var newCourseArr = [],
 	                newCourseId = [],
 	                newCourseType = [];
-	            for (var _i4 = 0; _i4 < data.length; _i4++) {
-	                newCourseArr.push(data[_i4].name);
-	                newCourseId.push(data[_i4].courseId);
-	                newCourseType.push(data[_i4].courseType);
+	            for (var i = 0; i < data.length; i++) {
+	                newCourseArr.push(data[i].name);
+	                newCourseId.push(data[i].courseId);
+	                newCourseType.push(data[i].courseType);
 	            }
 	            _this5.setState({
 	                demoCourse: {
@@ -31566,9 +31583,9 @@
 
 	            var newTimeArr = [],
 	                newTimeId = [];
-	            for (var _i5 = 0; _i5 < data.length; _i5++) {
-	                newTimeArr.push(data[_i5].startTime + ' - ' + data[_i5].endTime);
-	                newTimeId.push(data[_i5].slotId);
+	            for (var i = 0; i < data.length; i++) {
+	                newTimeArr.push(data[i].startTime + ' - ' + data[i].endTime);
+	                newTimeId.push(data[i].slotId);
 	            }
 	            _this6.setState({
 	                timeSlot: {
@@ -31625,8 +31642,10 @@
 	            timeZone = this.refs.contentInput.state.timeZone,
 	            telNum = this.refs.contentInput.state.telNum,
 	            email = this.refs.contentInput.state.email,
-	            interviewTime = this.refs.interviewTime.state.value.trim(),
-	            tryTime = this.refs.tryLessonTime.state.value.trim(),
+	            interviewTimeStart = this.refs.interviewTime.state.start,
+	            interviewTimeEnd = this.refs.interviewTime.state.end,
+	            tryTimeStart = this.refs.tryLessonTime.state.start,
+	            tryTimeEnd = this.refs.tryLessonTime.state.end,
 	            statu = configData.reservationTry.id[this.refs.reservationTry.state.index],
 	            myurl = searchUrl + 'page=0&size=' + this.state.pageSize;
 
@@ -31636,12 +31655,11 @@
 	        myurl += timeZone != -1 ? '&timeZone=' + timeZone : '';
 	        myurl += telNum.length > 0 ? '&cellphoneNumber=' + telNum : '';
 	        myurl += email.length > 0 ? '&email=' + email : '';
-	        myurl += interviewTime.length > 0 ? '&interviewTimeStart=' + interviewTime.substr(0, 19) + '&interviewTimeEnd=' + interviewTime.substr(-19, 19) : '';
-	        myurl += tryTime.length > 0 ? '&triallectureStartTimeStart=' + tryTime.substr(0, 19) + '&triallectureStartTimeEnd=' + tryTime.substr(-19, 19) : '';
+	        myurl += interviewTimeStart.length > 0 ? '&interviewTimeStart=' + interviewTimeStart + '&interviewTimeEnd=' + interviewTimeEnd : '';
+	        myurl += tryTimeStart.length > 0 ? '&triallectureStartTimeStart=' + tryTimeStart + '&triallectureStartTimeEnd=' + tryTimeEnd : '';
 	        myurl += statu != -1 ? '&isHasTriallectureTime=' + statu : '';
 
 	        console.log(myurl);
-	        //let testurl = `${searchUrl}page=0&size=10`;
 	        (0, _ajax.Get)({
 	            url: myurl
 	        }).then(function (_ref6) {
@@ -31658,8 +31676,8 @@
 	                });
 	            } else {
 	                var selectList = new Array(data.content.length);
-	                for (var _i6 = 0; _i6 < selectList.length; _i6++) {
-	                    selectList[_i6] = false;
+	                for (var i = 0; i < selectList.length; i++) {
+	                    selectList[i] = false;
 	                }
 	                _this7.setState({
 	                    curURL: myurl,
@@ -31723,7 +31741,7 @@
 	        });
 	        $(".tryLesson .modal").modal();
 	    },
-	    _arrangeScore: function _arrangeScore() {
+	    _arrangeScore: function _arrangeScore(i) {
 	        this.setState({
 	            curRow: i
 	        });
@@ -31756,36 +31774,22 @@
 	        });
 	        $(".modalAdopt .modal").modal();
 	    },
-	    _arangeAdopts: function _arangeAdopts() {
-	        $(".modalAdopts .modal").modal();
-	    },
-	    adopts: function adopts(num) {
+	    adopt: function adopt(num) {
 	        var _this10 = this;
 
-	        var emails = [];
-	        if (num == 1) {
-	            emails = emails.push(this.state.list[this.state.curRow].email);
-	        } else {
-	            console.log(this.state.selected);
-	            emails = this.state.selected.map(function (v, i) {
-	                if (v) {
-	                    return _this10.state.list[i].email;
-	                } else {
-	                    return;
-	                }
-	            });
-	        }
+	        var emails = [].concat(this.state.list[this.state.curRow].email);
 	        (0, _ajax.Post)({
-	            url: inPondsUrl,
+	            url: passUrl,
 	            data: {
-	                "emails": emails
+	                "emails": emails,
+	                "stateStep": 3
 	            }
 	        }).then(function (_ref8) {
 	            var code = _ref8.code;
 	            var data = _ref8.data;
 
 	            $(".modalAdopt .modal").modal('hide');
-	            $(".modalAdopts .modal").modal('hide');
+	            _this10._getPage(_this10.state.curPage);
 	        }, function () {
 	            alert("通过操作失败,请重试!");
 	        }).catch();
@@ -31800,18 +31804,23 @@
 	        $(".modalInPonds .modal").modal();
 	    },
 	    inPonds: function inPonds(num, reason) {
+	        var _this11 = this;
+
 	        var line = this.state.list[this.state.curRow];
 	        var emails = [];
 	        if (num == 1) {
 	            emails.push(line.email);
 	        } else {
-	            console.log(this.state.selected);
-	            for (var _i7 = 0; _i7 < this.state.list.length; _i7++) {
-	                emails.push(this.state.list[_i7].email);
+	            for (var i = 0; i < this.state.list.length; i++) {
+	                if (this.state.selected[i] == true) {
+	                    emails.push(this.state.list[i].email);
+	                }
 	            }
 	        }
-	        console.log(emails);
-	        return;
+	        if (email.length <= 0) {
+	            alert("请选中入池的教师!");
+	            return;
+	        }
 	        (0, _ajax.Post)({
 	            url: inPondsUrl,
 	            data: {
@@ -31824,12 +31833,13 @@
 
 	            $(".modalInPond .modal").modal('hide');
 	            $(".modalInPonds .modal").modal('hide');
+	            _this11._getPage(_this11.state.curPage);
 	        }, function () {
 	            alert("入池失败,请重试!");
 	        }).catch();
 	    },
 	    _arangeMore: function _arangeMore(i) {
-	        var _this11 = this;
+	        var _this12 = this;
 
 	        this.setState({
 	            curRow: i
@@ -31841,7 +31851,7 @@
 	            var data = _ref10.data;
 
 	            if (data) {
-	                _this11.setState({
+	                _this12.setState({
 	                    curInfo: data
 	                });
 	                $(".modalLecture .modal").modal();
@@ -32004,6 +32014,7 @@
 	            "triallectureTeacher": null,
 	            "triallectureStudent": null
 	        };
+	        console.log(content);
 	        (0, _ajax.Post)({
 	            url: submitUrl,
 	            data: content
@@ -32011,7 +32022,8 @@
 	            var data = _ref.data;
 
 	            //显示更改后的数据
-	            _this.props.callback(content);
+	            $(".modalLecture .modal").modal('hide');
+	            _this.props.callback();
 	        }, function () {
 	            alert("安排试讲失败,可能因为网络原因,也可能是安排出现冲突!");
 	        }).catch(function (err) {
@@ -32050,7 +32062,7 @@
 	        var _this = this;
 
 	        //初始化表格的日期选择控件
-	        $('.singleDatePicker').daterangepicker({ singleDatePicker: true, startDate: new Date() }, function (start, end) {
+	        $(this.refs.dateInput).daterangepicker({ singleDatePicker: true, startDate: new Date() }, function (start, end) {
 	            _this.setState({
 	                value: start.format("YYYY-MM-DD")
 	            });
@@ -32293,7 +32305,7 @@
 
 
 	// module
-	exports.push([module.id, ".tryLesson .modal-dialog {\n  width: 300px;\n}\n.tryLesson .modal-dialog .modal-content {\n  height: auto;\n  padding: 10px;\n}\n.tryLesson .modal-dialog .modal-content .element {\n  margin-bottom: 10px;\n}\n.tryLesson .modal-dialog .modal-content .element .field select {\n  width: 170px;\n}\n.tryLesson .modal-dialog .modal-content .element .try-time {\n  width: 170px;\n}\n.tryLesson .modal-dialog .modal-content .element .try-time .datePicker {\n  width: 170px;\n}\n.tryLesson .modal-dialog .modal-content .element label,\n.tryLesson .modal-dialog .modal-content .element .try-time {\n  float: left;\n}\n.tryLesson .modal-dialog .modal-content .element .form-control {\n  display: inline-block;\n  width: auto;\n}\n.tryLesson .modal-dialog .modal-content .element label {\n  margin-right: 5px;\n}\n", ""]);
+	exports.push([module.id, ".tryLesson .modal-dialog {\n  width: 350px;\n}\n.tryLesson .modal-dialog .modal-content {\n  height: auto;\n  padding: 10px;\n}\n.tryLesson .modal-dialog .modal-content .element {\n  margin-bottom: 10px;\n}\n.tryLesson .modal-dialog .modal-content .element .field select {\n  width: 190px;\n  max-width: 190px;\n}\n.tryLesson .modal-dialog .modal-content .element .try-time {\n  width: 190px;\n}\n.tryLesson .modal-dialog .modal-content .element .try-time .datePicker {\n  width: 190px;\n}\n.tryLesson .modal-dialog .modal-content .element label,\n.tryLesson .modal-dialog .modal-content .element .try-time {\n  float: left;\n}\n.tryLesson .modal-dialog .modal-content .element .form-control {\n  display: inline-block;\n  width: auto;\n}\n.tryLesson .modal-dialog .modal-content .element label {\n  margin-right: 5px;\n}\n", ""]);
 
 	// exports
 
@@ -32374,81 +32386,7 @@
 	exports.default = ModalAdopt;
 
 /***/ },
-/* 298 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	//引入样式
-
-	var ModalAdopts = _react2.default.createClass({
-	    displayName: "ModalAdopts",
-
-	    render: function render() {
-	        return _react2.default.createElement(
-	            "div",
-	            { className: "modalAdopts" },
-	            _react2.default.createElement(
-	                "div",
-	                { className: "modal fade" },
-	                _react2.default.createElement(
-	                    "div",
-	                    { className: "modal-dialog" },
-	                    _react2.default.createElement(
-	                        "div",
-	                        { className: "modal-content" },
-	                        _react2.default.createElement(
-	                            "div",
-	                            { className: "modal-body" },
-	                            _react2.default.createElement(
-	                                "p",
-	                                null,
-	                                "确认选中老师通过试讲?"
-	                            )
-	                        ),
-	                        _react2.default.createElement(
-	                            "div",
-	                            { className: "modal-footer" },
-	                            _react2.default.createElement(
-	                                "button",
-	                                { type: "button", className: "btn btn-primary", onClick: this._submit },
-	                                "确定"
-	                            ),
-	                            _react2.default.createElement(
-	                                "button",
-	                                { type: "button", className: "btn btn-default", "data-dismiss": "modal" },
-	                                "取消"
-	                            )
-	                        )
-	                    )
-	                )
-	            )
-	        );
-	    },
-	    _submit: function _submit() {
-	        this.props.callback(2);
-	    }
-	}); /**
-	     * Created by cuilu on 16/5/25.
-	     * 批量通过模态框
-	     */
-
-	//引入插件
-
-
-	exports.default = ModalAdopts;
-
-/***/ },
+/* 298 */,
 /* 299 */
 /***/ function(module, exports, __webpack_require__) {
 

@@ -78,13 +78,15 @@ var ModalLecture = React.createClass({
             "triallectureTeacher": null,
             "triallectureStudent": null
         };
+        console.log(content);
         Post({
             url : submitUrl,
             data : content
         }).then(
             ({data}) => {
                 //显示更改后的数据
-                this.props.callback(content);
+                $(".modalLecture .modal").modal('hide');
+                this.props.callback();
             },
             ()=>{
                 alert("安排试讲失败,可能因为网络原因,也可能是安排出现冲突!");

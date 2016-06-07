@@ -27,11 +27,18 @@ var DataPicker = React.createClass({
             <div className="field" >
                 <div style={{position:'relative', width:'220px'}}>
                     <input type="text" className="form-control datePicker" placeholder={this.props.name}
-                           style={{paddingLeft:'30px'}} value={this.props.value} ref="dateInput"/>
+                           style={{paddingLeft:'30px'}} value={this.props.value} ref="dateInput" onChange={this._change}/>
                     <i className="glyphicon glyphicon-calendar"  style={{position:'absolute',left:'10px',top:'8px'}}></i>
                 </div>
             </div>
         );
+    },
+    _change : function () {
+        this.setState({
+            value : this.refs.dateInput.value,
+            start : this.refs.dateInput.value.substr(0,10),
+            end : this.refs.dateInput.value.substr(-10,10)
+        });
     }
 });
 

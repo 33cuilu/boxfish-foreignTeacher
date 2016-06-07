@@ -14,8 +14,23 @@ var configData = require("../../test/config.json");
 
 var BasicInfo = React.createClass({
     getInitialState : function () {
-        let info = this.props.value || {};
         return {
+            firstName : '',
+            LastName : '',
+            tel : '',
+            email : '',
+            degree : '',
+            schoolName : '',
+            schoolingTime : '',
+            schoolCountry : '',
+            specialty : '',
+            occupation : '',
+            skype : '',
+            nationality : '',
+            timezone : '',
+            city : ''
+        };
+        /*{
             firstName : info.firstName,
             LastName : info.lastName,
             tel : info.cellphoneNumber,
@@ -30,7 +45,7 @@ var BasicInfo = React.createClass({
             nationality : info.nationality,
             timezone : info.timezone,
             city : info.city
-        }
+        }*/
     },
     render : function(){
         let info = this.props.value;
@@ -161,9 +176,9 @@ var BasicInfo = React.createClass({
         });
     },
     _changeTimeZone : function (index) {
-        let timezone = configData.timezone.id[index];
+        let timezone = configData.timeZone.id[index];
         this.setState({
-            timeZone : timezone
+            timezone : timezone
         });
     },
     _changeCity : function () {

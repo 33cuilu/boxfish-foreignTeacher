@@ -17,7 +17,6 @@ import PageList from './../commons/page.js';
 import TryLesson from './tryLesson.js';
 import ModalTryScore from './../commons/modalTryScore.js';
 import ModalAdopt from './modalAdopt.js';
-import ModalAdopts from './modalAdopts.js';
 import ModalInPond from './../commons/modalInPond.js';
 import ModalInPonds from './../commons/modalInPonds.js';
 
@@ -34,6 +33,7 @@ var demoCourseUrl = `http://${configData.ip}/web/common/demoCourses`;
 var searchUrl = `http://${configData.ip}/web/teacherOralEn/teacherStepList?`;
 var infoUrl = `http://${configData.ip}/web/teacherOralEn/teacherDetail?`;
 var inPondsUrl = `http://${configData.ip}/web/teacherOralEn/putPond`;
+var passUrl = `http://${configData.ip}/web/teacherOralEn/updateStatePass`;
 
 var TeacherLecture = React.createClass({
     getInitialState : function () {
@@ -146,12 +146,11 @@ var TeacherLecture = React.createClass({
             });
         return(
             <div className="TeacherLecture">
-                <ModalLecture info={this.state.curInfo} callback={this.updateList}/>
+                <ModalLecture info={this.state.curInfo} callback={(e)=>{this._getPage(this.state.curPage)}}/>
                 <TryLesson row={rowContent} teacher={this.state.teacherAccounts} student={this.state.studentAccounts}
                            time={this.state.timeSlot} course={this.state.demoCourse} callback={this.updateTime}/>
                 <ModalTryScore value={this.state.list[this.state.curRow]} />
-                <ModalAdopt callback={this.adopts}/>
-                <ModalAdopts callback={this.adopts}/>
+                <ModalAdopt callback={this.adopt}/>
                 <ModalInPond callback={this.inPonds}/>
                 <ModalInPonds callback={this.inPonds}/>
                 <div className="forms" id="forms">
@@ -180,7 +179,6 @@ var TeacherLecture = React.createClass({
                 <div className="main-btn">
                     <div className="btn-right">
                         <button className="btn btn-default btn-sm" onClick={this._arangeInPonds}>批量入池</button>
-                        <button className="btn btn-default btn-sm" onClick={this._arangeAdopts}>批量通过</button>
                     </div>
                 </div>
                 <PageList curPage={this.state.curPage} totalPages={this.state.totalPages} onPre={this._prePage} onFirst={this._firstPage} onLast={this._lastPage} onNext={this._nextPage}/>
@@ -311,8 +309,10 @@ var TeacherLecture = React.createClass({
             timeZone = this.refs.contentInput.state.timeZone,
             telNum = this.refs.contentInput.state.telNum,
             email = this.refs.contentInput.state.email,
-            interviewTime = this.refs.interviewTime.state.value.trim(),
-            tryTime = this.refs.tryLessonTime.state.value.trim(),
+            interviewTimeStart = this.refs.interviewTime.state.start,
+            interviewTimeEnd = this.refs.interviewTime.state.end,
+            tryTimeStart = this.refs.tryLessonTime.state.start,
+            tryTimeEnd = this.refs.tryLessonTime.state.end,
             statu = configData.reservationTry.id[this.refs.reservationTry.state.index],
             myurl = `${searchUrl}page=0&size=${this.state.pageSize}`;
 
@@ -322,12 +322,11 @@ var TeacherLecture = React.createClass({
         myurl += (timeZone != -1) ? `&timeZone=${timeZone}` : '';
         myurl += (telNum.length >0) ? `&cellphoneNumber=${telNum}`: '';
         myurl += (email.length >0) ? `&email=${email}`: '';
-        myurl += (interviewTime.length >0) ? `&interviewTimeStart=${interviewTime.substr(0,19)}&interviewTimeEnd=${interviewTime.substr(-19,19)}`: '';
-        myurl += (tryTime.length >0) ? `&triallectureStartTimeStart=${tryTime.substr(0,19)}&triallectureStartTimeEnd=${tryTime.substr(-19,19)}`: '';
+        myurl += (interviewTimeStart.length >0) ? `&interviewTimeStart=${interviewTimeStart}&interviewTimeEnd=${interviewTimeEnd}`: '';
+        myurl += (tryTimeStart.length >0) ? `&triallectureStartTimeStart=${tryTimeStart}&triallectureStartTimeEnd=${tryTimeEnd}`: '';
         myurl += (statu != -1) ? `&isHasTriallectureTime=${statu}`: '';
 
         console.log(myurl);
-        //let testurl = `${searchUrl}page=0&size=10`;
         Get({
             url : myurl
         }).then(
@@ -408,7 +407,7 @@ var TeacherLecture = React.createClass({
         });
         $(".tryLesson .modal").modal();
     },
-    _arrangeScore : function () {
+    _arrangeScore : function (i) {
         this.setState({
             curRow : i
         });
@@ -441,32 +440,18 @@ var TeacherLecture = React.createClass({
         });
         $(".modalAdopt .modal").modal();
     },
-    _arangeAdopts : function(){
-        $(".modalAdopts .modal").modal();
-    },
-    adopts : function (num) {
-        let emails = [];
-        if(num == 1){
-            emails = emails.push(this.state.list[this.state.curRow].email);
-        }else{
-            console.log(this.state.selected);
-            emails = this.state.selected.map((v,i) => {
-                if(v){
-                    return (this.state.list[i].email);
-                }else{
-                    return;
-                }
-            });
-        }
+    adopt : function (num) {
+        let emails = [].concat(this.state.list[this.state.curRow].email);
         Post({
-            url : inPondsUrl,
+            url : passUrl,
             data : {
-                "emails": emails
+                "emails": emails,
+                "stateStep":3
             }
         }).then(
             ({code,data}) => {
                 $(".modalAdopt .modal").modal('hide');
-                $(".modalAdopts .modal").modal('hide');
+                this._getPage(this.state.curPage);
             },
             () => {
                 alert("通过操作失败,请重试!");
@@ -487,13 +472,16 @@ var TeacherLecture = React.createClass({
         if(num == 1){
             emails.push(line.email);
         }else{
-            console.log(this.state.selected);
             for(let i=0; i<this.state.list.length; i++){
-                emails.push(this.state.list[i].email);
+                if(this.state.selected[i] == true){
+                    emails.push(this.state.list[i].email);
+                }
             }
         }
-        console.log(emails);
-        return;
+        if(email.length <=0){
+            alert("请选中入池的教师!");
+            return;
+        }
         Post({
             url : inPondsUrl,
             data : {
@@ -504,6 +492,7 @@ var TeacherLecture = React.createClass({
             ({code,data}) => {
                 $(".modalInPond .modal").modal('hide');
                 $(".modalInPonds .modal").modal('hide');
+                this._getPage(this.state.curPage);
             },
             () => {
                 alert("入池失败,请重试!");

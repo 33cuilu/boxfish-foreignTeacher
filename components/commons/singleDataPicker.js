@@ -12,7 +12,7 @@ var SingleDataPicker = React.createClass({
     },
     componentDidMount : function () {
         //初始化表格的日期选择控件
-        $('.singleDatePicker').daterangepicker({ singleDatePicker: true , startDate: new Date()}, (start,end) => {
+        $(this.refs.dateInput).daterangepicker({ singleDatePicker: true , startDate: new Date()}, (start,end) => {
             this.setState({
                 value : start.format("YYYY-MM-DD")
             });
