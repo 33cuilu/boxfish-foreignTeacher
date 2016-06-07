@@ -72,13 +72,14 @@ var TeacherLecture = React.createClass({
     },
     componentDidMount : function () {
         //获取空列表
+        let myurl = `${searchUrl}page=0&size=10`;
         Get({
-            url : `${searchUrl}page=0&size=0`
+            url : myurl
         }).then(
             ({data})=> {
                 if (data == null) {
                     this.setState({
-                        curURL : myurl,
+                        curURL : myurl
                     });
                 } else {
                     let selectList = new Array(data.content.length);
@@ -481,19 +482,18 @@ var TeacherLecture = React.createClass({
         $(".modalInPonds .modal").modal();
     },
     inPonds : function (num,reason) {
+        let line = this.state.list[this.state.curRow];
         let emails = [];
         if(num == 1){
-            emails = emails.push(this.state.list[this.state.curRow].email);
+            emails.push(line.email);
         }else{
             console.log(this.state.selected);
-            emails = this.state.selected.map((v,i) => {
-                if(v){
-                    return (this.state.list[i].email);
-                }else{
-                    return;
-                }
-            });
+            for(let i=0; i<this.state.list.length; i++){
+                emails.push(this.state.list[i].email);
+            }
         }
+        console.log(emails);
+        return;
         Post({
             url : inPondsUrl,
             data : {

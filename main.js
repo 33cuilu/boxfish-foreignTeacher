@@ -31297,8 +31297,9 @@
 	        var _this = this;
 
 	        //获取空列表
+	        var myurl = searchUrl + 'page=0&size=10';
 	        (0, _ajax.Get)({
-	            url: searchUrl + 'page=0&size=0'
+	            url: myurl
 	        }).then(function (_ref) {
 	            var data = _ref.data;
 
@@ -31799,21 +31800,18 @@
 	        $(".modalInPonds .modal").modal();
 	    },
 	    inPonds: function inPonds(num, reason) {
-	        var _this11 = this;
-
+	        var line = this.state.list[this.state.curRow];
 	        var emails = [];
 	        if (num == 1) {
-	            emails = emails.push(this.state.list[this.state.curRow].email);
+	            emails.push(line.email);
 	        } else {
 	            console.log(this.state.selected);
-	            emails = this.state.selected.map(function (v, i) {
-	                if (v) {
-	                    return _this11.state.list[i].email;
-	                } else {
-	                    return;
-	                }
-	            });
+	            for (var _i7 = 0; _i7 < this.state.list.length; _i7++) {
+	                emails.push(this.state.list[_i7].email);
+	            }
 	        }
+	        console.log(emails);
+	        return;
 	        (0, _ajax.Post)({
 	            url: inPondsUrl,
 	            data: {
@@ -31831,7 +31829,7 @@
 	        }).catch();
 	    },
 	    _arangeMore: function _arangeMore(i) {
-	        var _this12 = this;
+	        var _this11 = this;
 
 	        this.setState({
 	            curRow: i
@@ -31843,7 +31841,7 @@
 	            var data = _ref10.data;
 
 	            if (data) {
-	                _this12.setState({
+	                _this11.setState({
 	                    curInfo: data
 	                });
 	                $(".modalLecture .modal").modal();
@@ -32045,14 +32043,14 @@
 
 	    getInitialState: function getInitialState() {
 	        return {
-	            value: '2016-05-29'
+	            value: ''
 	        };
 	    },
 	    componentDidMount: function componentDidMount() {
 	        var _this = this;
 
 	        //初始化表格的日期选择控件
-	        $('.singleDatePicker').daterangepicker({ singleDatePicker: true }, function (start, end) {
+	        $('.singleDatePicker').daterangepicker({ singleDatePicker: true, startDate: new Date() }, function (start, end) {
 	            _this.setState({
 	                value: start.format("YYYY-MM-DD")
 	            });

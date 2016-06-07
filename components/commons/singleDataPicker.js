@@ -7,12 +7,12 @@ import React from 'react';
 var SingleDataPicker = React.createClass({
     getInitialState : function () {
         return {
-            value : '2016-05-29'
+            value : ''
         };
     },
     componentDidMount : function () {
         //初始化表格的日期选择控件
-        $('.singleDatePicker').daterangepicker({ singleDatePicker: true }, (start,end) => {
+        $('.singleDatePicker').daterangepicker({ singleDatePicker: true , startDate: new Date()}, (start,end) => {
             this.setState({
                 value : start.format("YYYY-MM-DD")
             });
