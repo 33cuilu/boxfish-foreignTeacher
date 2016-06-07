@@ -16,8 +16,8 @@ var ContentInput = React.createClass({
         return {
             firstName : '',
             lastName : '',
-            country : '国家',
-            timeZone : '时区',
+            country : -1,
+            timeZone : -1,
             telNum : '',
             email : ''
         }
@@ -53,13 +53,13 @@ var ContentInput = React.createClass({
         });
     },
     _getCountry : function (index) {
-        let newCountry = configData.country.arr[index];
+        let newCountry = configData.country.id[index];
         this.setState({
             country : newCountry
         });
     },
     _getTimeZone : function (index) {
-        let newTime = configData.timeZone.arr[index];
+        let newTime = configData.timeZone.id[index];
         this.setState({
             timeZone : newTime
         });

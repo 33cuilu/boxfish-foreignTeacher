@@ -16,6 +16,8 @@ import Table from './../commons/table.js';
 import PageList from './../commons/page.js';
 import ModalManagementFrozen from "./modalManagementFrozen.js";
 import ModalManagementActivation from './modalManagementActivation.js';
+import ModalTryScore from './../commons/modalTryScore.js';
+import ModalInterviewScore from './modalInterviewScore.js';
 
 //引入样式
 import "../../less/teacherManagement.less";
@@ -39,9 +41,6 @@ var TeacherManagement = React.createClass({
             list: []
         };
     },
-    _changeForm : function(event) {
-        $("#forms").toggleClass("forms-height");
-    },
     render : function(){
         let tableList = this.state.list.map((v,i) => {
             return {
@@ -62,6 +61,8 @@ var TeacherManagement = React.createClass({
                 "operate" : (
                     <div>
                         <button className="btn btn-default btn-xs" onClick={(e)=>{this._arrangeAccount(i)}}>分配账号</button>
+                        <button className="btn btn-default btn-xs" onClick={(e)=>{this._interviewScore(i)}}>面试评分</button>
+                        <button className="btn btn-default btn-xs" onClick={(e)=>{this._tryScore(i)}}>试讲评分</button>
                         <a onClick={(e)=>{this._arrangeMore(i)}}>详情</a>
                     </div>
                 )
@@ -72,6 +73,8 @@ var TeacherManagement = React.createClass({
                 <ModalManagement />
                 <ModalManagementFrozen ref="freeze"/>
                 <ModalManagementActivation ref="unfreeze"/>
+                <ModalTryScore />
+                <ModalInterviewScore />
                 <div className="forms" id="forms">
                     <div className="input">
                         <div className="form row">
@@ -110,6 +113,9 @@ var TeacherManagement = React.createClass({
                 <PageList curPage={this.state.curPage} totalPages={this.state.totalPages} onPre={this._prePage} onFirst={this._firstPage} onLast={this._lastPage} onNext={this._nextPage}/>
             </div>
         );
+    },
+    _changeForm : function(event) {
+        $("#forms").toggleClass("forms-height");
     },
     _getPage : function (page) {
         let myurl = this.state.curURL.replace(/page=0/,`page=${page-1}`);
@@ -162,6 +168,12 @@ var TeacherManagement = React.createClass({
             curRow : i
         });
         $(".teacherManagement .modal").modal();
+    },
+    _interviewScore : function (i) {
+        $(".interviewScore .modal").modal();
+    },
+    _tryScore : function (i) {
+        $(".tryScore .modal").modal();
     }
 });
 

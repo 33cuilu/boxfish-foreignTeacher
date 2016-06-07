@@ -17,6 +17,9 @@ var DataPicker = React.createClass({
                 end: end.format("YYYY-MM-DD"),
                 value: `${start.format("YYYY-MM-DD")} - ${end.format("YYYY-MM-DD")}`
             });
+            if(this.props.onChange){
+                this.props.onChange(`${start.format("YYYY-MM-DD")} - ${end.format("YYYY-MM-DD")}`);
+            }
         });
     },
     render : function () {

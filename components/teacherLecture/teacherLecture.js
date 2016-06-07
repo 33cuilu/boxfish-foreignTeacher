@@ -5,7 +5,7 @@
 
 //引入插件
 import React from 'react';
-import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
+import {Post,Get} from '../../util/ajax.js';
 
 //引入组件
 import ModalLecture from './modalLecture.js';
@@ -15,7 +15,7 @@ import SelectComponent from './../commons/selectComponent.js';
 import Table from './../commons/table.js';
 import PageList from './../commons/page.js';
 import TryLesson from './tryLesson.js';
-import ModalScore from './modalScore.js';
+import ModalTryScore from './../commons/modalTryScore.js';
 import ModalAdopt from './modalAdopt.js';
 import ModalAdopts from './modalAdopts.js';
 import ModalInPond from './../commons/modalInPond.js';
@@ -33,6 +33,7 @@ var demoCourseUrl = `http://${configData.ip}/web/common/demoCourses`;
 
 var searchUrl = `http://${configData.ip}/web/teacherOralEn/teacherStepList?`;
 var infoUrl = `http://${configData.ip}/web/teacherOralEn/teacherDetail?`;
+var inPondsUrl = `http://${configData.ip}/web/teacherOralEn/putPond`;
 
 var TeacherLecture = React.createClass({
     getInitialState : function () {
@@ -70,6 +71,37 @@ var TeacherLecture = React.createClass({
         };
     },
     componentDidMount : function () {
+        //获取空列表
+        Get({
+            url : `${searchUrl}page=0&size=0`
+        }).then(
+            ({data})=> {
+                if (data == null) {
+                    this.setState({
+                        curURL : myurl,
+                    });
+                } else {
+                    let selectList = new Array(data.content.length);
+                    for(let i=0; i<selectList.length; i++){
+                        selectList[i] = false;
+                    }
+                    this.setState({
+                        curURL: myurl,
+                        totalPages: data.totalPages,
+                        list: data.content,
+                        select : selectList
+                    });
+                }
+            },
+            ()=> {
+                alert("查询失败!");
+                this.setState({
+                    curURL : myurl
+                });
+            }
+        ).catch((err)=>{
+            console.log(err);
+        });
         //获取试讲账号列表
         this._getTeacherAccounts(teacherAccountsUrl);
 
@@ -103,9 +135,9 @@ var TeacherLecture = React.createClass({
                     "triallectureTime" : tryTime,
                     "operate" : (
                         <div>
-                            <button className="btn btn-default btn-xs" onClick={this._score}>评分</button>
-                            <button className="btn btn-default btn-xs" onClick={this._arangeAdopt}>通过</button>
-                            <button className="btn btn-default btn-xs" onClick={this._arangeInPond}>入池</button>
+                            <button className="btn btn-default btn-xs" onClick={(e)=>{this._arrangeScore(i)}}>评分</button>
+                            <button className="btn btn-default btn-xs" onClick={(e)=>{this._arangeAdopt(i)}}>通过</button>
+                            <button className="btn btn-default btn-xs" onClick={(e)=>{this._arangeInPond(i)}}>入池</button>
                             <a onClick={(e)=>{this._arangeMore(i)}}>详情</a>
                         </div>
                     )
@@ -113,15 +145,14 @@ var TeacherLecture = React.createClass({
             });
         return(
             <div className="TeacherLecture">
-                <ModalLecture info={this.state.curInfo} teacher={this.state.teacherAccounts} student={this.state.studentAccounts}
-                              time={this.state.timeSlot} course={this.state.demoCourse} callback={this.updateList}/>
+                <ModalLecture info={this.state.curInfo} callback={this.updateList}/>
                 <TryLesson row={rowContent} teacher={this.state.teacherAccounts} student={this.state.studentAccounts}
                            time={this.state.timeSlot} course={this.state.demoCourse} callback={this.updateTime}/>
-                <ModalScore creative={configData.creative} adaptation={configData.adaptation}/>
-                <ModalAdopt />
-                <ModalAdopts />
-                <ModalInPond />
-                <ModalInPonds />
+                <ModalTryScore value={this.state.list[this.state.curRow]} />
+                <ModalAdopt callback={this.adopts}/>
+                <ModalAdopts callback={this.adopts}/>
+                <ModalInPond callback={this.inPonds}/>
+                <ModalInPonds callback={this.inPonds}/>
                 <div className="forms" id="forms">
                     <div className="input">
                         <div className="form row">
@@ -245,16 +276,22 @@ var TeacherLecture = React.createClass({
         let selectList = this.state.select;
         selectList[index] = e.target.checked;
         this.setState({
-            select : selectList
+            selected : selectList
         });
     },
     selectAll : function (state) {
         let selectList = this.state.select.map(() => {return (state);});
         this.setState({
-            select : selectList
+            selected : selectList
         });
     },
-    updateList : function () {
+    updateList : function (line) {
+        let index = this.state.curRow;
+        Object.assign(this.state.list[index],line);
+        let newList = [].concat(this.state.list.slice(0,index), line, this.state.list.slice(index + 1));
+        this.setState({
+            list : newList
+        });
     },
     updateTime : function (start,end) {
         let index = this.state.curRow;
@@ -280,8 +317,8 @@ var TeacherLecture = React.createClass({
 
         myurl += (firstName.length >0) ? `&firstName=${firstName}` : '';
         myurl += (lastName.length >0) ? `&lastName=${lastName}` : '';
-        myurl += (country != "国家") ? `&nationality=${country}` : '';
-        myurl += (timeZone != "时区") ? `&timeZone=${timeZone}` : '';
+        myurl += (country != -1) ? `&nationality=${country}` : '';
+        myurl += (timeZone != -1) ? `&timeZone=${timeZone}` : '';
         myurl += (telNum.length >0) ? `&cellphoneNumber=${telNum}`: '';
         myurl += (email.length >0) ? `&email=${email}`: '';
         myurl += (interviewTime.length >0) ? `&interviewTimeStart=${interviewTime.substr(0,19)}&interviewTimeEnd=${interviewTime.substr(-19,19)}`: '';
@@ -292,28 +329,39 @@ var TeacherLecture = React.createClass({
         //let testurl = `${searchUrl}page=0&size=10`;
         Get({
             url : myurl
-        }).then(({code,message,data})=> {
-            if (data == null) {
+        }).then(
+            ({code,message,data})=> {
+                if (data == null) {
+                    this.setState({
+                        curPage: 1,
+                        totalPages: 1,
+                        curURL : myurl,
+                        list: []
+                    });
+                } else {
+                    let selectList = new Array(data.content.length);
+                    for(let i=0; i<selectList.length; i++){
+                        selectList[i] = false;
+                    }
+                    this.setState({
+                        curURL: myurl,
+                        curPage: 1,
+                        totalPages: data.totalPages,
+                        list: data.content,
+                        select : selectList
+                    });
+                }
+            },
+            ()=> {
+                alert("查询失败!");
                 this.setState({
                     curPage: 1,
                     totalPages: 1,
                     curURL : myurl,
                     list: []
                 });
-            } else {
-                let selectList = new Array(data.content.length);
-                for(let i=0; i<selectList.length; i++){
-                    selectList[i] = false;
-                }
-                this.setState({
-                    curURL: myurl,
-                    curPage: 1,
-                    totalPages: data.totalPages,
-                    list: data.content,
-                    select : selectList
-                });
             }
-        }).catch((err)=>{
+        ).catch((err)=>{
             console.log(err);
         });
 
@@ -359,14 +407,107 @@ var TeacherLecture = React.createClass({
         });
         $(".tryLesson .modal").modal();
     },
-    _score : function () {
-        $(".modalScore .modal").modal();
+    _arrangeScore : function () {
+        this.setState({
+            curRow : i
+        });
+        $(".tryScore .modal").modal();
     },
-    _arangeAdopt : function(){
+    score : function(creative,adaptation) {
+        let line = this.state.list[this.state.curRow];
+        line.creative = creative;
+        line.adaptation = adaptation;
+        let newList = [].concat(this.state.list.slice(0,index), line, this.state.list.slice(index + 1));
+        Post({
+            url : inPondsUrl,
+            data : {
+                "emails": email
+            }
+        }).then(
+            () => {
+                $(".tryScore .modal").modal('hide');
+                this.setState({
+                    list : newList
+                });
+            },
+            () => {
+                alert("评分操作失败,请重试!");
+            }).catch();
+    },
+    _arangeAdopt : function(i){
+        this.setState({
+            curRow : i
+        });
         $(".modalAdopt .modal").modal();
     },
-    _arangeInPond : function(){
+    _arangeAdopts : function(){
+        $(".modalAdopts .modal").modal();
+    },
+    adopts : function (num) {
+        let emails = [];
+        if(num == 1){
+            emails = emails.push(this.state.list[this.state.curRow].email);
+        }else{
+            console.log(this.state.selected);
+            emails = this.state.selected.map((v,i) => {
+                if(v){
+                    return (this.state.list[i].email);
+                }else{
+                    return;
+                }
+            });
+        }
+        Post({
+            url : inPondsUrl,
+            data : {
+                "emails": emails
+            }
+        }).then(
+            ({code,data}) => {
+                $(".modalAdopt .modal").modal('hide');
+                $(".modalAdopts .modal").modal('hide');
+            },
+            () => {
+                alert("通过操作失败,请重试!");
+            }).catch();
+    },
+    _arangeInPond : function(i){
+        this.setState({
+            curRow : i
+        });
         $(".modalInPond .modal").modal();
+    },
+    _arangeInPonds : function(){
+        $(".modalInPonds .modal").modal();
+    },
+    inPonds : function (num,reason) {
+        let emails = [];
+        if(num == 1){
+            emails = emails.push(this.state.list[this.state.curRow].email);
+        }else{
+            console.log(this.state.selected);
+            emails = this.state.selected.map((v,i) => {
+                if(v){
+                    return (this.state.list[i].email);
+                }else{
+                    return;
+                }
+            });
+        }
+        Post({
+            url : inPondsUrl,
+            data : {
+                "emails": emails,
+                "noPassReason": reason
+            }
+        }).then(
+            ({code,data}) => {
+                $(".modalInPond .modal").modal('hide');
+                $(".modalInPonds .modal").modal('hide');
+            },
+            () => {
+                alert("入池失败,请重试!");
+            }).catch();
     },
     _arangeMore : function(i){
         this.setState({
@@ -392,12 +533,6 @@ var TeacherLecture = React.createClass({
         ).catch((err)=>{
             console.log(err);
         });
-    },
-    _arangeInPonds : function(){
-        $(".modalInPonds .modal").modal();
-    },
-    _arangeAdopts : function(){
-        $(".modalAdopts .modal").modal();
     }
 });
 

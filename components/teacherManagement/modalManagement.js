@@ -12,20 +12,19 @@ import DataPicker from './../commons/dataPicker.js';
 import TimePicker from './../commons/timePicker.js';
 import SelectComponent from './../commons/selectComponent.js';
 import BasicInfo from './../commons/basicInfo.js';
-import AbilityInfo from './../commons/abilityInfo';
 
 //引入样式
 import '../../less/modalManagement.less';
 import '../../less/modalLecture.less';
 
 
-var config = require("../../test/config.json");
+var configData = require("../../test/config.json");
 
 var ModalManagement = React.createClass({
     render : function(){
         return(
             <div className="modalManagement">
-                <div className="">
+                <div className="modal fade">
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">
                             <div className="modal-body">
@@ -49,24 +48,11 @@ var ModalManagement = React.createClass({
                                     <BasicInfo ref="basicInfo"/>
                                     <div className="field">
                                         <label>性别:</label>
-                                        <SelectComponent ref="gender" contentData={config.sex} />
+                                        <SelectComponent ref="gender" contentData={configData.sex} />
                                     </div>
                                     <div className="field">
                                         <label>综合评分:</label>
                                         <input type="text" className="form-control" />
-                                    </div>
-                                </div>
-                                <div className="modal-body-body">
-                                    <AbilityInfo ref="abilityInfo"/>
-                                </div>
-                                <div className="modal-body-body">
-                                    <div className="field">
-                                        <label>创意和表达:</label>
-                                        <SelectComponent ref="creative" contentData={config.creative} />
-                                    </div>
-                                    <div className="field">
-                                        <label>适应和引导:</label>
-                                        <SelectComponent ref="adaptation" contentData={config.adaptation} />
                                     </div>
                                 </div>
                             </div>
@@ -78,7 +64,6 @@ var ModalManagement = React.createClass({
                     </div>
                 </div>
             </div>
-
         );
     }
 });

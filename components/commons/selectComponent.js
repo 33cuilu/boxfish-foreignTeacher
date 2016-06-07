@@ -24,7 +24,7 @@ var SelectComponent = React.createClass({
         let selectClassName = (this.props.size == "small")? "form-control select-sm" : "form-control";
         return(
             <div className="field">
-                <select className={selectClassName} ref="select" onChange={this._changeSelect}>
+                <select className={selectClassName} ref="select" defaultValue={this.props.value} onChange={this._changeSelect}>
                     {arr}
                 </select>
             </div>

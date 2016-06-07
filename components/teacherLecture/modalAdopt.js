@@ -20,7 +20,7 @@ var ModalAdopt = React.createClass({
                                 <p>确认该老师通过试讲?</p>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-primary">确定</button>
+                                <button type="button" className="btn btn-primary" onClick={this._submit}>确定</button>
                                 <button type="button" className="btn btn-default" data-dismiss="modal">取消</button>
                             </div>
                         </div>
@@ -28,6 +28,9 @@ var ModalAdopt = React.createClass({
                 </div>
             </div>
         );
+    },
+    _submit : function () {
+        this.props.callback(1);
     }
 });
 

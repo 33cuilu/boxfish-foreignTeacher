@@ -8,12 +8,9 @@ import React from 'react'
 import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
 
 //引入插件
-import SelectComponent from './../commons/selectComponent.js';
 
 //引入样式
 import '../../less/modalPond.less';
-
-var config = require("../../test/config.json");
 
 var ModalPond = React.createClass({
     render : function(){

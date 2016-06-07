@@ -55,7 +55,6 @@ var TryLesson = React.createClass({
         );
     },
     _submit : function () {
-        console.log(this.props.course);
         let email = this.props.row.email,
             teacherId = this.props.teacher.id[this.refs.teacherAccounts.state.index],
             studentId = this.props.student.id[this.refs.studentAccounts.state.index],

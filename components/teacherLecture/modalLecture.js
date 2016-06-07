@@ -9,10 +9,8 @@ import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
 
 //引入组件
 import DataPicker from './../commons/dataPicker.js';
-import SingleDataPicker from './../commons/singleDataPicker.js';
 import SelectComponent from './../commons/selectComponent.js';
 import BasicInfo from './../commons/basicInfo.js';
-import AbilityInfo from './../commons/abilityInfo';
 
 //引入样式
 import '../../less/modalLecture.less';
@@ -39,12 +37,12 @@ var ModalLecture = React.createClass({
                                         <label>性别:</label>
                                         <SelectComponent ref="gender" value={gender} contentData={configData.sex} />
                                     </div>
-                                    <BasicInfo {...this.props.info} ref="basicInfo" />
+                                    <BasicInfo value={this.props.info} ref="basicInfo" />
                                 </div>
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-default" data-dismiss="modal">取消</button>
-                                <button type="button" className="btn btn-primary">保存</button>
+                                <button type="button" className="btn btn-primary" onClick={this._submit}>保存</button>
                             </div>
                         </div>
                     </div>
@@ -53,7 +51,47 @@ var ModalLecture = React.createClass({
         );
     },
     _submit : function () {
-        
+        let content = {
+            "teacherId": null,
+            "email": this.refs.basicInfo.state.email,
+            "firstName": this.refs.basicInfo.state.firstName,
+            "lastName": this.refs.basicInfo.state.lastName,
+            "cellphoneNumber": this.refs.basicInfo.state.tel,
+            "degree": this.refs.basicInfo.state.degree,
+            "nationality": this.refs.basicInfo.state.nationality,
+            "occupation": this.refs.basicInfo.state.occupation,
+            "timezone": this.refs.basicInfo.state.timezone,
+            "skype": this.refs.basicInfo.state.skype,
+            "schoolCountry": this.refs.basicInfo.state.schoolCountry,
+            "specialty": this.refs.basicInfo.state.specialty,
+            "schoolingTime": this.refs.basicInfo.state.schoolingTime, //缺少schoolName和city
+            "job": null,
+            "snack": null,
+            "spokenLevel": null,
+            "triallectureStartTime": null,
+            "triallectureEndTime": null,
+            "demoCourse": null,
+            "initAccount": null,
+            "teachingExperience": 0,
+            "schoolStartYear": null,
+            "schoolEndYear": null,
+            "triallectureTeacher": null,
+            "triallectureStudent": null
+        };
+        Post({
+            url : submitUrl,
+            data : content
+        }).then(
+            ({data}) => {
+                //显示更改后的数据
+                this.props.callback(content);
+            },
+            ()=>{
+                alert("安排试讲失败,可能因为网络原因,也可能是安排出现冲突!");
+            }
+        ).catch((err) => {
+            console.log(err);
+        });
     }
 });
 
