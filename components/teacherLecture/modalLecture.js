@@ -8,7 +8,7 @@ import React from 'react'
 import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
 
 //引入组件
-import DataPicker from './../commons/dataPicker.js';
+import TimePicker from './../commons/timePicker.js';
 import SelectComponent from './../commons/selectComponent.js';
 import BasicInfo from './../commons/basicInfo.js';
 
@@ -21,7 +21,6 @@ var submitUrl = `http://${configData.ip}/web/teacherOralEn/updateTeacher`;
 
 var ModalLecture = React.createClass({
     render : function(){
-        let {interviewTime,gender} = this.props.info;
         return(
             <div className="modalLecture">
                 <div className="modal fade">
@@ -31,11 +30,11 @@ var ModalLecture = React.createClass({
                                 <div className="modal-body-header">
                                     <div className="field">
                                         <label>面试时间:</label>
-                                        <DataPicker ref="interviewTime" value={interviewTime}/>
+                                        <TimePicker ref="interviewTime" value={this.props.info.interviewTime}/>
                                     </div>
                                     <div className="field">
                                         <label>性别:</label>
-                                        <SelectComponent ref="gender" value={gender} contentData={configData.sex} />
+                                        <SelectComponent ref="gender" value={this.props.info.gender} contentData={configData.sex} />
                                     </div>
                                     <BasicInfo value={this.props.info} ref="basicInfo" />
                                 </div>
@@ -51,9 +50,11 @@ var ModalLecture = React.createClass({
         );
     },
     _submit : function () {
+        console.log(this.props.info);
         let content = {
-            "teacherId": null,
-            "email": this.refs.basicInfo.state.email,
+            "gender": this.refs.gender.state.index,
+            "interviewTime": this.refs.interviewTime.state.value,
+            "email": this.props.info.email,
             "firstName": this.refs.basicInfo.state.firstName,
             "lastName": this.refs.basicInfo.state.lastName,
             "cellphoneNumber": this.refs.basicInfo.state.tel,
@@ -64,7 +65,11 @@ var ModalLecture = React.createClass({
             "skype": this.refs.basicInfo.state.skype,
             "schoolCountry": this.refs.basicInfo.state.schoolCountry,
             "specialty": this.refs.basicInfo.state.specialty,
-            "schoolingTime": this.refs.basicInfo.state.schoolingTime, //缺少schoolName和city
+            "schoolTime": this.refs.basicInfo.state.schoolingTime,
+            // "schoolStartYear": this.refs.basicInfo.state.schoolingTime.substr(0,4),
+            // "schoolEndYear": this.refs.basicInfo.state.schoolingTime.substr(13,4),
+            "city": this.refs.basicInfo.state.city,
+            "school": this.refs.basicInfo.state.school,
             "job": null,
             "snack": null,
             "spokenLevel": null,

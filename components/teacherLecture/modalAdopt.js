@@ -30,7 +30,7 @@ var ModalAdopt = React.createClass({
         );
     },
     _submit : function () {
-        this.props.callback(1);
+        this.props.callback();
     }
 });
 

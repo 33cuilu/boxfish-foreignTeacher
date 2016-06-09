@@ -16,8 +16,8 @@ var ContentInput = React.createClass({
         return {
             firstName : '',
             lastName : '',
-            country : -1,
-            timeZone : -1,
+            country : "-1",
+            timeZone : "时区",
             telNum : '',
             email : ''
         }

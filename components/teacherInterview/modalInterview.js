@@ -16,6 +16,7 @@ import BasicInfo from './../commons/basicInfo.js';
 import '../../less/modalInterview.less';
 
 var configData = require("../../test/config.json");
+var submitUrl = `http://${configData.ip}/web/teacherOralEn/updateTeacher`;
 
 var ModalInterview = React.createClass({
     render : function(){
@@ -28,12 +29,12 @@ var ModalInterview = React.createClass({
                                 <div className="modal-body-header">
                                     <div className="field">
                                         <label>审核日期:</label>
-                                        <DataPicker ref="checkDate"/>
+                                        <DataPicker ref="checkDate" value={this.props.info.auditTime}/>
                                     </div>
-                                    <BasicInfo ref="basicInfo"/>
+                                    <BasicInfo value={this.props.info} ref="basicInfo"/>
                                     <div className="field">
                                         <label>教学经验:</label>
-                                        <SelectComponent ref="teachingExperience" contentData={configData.experienceDetail} />
+                                        <SelectComponent ref="teachingExperience" value={this.props.info.teachingExperience} contentData={configData.experienceDetail} />
                                     </div>
                                 </div>
                             </div>

@@ -9,8 +9,16 @@ import React from 'react';
 var SelectComponent = React.createClass({
     getInitialState : function () {
         return {
+            value : -100,
             index : 0
         };
+    },
+    componentWillReceiveProps : function (nextProps) {
+        if(nextProps.value !== null){
+            this.setState({
+                value : nextProps.value+""
+            });
+        } 
     },
     render : function(){
         let arr = this.props.contentData.arr ;
@@ -18,13 +26,13 @@ var SelectComponent = React.createClass({
 
         arr = arr.map( (v,i) => {
             return (
-                <option key={i} value={id[i]} >{v}</option>
+                <option key={i} value={id[i]+""} >{v}</option>
             );
         });
         let selectClassName = (this.props.size == "small")? "form-control select-sm" : "form-control";
         return(
             <div className="field">
-                <select className={selectClassName} ref="select" defaultValue={this.props.value} onChange={this._changeSelect}>
+                <select defaultValue={this.state.value} className={selectClassName} ref="select" onChange={this._changeSelect}>
                     {arr}
                 </select>
             </div>

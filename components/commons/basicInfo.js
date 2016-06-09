@@ -16,58 +16,63 @@ var BasicInfo = React.createClass({
     getInitialState : function () {
         return {
             firstName : '',
-            LastName : '',
+            lastName : '',
             tel : '',
             email : '',
-            degree : '',
-            schoolName : '',
+            degree : -1,
+            school : '',
             schoolingTime : '',
-            schoolCountry : '',
-            specialty : '',
-            occupation : '',
+            schoolCountry : -1,
+            specialty : -1,
+            occupation : -1,
             skype : '',
-            nationality : '',
-            timezone : '',
+            nationality : -1,
+            timezone : -100,
             city : ''
         };
-        /*{
-            firstName : info.firstName,
-            LastName : info.lastName,
-            tel : info.cellphoneNumber,
-            email : info.email,
-            degree : info.degree,
-            schoolName : info.schoolName,
-            schoolingTime : info.schoolingTime,
-            schoolCountry : info.schoolCountry,
-            specialty : info.specialty,
-            occupation : info.occupation,
-            skype : info.skype,
-            nationality : info.nationality,
-            timezone : info.timezone,
-            city : info.city
-        }*/
+    },
+    componentWillReceiveProps : function (nextProps) {
+        let info = nextProps.value;
+        this.setState({
+            firstName: info.firstName,
+            lastName: info.lastName,
+            tel: info.cellphoneNumber,
+            email: info.email,
+            degree: info.degree,
+            school: info.school,
+            schoolingTime: info.schoolingTime,
+            schoolCountry: info.schoolCountry,
+            specialty: info.specialty,
+            occupation: info.occupation,
+            skype: info.skype,
+            nationality: info.nationality,
+            timezone: info.timezone,
+            city: info.city
+        });
+
     },
     render : function(){
-        let info = this.props.value;
-        if (!info)
+        let info = this.state;
+        if(!info){
             info = {};
+        }
         return(
             <div className="basicInfo">
                 <div className="field">
                     <label>First Name:</label>
-                    <input type="text" ref="firstName" className="form-control" value={info.firstName} onChange={this._changeFirstName}/>
+                    <input type="text" className="form-control" ref="firstName" value={info.firstName} onChange={this._changeFirstName}/>
                 </div>
                 <div className="field">
                     <label>手机号:</label>
-                    <input type="text" className="form-control" value={info.cellphoneNumber} onChange={this._changeTel}/>
+                    <input type="text" className="form-control" ref="cellphoneNumber" value={info.tel} onChange={this._changeTel}/>
                 </div>
                 <div className="field">
                     <label>Last Name:</label>
-                    <input type="text" className="form-control" value={info.lastName} onChange={(e)=>{this._change(lastName)}}/>
+                    <input type="text" className="form-control" ref="lastName" value={info.lastName} onChange={this._changeLastName}/>
                 </div>
                 <div className="field">
                     <label>邮箱:</label>
-                    <input type="text" className="form-control" value={info.email} onChange={this._changeEmail}/>
+                    <label>{info.email}</label>
                 </div>
                 <div className="field">
                     <label>学历:</label>
@@ -75,7 +80,7 @@ var BasicInfo = React.createClass({
                 </div>
                 <div className="field">
                     <label>学校名称:</label>
-                    <input type="text" className="form-control" value={info.schoolName} onChange={this._changeSchoolName}/>
+                    <input type="text" className="form-control" ref="school" value={info.school} onChange={this._changeSchoolName}/>
                 </div>
                 <div className="field">
                     <label>在校时间:</label>
@@ -87,15 +92,15 @@ var BasicInfo = React.createClass({
                 </div>
                 <div className="field">
                     <label>专业:</label>
-                    <input type="text" className="form-control" value={info.specialty} onChange={this._changeSpecialty}/>
+                    <input type="text" className="form-control" ref="specialty" value={info.specialty} onChange={this._changeSpecialty}/>
                 </div>
                 <div className="field">
                     <label>职业:</label>
-                    <input type="text" className="form-control" value={info.occupation} onChange={this._changeOccupation}/>
+                    <input type="text" className="form-control" ref="occupation" value={info.occupation} onChange={this._changeOccupation}/>
                 </div>
                 <div className="field">
                     <label>Skype ID:</label>
-                    <input type="text" className="form-control" value={info.skype} onChange={this._changeSkype}/>
+                    <input type="text" className="form-control" ref="skype" value={info.skype} onChange={this._changeSkype}/>
                 </div>
                 <div className="field">
                     <label>国家:</label>
@@ -107,29 +112,26 @@ var BasicInfo = React.createClass({
                 </div>
                 <div className="field">
                     <label>城市:</label>
-                    <input type="text" className="form-control" value={info.city} onChange={(e)=>{this._change(city)}}/>
+                    <input type="text" className="form-control" ref="city" value={info.city} onChange={this._changeCity}/>
                 </div>
             </div>
         );
     },
     _changeFirstName : function () {
+        let firstName = this.refs.firstName.value;
         this.setState({
-            firstName : this.refs.firstName.value
+            firstName : firstName
         });
     },
     _changeTel : function () {
+        let tel = this.refs.cellphoneNumber.value;
         this.setState({
-            tel : this.refs.cellphoneNumber.value
+            tel : tel
         });
     },
     _changeLastName : function () {
         this.setState({
             lastName : this.refs.lastName.value
-        });
-    },
-    _changeEmail : function () {
-        this.setState({
-            email : this.refs.email.value
         });
     },
     _changeDegree : function (index) {
@@ -140,7 +142,7 @@ var BasicInfo = React.createClass({
     },
     _changeSchoolName : function () {
         this.setState({
-            schoolName : this.refs.schoolName.value
+            school : this.refs.school.value
         });
     },
     _changeSchoolingTime : function (value) {
@@ -151,7 +153,7 @@ var BasicInfo = React.createClass({
     _changeSchoolCountry : function (index) {
         let schoolCountry = configData.country.id[index];
         this.setState({
-            city : schoolCountry
+            schoolCountry : schoolCountry
         });
     },
     _changeSpecialty : function () {

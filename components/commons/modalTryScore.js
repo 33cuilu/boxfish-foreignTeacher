@@ -25,12 +25,12 @@ var ModalTryScore = React.createClass({
                         <div className="modal-content">
                             <div className="modal-body">
                                 <label>创意和表达:</label>
-                                <SelectComponent ref="creative" contentData={configData.creative} />
+                                <SelectComponent ref="creativeAndExpression" contentData={configData.creativeAndExpression} />
                                 <label>适应和引导:</label>
-                                <SelectComponent ref="adaptation" contentData={configData.adaptation} />
+                                <SelectComponent ref="adaptAndLead" contentData={configData.adaptAndLead} />
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-primary" onClick={this._submit} data-dismiss="modal" onClick={this._submit}>确定</button>
+                                <button type="button" className="btn btn-primary" onClick={this._submit} data-dismiss="modal">确定</button>
                             </div>
                         </div>
                     </div>
@@ -39,7 +39,7 @@ var ModalTryScore = React.createClass({
         );
     },
     _submit : function () {
-        this.props.callback(this.refs.creative.state.index, this.refs.adaptation.state.index);
+        this.props.callback(this.refs.creativeAndExpression.state.index, this.refs.adaptAndLead.state.index);
     }
 });
 

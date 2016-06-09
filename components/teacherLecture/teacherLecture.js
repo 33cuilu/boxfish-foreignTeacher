@@ -34,6 +34,7 @@ var searchUrl = `http://${configData.ip}/web/teacherOralEn/teacherStepList?`;
 var infoUrl = `http://${configData.ip}/web/teacherOralEn/teacherDetail?`;
 var inPondsUrl = `http://${configData.ip}/web/teacherOralEn/putPond`;
 var passUrl = `http://${configData.ip}/web/teacherOralEn/updateStatePass`;
+var tryScoreUrl = `http://${configData.ip}/web/teacherOralEn/updateTrialScore`;
 
 var TeacherLecture = React.createClass({
     getInitialState : function () {
@@ -149,7 +150,7 @@ var TeacherLecture = React.createClass({
                 <ModalLecture info={this.state.curInfo} callback={(e)=>{this._getPage(this.state.curPage)}}/>
                 <TryLesson row={rowContent} teacher={this.state.teacherAccounts} student={this.state.studentAccounts}
                            time={this.state.timeSlot} course={this.state.demoCourse} callback={this.updateTime}/>
-                <ModalTryScore value={this.state.list[this.state.curRow]} />
+                <ModalTryScore value={this.state.list[this.state.curRow]} callback={this.score}/>
                 <ModalAdopt callback={this.adopt}/>
                 <ModalInPond callback={this.inPonds}/>
                 <ModalInPonds callback={this.inPonds}/>
@@ -319,7 +320,7 @@ var TeacherLecture = React.createClass({
         myurl += (firstName.length >0) ? `&firstName=${firstName}` : '';
         myurl += (lastName.length >0) ? `&lastName=${lastName}` : '';
         myurl += (country != -1) ? `&nationality=${country}` : '';
-        myurl += (timeZone != -1) ? `&timeZone=${timeZone}` : '';
+        myurl += (timeZone != "时区") ? `&timeZone=${timeZone}` : '';
         myurl += (telNum.length >0) ? `&cellphoneNumber=${telNum}`: '';
         myurl += (email.length >0) ? `&email=${email}`: '';
         myurl += (interviewTimeStart.length >0) ? `&interviewTimeStart=${interviewTimeStart}&interviewTimeEnd=${interviewTimeEnd}`: '';
@@ -413,15 +414,22 @@ var TeacherLecture = React.createClass({
         });
         $(".tryScore .modal").modal();
     },
-    score : function(creative,adaptation) {
-        let line = this.state.list[this.state.curRow];
-        line.creative = creative;
-        line.adaptation = adaptation;
+    score : function(index1,index2) {
+        let index = this.state.curRow,
+            line = this.state.list[index],
+            score1 = configData.creativeAndExpression.id[index1],
+            score2 = configData.adaptAndLead.id[index2];
+        line.creativeAndExpression = score1;
+        line.adaptAndLead = score2;
         let newList = [].concat(this.state.list.slice(0,index), line, this.state.list.slice(index + 1));
         Post({
-            url : inPondsUrl,
+            url : tryScoreUrl,
             data : {
-                "emails": email
+                "email": this.state.list[index].email,
+                "trialScoresMap": {
+                    "creativeAndExpression": score1,
+                    "adaptAndLead": score2
+                }
             }
         }).then(
             () => {
@@ -432,7 +440,7 @@ var TeacherLecture = React.createClass({
             },
             () => {
                 alert("评分操作失败,请重试!");
-            }).catch();
+            }).catch((err) => { console.log(err)});
     },
     _arangeAdopt : function(i){
         this.setState({
@@ -440,7 +448,7 @@ var TeacherLecture = React.createClass({
         });
         $(".modalAdopt .modal").modal();
     },
-    adopt : function (num) {
+    adopt : function () {
         let emails = [].concat(this.state.list[this.state.curRow].email);
         Post({
             url : passUrl,
@@ -449,7 +457,7 @@ var TeacherLecture = React.createClass({
                 "stateStep":3
             }
         }).then(
-            ({code,data}) => {
+            () => {
                 $(".modalAdopt .modal").modal('hide');
                 this._getPage(this.state.curPage);
             },
