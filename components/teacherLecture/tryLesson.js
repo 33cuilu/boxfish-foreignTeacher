@@ -55,33 +55,35 @@ var TryLesson = React.createClass({
         );
     },
     _submit : function () {
-        let email = this.props.row.email,
-            teacherId = this.props.teacher.id[this.refs.teacherAccounts.state.index],
-            studentId = this.props.student.id[this.refs.studentAccounts.state.index],
-            courseId = this.props.course.id[this.refs.course.state.index],
-            courseName = this.props.course.arr[this.refs.course.state.index],
-            date = this.refs.date.state.value,
+        if(!this.props.row.email){
+            alert("该用户没有邮箱,用户不存在!");
+        }
+        let date = this.refs.date.state.value,
             hour = this.props.time.arr[this.refs.timeSlot.state.index],
             startHour = hour.substr(0,8),
             endHour = hour.substr(-8,8),
-            startTime = `${date} ${startHour}`,
-            endTime = `${date} ${endHour}`,
-            courseType = this.props.course.type[this.refs.course.state.index],
-            timeSlotId = this.props.time.id[this.refs.timeSlot.state.index];
+            data = {
+            "email" : this.props.row.email,
+            "teacherId": this.props.teacher.id[this.refs.teacherAccounts.state.index],
+            "studentId": this.props.student.id[this.refs.studentAccounts.state.index],
+            "courseId": this.props.course.id[this.refs.course.state.index],
+            "courseName": this.props.course.arr[this.refs.course.state.index],
+            "startTime": `${date} ${startHour}`,
+            "endTime": `${date} ${endHour}`,
+            "courseType": this.props.course.type[this.refs.course.state.index],
+            "timeSlotId": this.props.time.id[this.refs.timeSlot.state.index]
+            };
+
+        for(let attr in data){
+            if(!data[attr]){
+                alert(`您有未选择的信息${attr},请填写!`);
+                return;
+            }
+        }
 
         Post({
             url : submitUrl,
-            data : {
-                "email" : email,
-                "teacherId": teacherId,
-                "studentId": studentId,
-                "courseId": courseId,
-                "courseName": courseName,
-                "startTime": startTime,
-                "endTime": endTime,
-                "courseType": courseType,
-                "timeSlotId": timeSlotId
-            }
+            data : data
         }).then(
             ({data}) => {
             //显示更改后的时间

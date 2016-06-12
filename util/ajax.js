@@ -41,4 +41,18 @@ export function transformArrayToObj(arr) {
     return obj;
 }
 
+export function getById(obj,index) {
+    if(typeof index != "number"){
+        return '';
+    }
+    let arr = obj.arr,
+        id = obj.id;
+    for(let i = 0; i< arr.length; i++){
+        if(id[i] == index){
+            return arr[i];
+        }
+    }
+    return '';
+}
+
 

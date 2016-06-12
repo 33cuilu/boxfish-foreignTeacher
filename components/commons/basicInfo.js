@@ -17,7 +17,7 @@ var BasicInfo = React.createClass({
         return {
             firstName : '',
             lastName : '',
-            tel : '',
+            cellphoneNumber : '',
             email : '',
             degree : -1,
             school : '',
@@ -36,7 +36,7 @@ var BasicInfo = React.createClass({
         this.setState({
             firstName: info.firstName,
             lastName: info.lastName,
-            tel: info.cellphoneNumber,
+            cellphoneNumber: info.cellphoneNumber,
             email: info.email,
             degree: info.degree,
             school: info.school,
@@ -60,15 +60,15 @@ var BasicInfo = React.createClass({
             <div className="basicInfo">
                 <div className="field">
                     <label>First Name:</label>
-                    <input type="text" className="form-control" ref="firstName" value={info.firstName} onChange={this._changeFirstName}/>
+                    <input type="text" className="form-control" ref="firstName" value={info.firstName||''} onChange={this._changeFirstName}/>
                 </div>
                 <div className="field">
                     <label>手机号:</label>
-                    <input type="text" className="form-control" ref="cellphoneNumber" value={info.tel} onChange={this._changeTel}/>
+                    <input type="text" className="form-control" ref="cellphoneNumber" value={info.cellphoneNumber||''} onChange={this._changeTel}/>
                 </div>
                 <div className="field">
                     <label>Last Name:</label>
-                    <input type="text" className="form-control" ref="lastName" value={info.lastName} onChange={this._changeLastName}/>
+                    <input type="text" className="form-control" ref="lastName" value={info.lastName||''} onChange={this._changeLastName}/>
                 </div>
                 <div className="field">
                     <label>邮箱:</label>
@@ -76,43 +76,43 @@ var BasicInfo = React.createClass({
                 </div>
                 <div className="field">
                     <label>学历:</label>
-                    <SelectComponent contentData={configData.degree} value={info.degree} onChange={(index)=>{this._changeDegree(index)}}/>
+                    <SelectComponent contentData={configData.degree} value={info.degree||''} onChange={(index)=>{this._changeDegree(index)}}/>
                 </div>
                 <div className="field">
                     <label>学校名称:</label>
-                    <input type="text" className="form-control" ref="school" value={info.school} onChange={this._changeSchoolName}/>
+                    <input type="text" className="form-control" ref="school" value={info.school||''} onChange={this._changeSchoolName}/>
                 </div>
                 <div className="field">
                     <label>在校时间:</label>
-                    <DataPicker ref="schoolingTime" value={info.schoolingTime} onChange={(value)=>{this._changeSchoolingTime(value)}}/>
+                    <DataPicker ref="schoolingTime" value={info.schoolingTime||''} onChange={(value)=>{this._changeSchoolingTime(value)}}/>
                 </div>
                 <div className="field">
                     <label>学校所在国家:</label>
-                    <SelectComponent ref="schoolCountry" contentData={configData.country} value={info.schoolCountry} onChange={(index)=>{this._changeSchoolCountry(index)}}/>
+                    <SelectComponent ref="schoolCountry" contentData={configData.country} value={info.schoolCountry||''} onChange={(index)=>{this._changeSchoolCountry(index)}}/>
                 </div>
                 <div className="field">
                     <label>专业:</label>
-                    <input type="text" className="form-control" ref="specialty" value={info.specialty} onChange={this._changeSpecialty}/>
+                    <input type="text" className="form-control" ref="specialty" value={info.specialty||''} onChange={this._changeSpecialty}/>
                 </div>
                 <div className="field">
                     <label>职业:</label>
-                    <input type="text" className="form-control" ref="occupation" value={info.occupation} onChange={this._changeOccupation}/>
+                    <input type="text" className="form-control" ref="occupation" value={info.occupation||''} onChange={this._changeOccupation}/>
                 </div>
                 <div className="field">
                     <label>Skype ID:</label>
-                    <input type="text" className="form-control" ref="skype" value={info.skype} onChange={this._changeSkype}/>
+                    <input type="text" className="form-control" ref="skype" value={info.skype||''} onChange={this._changeSkype}/>
                 </div>
                 <div className="field">
                     <label>国家:</label>
-                    <SelectComponent contentData={configData.country} value={info.nationality} onChange={(index)=>{this._changeCountry(index)}}/>
+                    <SelectComponent contentData={configData.country} value={info.nationality||''} onChange={(index)=>{this._changeCountry(index)}}/>
                 </div>
                 <div className="field">
                     <label>时区:</label>
-                    <SelectComponent contentData={configData.timeZone} value={info.timezone} onChange={(index)=>{this._changeTimeZone(index)}}/>
+                    <SelectComponent contentData={configData.timeZone} value={info.timezone||''} onChange={(index)=>{this._changeTimeZone(index)}}/>
                 </div>
                 <div className="field">
                     <label>城市:</label>
-                    <input type="text" className="form-control" ref="city" value={info.city} onChange={this._changeCity}/>
+                    <input type="text" className="form-control" ref="city" value={info.city||''} onChange={this._changeCity}/>
                 </div>
             </div>
         );

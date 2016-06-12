@@ -9,7 +9,7 @@ import React from 'react';
 var SelectComponent = React.createClass({
     getInitialState : function () {
         return {
-            value : -100,
+            defaultValue : -100,
             index : 0
         };
     },
@@ -32,7 +32,7 @@ var SelectComponent = React.createClass({
         let selectClassName = (this.props.size == "small")? "form-control select-sm" : "form-control";
         return(
             <div className="field">
-                <select defaultValue={this.state.value} className={selectClassName} ref="select" onChange={this._changeSelect}>
+                <select value={this.state.defaultValue} className={selectClassName} ref="select" onChange={this._changeSelect}>
                     {arr}
                 </select>
             </div>
@@ -41,7 +41,8 @@ var SelectComponent = React.createClass({
     },
     _changeSelect : function () {
         this.setState({
-            index : this.refs.select.selectedIndex
+            index : this.refs.select.selectedIndex,
+            defaultValue : this.props.contentData.id[this.refs.select.selectedIndex]
         });
         if(this.props.onChange){
             this.props.onChange(this.refs.select.selectedIndex);

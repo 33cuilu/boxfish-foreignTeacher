@@ -34,7 +34,7 @@ var ModalLecture = React.createClass({
                                     </div>
                                     <div className="field">
                                         <label>性别:</label>
-                                        <SelectComponent ref="gender" value={this.props.info.gender} contentData={configData.sex} />
+                                        <SelectComponent ref="gender" value={this.props.info.gender} contentData={configData.gender} />
                                     </div>
                                     <BasicInfo value={this.props.info} ref="basicInfo" />
                                 </div>
@@ -50,7 +50,6 @@ var ModalLecture = React.createClass({
         );
     },
     _submit : function () {
-        console.log(this.props.info);
         let content = {
             "gender": this.refs.gender.state.index,
             "interviewTime": this.refs.interviewTime.state.value,

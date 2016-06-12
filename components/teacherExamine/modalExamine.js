@@ -15,7 +15,7 @@ import BasicInfo from './../commons/basicInfo.js';
 //引入样式
 import '../../less/modalExamine.less';
 
-var config = require("../../test/config.json");
+var configData = require("../../test/config.json");
 
 var ModalExamine = React.createClass({
     render : function(){
@@ -28,37 +28,79 @@ var ModalExamine = React.createClass({
                                 <div className="modal-body-header">
                                     <div className="field">
                                         <label>报名日期:</label>
-                                        <DataPicker />
+                                        <DataPicker ref="createTime" value={this.props.info.createTime}/>
                                     </div>
                                     <div className="field">
                                         <label>性别:</label>
-                                        <input type="text" className="form-control" />
+                                        <SelectComponent ref="gender" value={this.props.info.gender} contentData={configData.gender} />
                                     </div>
-                                    <BasicInfo ref="basicInfo"/>
-                                    <div className="field">
-                                        <label>在校时间:</label>
-                                        <DataPicker ref="schoolingTime"/>
-                                    </div>
+                                    <BasicInfo value={this.props.info} ref="basicInfo"/>
                                     <div className="field">
                                         <label>教学经验:</label>
-                                        <SelectComponent ref="teachingExperience" contentData={config.experienceDetail} />
-                                    </div>
-                                    <div className="field">
-                                        <label>国家:</label>
-                                        <SelectComponent contentData={config.country} />
+                                        <SelectComponent ref="teachingExperience" value={this.props.info.teachingExperience} contentData={configData.experienceDetail} />
                                     </div>
                                 </div>
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-default" data-dismiss="modal">取消</button>
-                                <button type="button" className="btn btn-primary">保存</button>
+                                <button type="button" className="btn btn-primary" onClick={this._submit}>保存</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         );
+    },
+    _submit : function () {
+        let content = {
+            "createTime": this.refs.createTime.state.value,
+            "firstName": this.refs.basicInfo.state.firstName,
+            "lastName": this.refs.basicInfo.state.lastName,
+            "cellphoneNumber": this.refs.basicInfo.state.tel,
+            "email": this.props.info.email,
+            "gender": configData.gender.id[this.refs.gender.state.index],
+            "skype": this.refs.basicInfo.state.skype,
+            "nationality": this.refs.basicInfo.state.nationality,
+            "timezone": this.refs.basicInfo.state.timezone,
+            "city": this.refs.basicInfo.state.city,
+            "degree": this.refs.basicInfo.state.degree,
+            "school": this.refs.basicInfo.state.school,
+            "schoolCountry": this.refs.basicInfo.state.schoolCountry,
+            "specialty": this.refs.basicInfo.state.specialty,
+            "schoolTime": this.refs.basicInfo.state.schoolingTime,
+            // "schoolStartYear": this.refs.basicInfo.state.schoolingTime.substr(0,4),
+            // "schoolEndYear": this.refs.basicInfo.state.schoolingTime.substr(13,4),
+            "teachingExperience": configData.experienceDetail.id[this.refs.teachingExperience.state.index],
+            "occupation": null,
+            "interviewTime": null,
+            "job": null,
+            "snack": null,
+            "spokenLevel": null,
+            "triallectureStartTime": null,
+            "triallectureEndTime": null,
+            "demoCourse": null,
+            "initAccount": null,
+            "schoolStartYear": null,
+            "schoolEndYear": null,
+            "triallectureTeacher": null,
+            "triallectureStudent": null
+        };
+        console.log(content);
+        Post({
+            url : submitUrl,
+            data : content
+        }).then(
+            ({data}) => {
+                //显示更改后的数据
+                $(".modalExamine .modal").modal('hide');
+                this.props.callback();
+            },
+            ()=>{
+                alert("保存失败,可能因为网络原因,也可能是安排出现冲突!");
+            }
+        ).catch((err) => {
+            console.log(err);
+        });
     }
 });
 

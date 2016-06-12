@@ -25,10 +25,10 @@ import "../../less/teacherLecture.less";
 
 var configData = require('../../test/config.json');
 
-var teacherAccountsUrl = `http://${configData.ip}/web/common/trialTeacherList`;
-var studentAccountsUrl = `http://${configData.ip}/web/common/trialStudentList`;
+var teacherAccountsUrl = `http://${configData.ip}/web/common/trialTeacherList/2`;
+var studentAccountsUrl = `http://${configData.ip}/web/common/trialStudentList/2`;
 var timeSlotUrl = `http://${configData.ip}/timeslot/list/0`;
-var demoCourseUrl = `http://${configData.ip}/web/common/demoCourses`;
+var demoCourseUrl = `http://${configData.ip}/web/common/demoCourses/2`;
 
 var searchUrl = `http://${configData.ip}/web/teacherOralEn/teacherStepList?`;
 var infoUrl = `http://${configData.ip}/web/teacherOralEn/teacherDetail?`;
@@ -37,8 +37,14 @@ var passUrl = `http://${configData.ip}/web/teacherOralEn/updateStatePass`;
 var tryScoreUrl = `http://${configData.ip}/web/teacherOralEn/updateTrialScore`;
 
 var TeacherLecture = React.createClass({
+    /**
+     * 设置组件的状态
+     * @returns {{pageSize: number, totalPages: number, curPage: number, curURL: string, curRow: number, curInfo: {}, teacherAccounts: {arr: Array, id: Array}, studentAccounts: {arr: Array, id: Array}, timeSlot: {arr: Array, id: Array}, demoCourse: {arr: Array, id: Array, type: Array}, tableStyle: {tableSize: number, hasCheckBox: boolean, hasOperate: boolean}, list: Array, selected: Array}}
+     * @private
+     */
     getInitialState : function () {
         return {
+            stateStep : 3,
             pageSize : 10,
             totalPages : 1,
             curPage : 1,
@@ -71,6 +77,11 @@ var TeacherLecture = React.createClass({
             selected : []
         };
     },
+
+    /**
+     * 组件第一次渲染时加载列表
+     * @private
+     */
     componentDidMount : function () {
         //获取空列表
         let myurl = `${searchUrl}page=0&size=10`;
@@ -116,31 +127,44 @@ var TeacherLecture = React.createClass({
         //获取demo课列表
         this._getCourse(demoCourseUrl);
     },
+
+    /**
+     * 渲染面试页面
+     * @returns {XML}
+     * @private
+     */
     render : function(){
         let rowContent = this.state.list[this.state.curRow];
         let tableList = this.state.list.map((v,i) => {
                 let tryTime = v.triallectureStartTime ?
-                    <div>{v.triallectureStartTime} - {v.triallectureEndTime}
-                        <button className="btn btn-default btn-xs" onClick={(e)=>{this._arangeTryLesson(i)}}>修改</button></div> :
-                    <button key={i} className="btn btn-default btn-xs" onClick={(e)=>{this._arangeTryLesson(i)}}>
+                    <div>
+                        <label>{v.triallectureStartTime} - {v.triallectureEndTime}</label>
+                        <button className="btn btn-primary btn-xs" onClick={(e)=>{this.arangeTryLesson(i)}}>
+                            修改
+                        </button>
+                    </div> :
+                    <button key={i} className="btn btn-primary btn-xs" onClick={(e)=>{this.arangeTryLesson(i)}}>
                         安排试讲
                     </button> ;
                 return {
                     "checkbox" : <input type="checkbox" onChange={(e)=>{this.select(e,i)}}/>,
-                    "teacherId" : v.teacherId,
+                    "interviewTime" : v.interviewTime,
                     "firstName" : v.firstName,
                     "lastName" : v.lastName,
                     "country" : v.nationality,
-                    "timeZone" : v.timezone,
+                    "timezone" : v.timezone,
                     "telNum" : v.cellphoneNumber,
                     "email" : v.email,
+                    "interviewScore" : v.interviewScore,
+                    "triallectureScore" : v.triallectureScore,
+                    "combinedScore" : v.combinedScore,
                     "triallectureTime" : tryTime,
                     "operate" : (
                         <div>
-                            <button className="btn btn-default btn-xs" onClick={(e)=>{this._arrangeScore(i)}}>评分</button>
-                            <button className="btn btn-default btn-xs" onClick={(e)=>{this._arangeAdopt(i)}}>通过</button>
-                            <button className="btn btn-default btn-xs" onClick={(e)=>{this._arangeInPond(i)}}>入池</button>
-                            <a onClick={(e)=>{this._arangeMore(i)}}>详情</a>
+                            <button className="btn btn-primary btn-xs" onClick={(e)=>{this.arrangeScore(i)}}>评分</button>
+                            <button className="btn btn-success btn-xs" onClick={(e)=>{this.arangeAdopt(i)}}>通过</button>
+                            <button className="btn btn-warning btn-xs" onClick={(e)=>{this.arangeInPond(i)}}>入池</button>
+                            <button className="btn btn-link btn-xs" onClick={(e)=>{this.arangeMore(i)}}>详情</button>
                         </div>
                     )
                 };
@@ -179,130 +203,154 @@ var TeacherLecture = React.createClass({
 
                 <div className="main-btn">
                     <div className="btn-right">
-                        <button className="btn btn-default btn-sm" onClick={this._arangeInPonds}>批量入池</button>
+                        <button className="btn btn-warning btn-sm" onClick={this._arangeInPonds}>批量入池</button>
                     </div>
                 </div>
                 <PageList curPage={this.state.curPage} totalPages={this.state.totalPages} onPre={this._prePage} onFirst={this._firstPage} onLast={this._lastPage} onNext={this._nextPage}/>
             </div>
         );
     },
+
+    /**
+     * 获取可分配的老师试讲账号列表
+     * @param myUrl: 老师试讲账号接口地址
+     * @private
+     */
     _getTeacherAccounts : function (myUrl) {
         Get({
             url : myUrl
-        }).then(({data}) =>{
-            let newTeacherArr = [],
-                newTeacherId = [];
-            for(let i=0 ; i<data.length; i++){
-                newTeacherArr.push(data[i].nickName);
-                newTeacherId.push(data[i].teacherId);
-            }
-            this.setState({
-                teacherAccounts: {
-                    arr : newTeacherArr,
-                    id : newTeacherId
+        }).then(
+            ({data}) => {
+                let newTeacherArr = [],
+                    newTeacherId = [];
+                for(let i=0 ; i<data.length; i++){
+                    newTeacherArr.push(data[i].nickName);
+                    newTeacherId.push(data[i].teacherId);
                 }
-            });
-        }).catch((err) => {
+                this.setState({
+                        teacherAccounts: {
+                            arr : newTeacherArr,
+                            id : newTeacherId
+                        }
+                    }
+                );
+            },
+            () => {
+                alert("未能获取可选的教师试讲账号,不能安排试讲!");
+            }
+        ).catch((err) => {
             console.log(err);
         });
     },
+
+    /**
+     * 获取可分配的学生听课账号列表
+     * @param myUrl: 学生听课账号接口地址
+     * @private
+     */
     _getStudentAccounts : function (myUrl) {
         Get({
             url : myUrl
-        }).then(({data}) =>{
-            let newStudentArr = [],
-                newStudentId = [];
-            for(let i=0 ; i<data.length; i++){
-                newStudentArr.push(data[i].nickName);
-                newStudentId.push(data[i].studentId);
-            }
-            this.setState({
-                studentAccounts: {
-                    arr : newStudentArr,
-                    id : newStudentId
+        }).then(
+            ({data}) => {
+                let newStudentArr = [],
+                    newStudentId = [];
+                for(let i=0 ; i<data.length; i++){
+                    newStudentArr.push(data[i].nickName);
+                    newStudentId.push(data[i].studentId);
                 }
-            });
-        }).catch((err) => {
+                this.setState({
+                    studentAccounts: {
+                        arr : newStudentArr,
+                        id : newStudentId
+                    }
+                });
+            },
+            () => {
+                alert("未能获取可选学生听课账号,不能安排试讲!");
+            }
+        ).catch((err) => {
             console.log(err);
         });
     },
+
+    /**
+     * 获取试讲课程类型列表
+     * @param myUrl: 试讲课程类型接口地址
+     * @private
+     */
     _getCourse : function (myUrl) {
         Get({
             url : myUrl
-        }).then(({data}) =>{
-            let newCourseArr = [],
-                newCourseId = [],
-                newCourseType = [];
-            for(let i=0 ; i<data.length; i++){
-                newCourseArr.push(data[i].name);
-                newCourseId.push(data[i].courseId);
-                newCourseType.push(data[i].courseType);
-            }
-            this.setState({
-                demoCourse: {
-                    arr: newCourseArr,
-                    id : newCourseId,
-                    type : newCourseType
+        }).then(
+            ({data}) =>{
+                let newCourseArr = [],
+                    newCourseId = [],
+                    newCourseType = [];
+                for(let i=0 ; i<data.length; i++){
+                    newCourseArr.push(data[i].name);
+                    newCourseId.push(data[i].courseId);
+                    newCourseType.push(data[i].courseType);
                 }
-            });
-        }).catch((err) => {
+                this.setState({
+                    demoCourse: {
+                        arr: newCourseArr,
+                        id : newCourseId,
+                        type : newCourseType
+                    }
+                });
+            },
+            () => {
+                alert("未能获取可选试讲课类型,不能安排试讲!");
+            }
+        ).catch((err) => {
             console.log(err);
         });
     },
+
+    /**
+     * 获取试讲可选时间段列表
+     * @param myUrl: 试讲可选时间段接口地址
+     * @private
+     */
     _getTimeSlot : function (myUrl) {
         Get({
             url : myUrl
-        }).then(({data}) =>{
-            let newTimeArr = [],
-                newTimeId = [];
-            for(let i=0 ; i<data.length; i++){
-                newTimeArr.push(`${data[i].startTime} - ${data[i].endTime}`);
-                newTimeId.push(data[i].slotId);
-            }
-            this.setState({
-                timeSlot: {
-                    arr: newTimeArr,
-                    id : newTimeId
+        }).then(
+            ({data}) => {
+                let newTimeArr = [],
+                    newTimeId = [];
+                for(let i=0 ; i<data.length; i++){
+                    newTimeArr.push(`${data[i].startTime} - ${data[i].endTime}`);
+                    newTimeId.push(data[i].slotId);
                 }
-            });
-        }).catch((err) => {
+                this.setState({
+                    timeSlot: {
+                        arr: newTimeArr,
+                        id : newTimeId
+                    }
+                });
+            },
+            () => {
+                alert("未能获取可选时间列表,不能安排试讲!");
+            }
+        ).catch((err) => {
             console.log(err);
         });
     },
+
+    /**
+     * 查询表单的展开动画
+     * @private
+     */
     _changeForm : function() {
         $("#forms").toggleClass("forms-height");
     },
-    select : function (e,index) {
-        let selectList = this.state.select;
-        selectList[index] = e.target.checked;
-        this.setState({
-            selected : selectList
-        });
-    },
-    selectAll : function (state) {
-        let selectList = this.state.select.map(() => {return (state);});
-        this.setState({
-            selected : selectList
-        });
-    },
-    updateList : function (line) {
-        let index = this.state.curRow;
-        Object.assign(this.state.list[index],line);
-        let newList = [].concat(this.state.list.slice(0,index), line, this.state.list.slice(index + 1));
-        this.setState({
-            list : newList
-        });
-    },
-    updateTime : function (start,end) {
-        let index = this.state.curRow;
-        let line = this.state.list[index];
-        line.triallectureStartTime = start;
-        line.triallectureEndTime = end.substr(-8,8);
-        let newList = [].concat(this.state.list.slice(0,index), line, this.state.list.slice(index + 1));
-        this.setState({
-            list : newList
-        });
-    },
+
+    /**
+     * 点击"筛选"按钮,触发ajax请求,刷新列表
+     * @private
+     */
     _search : function () {
          let firstName = this.refs.contentInput.state.firstName,
             lastName = this.refs.contentInput.state.lastName,
@@ -367,6 +415,12 @@ var TeacherLecture = React.createClass({
         });
 
     },
+
+    /**
+     * 不改变url,获取第page页数据
+     * @param page: 表示需要获取的页面,从1开始
+     * @private
+     */
     _getPage : function (page) {
         let myurl = this.state.curURL.replace(/page=0/,`page=${page-1}`);
         Get({
@@ -382,45 +436,127 @@ var TeacherLecture = React.createClass({
             console.log(err);
         });
     },
+
+    /**
+     * 跳转到上一页
+     * @private
+     */
     _prePage : function () {
         if(this.state.curPage == 1)
             return;
         this._getPage(this.state.curPage - 1);
     },
+
+    /**
+     * 跳转到首页
+     * @private
+     */
     _firstPage : function () {
         if(this.state.curPage == 1)
             return;
         this._getPage(1);
     },
+
+    /**
+     * 跳转到尾页
+     * @private
+     */
     _lastPage : function () {
         if(this.state.curPage == this.state.totalPages)
             return;
         this._getPage(this.state.totalPages);
     },
+
+    /**
+     * 跳转到下一页
+     * @private
+     */
     _nextPage : function () {
         if(this.state.curPage == this.state.totalPages)
             return;
         this._getPage(this.state.curPage + 1);
     },
-    _arangeTryLesson : function(i){
+
+    /**
+     * 点击表格中的复选框,触发当前行选中事件
+     * @param e: 点击事件
+     * @param index: 选中的行在表格中的序号
+     * @public (子组件"表格"调用)
+     */
+    select : function (e,index) {
+        let selectList = this.state.select;
+        selectList[index] = e.target.checked;
+        this.setState({
+            selected : selectList
+        });
+    },
+
+    /**
+     * 点击表头中的复选框,触发全选事件
+     * @param state: 全选状态. false表示不选中,true表示选中
+     * @public (子组件"表格"调用)
+     */
+    selectAll : function (state) {
+        let selectList = this.state.list.map(() => {return (state);});
+        this.setState({
+            selected : selectList
+        });
+    },
+
+    /**
+     * 点击表格中的"安排试讲"按钮,触发"安排试讲模态框"
+     * @param i: 表示选择的是表格中的第i个教师,从0开始
+     * @public (子组件"表格"调用)
+     */
+    arangeTryLesson : function(i){
         this.setState({
             curRow : i
         });
         $(".tryLesson .modal").modal();
     },
-    _arrangeScore : function (i) {
+
+    /**
+     * 安排试讲模态框中点击"确定"按钮,触发安排试讲事件,任何一项为空,则不能安排试讲
+     * @param start: 试讲开始时间
+     * @param end: 试讲结束时间
+     * @public (子组件"安排试讲模态框"调用)
+     */
+    updateTime : function (start,end) {
+        let index = this.state.curRow;
+        let line = this.state.list[index];
+        line.triallectureStartTime = start;
+        line.triallectureEndTime = end.substr(-8,8);
+        let newList = [].concat(this.state.list.slice(0,index), line, this.state.list.slice(index + 1));
+        this.setState({
+            list : newList
+        });
+    },
+
+    /**
+     * 点击表格中的"评分"按钮,触发"评分模态框"
+     * @param i: 表示选择的是表格中的第i个教师,从0开始
+     * @public: (子组件"表格"调用)
+     */
+    arrangeScore : function (i) {
         this.setState({
             curRow : i
         });
         $(".tryScore .modal").modal();
     },
+
+    /**
+     * "评分模态框"中点击"确定按钮",触发评分事件.
+     * @param index1: 创意和表达选择的ID
+     * @param index2: 适应和引导选择的ID
+     * @public (子组件"评分模态框"调用)
+     */
     score : function(index1,index2) {
         let index = this.state.curRow,
             line = this.state.list[index],
             score1 = configData.creativeAndExpression.id[index1],
             score2 = configData.adaptAndLead.id[index2];
-        line.creativeAndExpression = score1;
-        line.adaptAndLead = score2;
+        line.triallectureScore = score1 + score2;
+        line.combinedScore = line.interviewScore + score1 + score2;
         let newList = [].concat(this.state.list.slice(0,index), line, this.state.list.slice(index + 1));
         Post({
             url : tryScoreUrl,
@@ -442,19 +578,30 @@ var TeacherLecture = React.createClass({
                 alert("评分操作失败,请重试!");
             }).catch((err) => { console.log(err)});
     },
-    _arangeAdopt : function(i){
+
+    /**
+     * 点击"通过"按钮,触发通过模态框,确定当前通过的教师序号
+     * @param i: 表示选择的是表格中的第i个教师,从0开始
+     * @public (子组件"表格"调用)
+     */
+    arangeAdopt : function(i){
         this.setState({
             curRow : i
         });
         $(".modalAdopt .modal").modal();
     },
+
+    /**
+     * 通过模态框中点击"确定"按钮,触发通过事件.通过ajax请求将当前教师的email发送给后台,然后ajax请求重新获取教师列表
+     * @public (子组件"通过模态框"调用)
+     */
     adopt : function () {
         let emails = [].concat(this.state.list[this.state.curRow].email);
         Post({
             url : passUrl,
             data : {
                 "emails": emails,
-                "stateStep":3
+                "stateStep":this.state.stateStep
             }
         }).then(
             () => {
@@ -463,17 +610,39 @@ var TeacherLecture = React.createClass({
             },
             () => {
                 alert("通过操作失败,请重试!");
-            }).catch();
+            }).catch(
+            () => {
+                console.log(err);
+            }
+        );
     },
-    _arangeInPond : function(i){
+
+    /**
+     * 点击"入池"按钮,触发入池模态框,确定当前入池的教师序号
+     * @param i: 表示选择的是表格中的第i个教师,从0开始
+     * @public (子组件"表格"调用)
+     */
+    arangeInPond : function(i){
         this.setState({
             curRow : i
         });
         $(".modalInPond .modal").modal();
     },
+
+    /**
+     * 点击"批量入池"按钮,触发批量入池模态框
+     * @private
+     */
     _arangeInPonds : function(){
         $(".modalInPonds .modal").modal();
     },
+
+    /**
+     * 入池模态框和批量入池模态框中点击"确定"按钮,触发入池事件.通过ajax请求将选中的教师的emails数组发送给后台,然后ajax请求重新获取教师列表
+     * @param num: 表明需要执行"入池"还是"批量入池"操作. 1表示"入池",2表示"批量入池".
+     * @param reason: 表明"入池"或"批量入池"的原因,不能为空.
+     * @public (子组件"入池模态框"和"批量入池模态框"调用)
+     */
     inPonds : function (num,reason) {
         let line = this.state.list[this.state.curRow];
         let emails = [];
@@ -486,7 +655,7 @@ var TeacherLecture = React.createClass({
                 }
             }
         }
-        if(email.length <=0){
+        if(emails.length <=0){
             alert("请选中入池的教师!");
             return;
         }
@@ -506,7 +675,13 @@ var TeacherLecture = React.createClass({
                 alert("入池失败,请重试!");
             }).catch();
     },
-    _arangeMore : function(i){
+
+    /**
+     * 点击"详情"按钮,触发详情模态框,通过ajax请求获取当前教师的信息,显示在详情模态框中
+     * @param i: 表示选择的是表格中的第i个教师,从0开始
+     * @public (子组件"表格"调用)
+     */
+    arangeMore : function(i){
         this.setState({
             curRow : i
         });

@@ -19,7 +19,7 @@ var ModalManagementActivation = React.createClass({
                                 <p>确认激活选中老师的账号?</p>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-primary">确定</button>
+                                <button type="button" className="btn btn-primary" onClick={this._submit}>确定</button>
                                 <button type="button" className="btn btn-default" data-dismiss="modal">取消</button>
                             </div>
                         </div>
@@ -27,6 +27,9 @@ var ModalManagementActivation = React.createClass({
                 </div>
             </div>
         );
+    },
+    _submit : function () {
+        this.props.callback();
     }
 });
 

@@ -24,16 +24,17 @@ var ModalInterviewScore = React.createClass({
                         <div className="modal-content">
                             <div className="modal-body">
                                     <label>国家级别:</label>
-                                    <SelectComponent contentData={configData.nationalLevel} /> <span>100</span>
+                                    <SelectComponent contentData={configData.nationalLevel} ref="nationalLevel"/> <span>100</span>
                                     <label>零食:</label>
-                                    <SelectComponent contentData={configData.snacks} /> <span>100</span>
+                                    <SelectComponent contentData={configData.snacks} ref="snack"/> <span>100</span>
                                     <label>口语水平:</label>
-                                    <SelectComponent contentData={configData.spokenLevel} /> <span>100</span>
+                                    <SelectComponent contentData={configData.spokenLevel} ref="spokenLevel"/> <span>100</span>
                                     <label>教学经验:</label>
                                     <SelectComponent ref="teachingExperience" contentData={configData.experienceDetail}/> <span>100</span>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-primary" onClick={this._submit} data-dismiss="modal">确定</button>
+                                <button type="button" className="btn btn-primary" onClick={this._submit} data-dismiss="modal" onClick={this._submit}>确定</button>
+                                <button type="button" className="btn btn-default" data-dismiss="modal">取消</button>
                             </div>
                         </div>
                     </div>
@@ -42,7 +43,8 @@ var ModalInterviewScore = React.createClass({
         );
     },
     _submit : function () {
-        
+        this.props.callback(this.refs.nationalLevel.state.index, this.refs.snack.state.index,
+                            this.refs.spokenLevel.state.index, this.refs.teachingExperience.state.index);
     }
 });
 

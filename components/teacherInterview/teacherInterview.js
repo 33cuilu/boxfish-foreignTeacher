@@ -6,7 +6,7 @@
 
 //引入插件
 import React from 'react';
-import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
+import {Post,Get,getById} from '../../util/ajax.js';
 
 //引入组件
 import ModalInterview from './modalInterview.js';
@@ -23,8 +23,8 @@ import ModalInPonds from './../commons/modalInPonds.js';
 //引入样式
 import "../../less/teacherInterview.less";
 
+//引入配置文件
 var configData = require('../../test/config.json');
-var config = require('../../test/config.json');
 
 var searchUrl = `http://${configData.ip}/web/teacherOralEn/teacherStepList?`;
 var infoUrl = `http://${configData.ip}/web/teacherOralEn/teacherDetail?`;
@@ -37,8 +37,15 @@ var updateSnackUrl = '';
 var updateSpokenLevelUrl = '';
 
 var TeacherInterview = React.createClass({
+
+    /**
+     * 设置组件的状态
+     * @returns {{pageSize: number, totalPages: number, curPage: number, curURL: string, curRow: number, curInfo: {}, tableStyle: {tableSize: number, hasCheckBox: boolean, hasOperate: boolean}, list: Array, selected: Array, nationalLevel: number, snack: number, spokenLevel: number}}
+     * @private
+     */
     getInitialState : function () {
         return {
+            stateStep : 2,
             pageSize : 10,
             totalPages : 1,
             curPage : 1,
@@ -57,6 +64,11 @@ var TeacherInterview = React.createClass({
             spokenLevel : -1
         };
     },
+
+    /**
+     * 组件第一次渲染时加载列表
+     * @private
+     */
     componentDidMount : function () {
         //获取空列表
         let myurl = `${searchUrl}page=0&size=10`;
@@ -91,10 +103,16 @@ var TeacherInterview = React.createClass({
             console.log(err);
         });
     },
+
+    /**
+     * 渲染面试页面
+     * @returns {XML}
+     */
     render : function(){
         let tableList = this.state.list.map((v,i) => {
+            console.log(v.teachingExperience);
             return {
-                "checkbox" : <input type="checkbox" />,
+                "checkbox" : <input type="checkbox" onChange={(e)=>{this.select(e,i)}}/>,
                 "auditTime" : v.auditTime,
                 "firstName" : v.firstName,
                 "lastName" : v.lastName,
@@ -102,21 +120,22 @@ var TeacherInterview = React.createClass({
                 "timeZone" : v.timezone,
                 "telNum" : v.cellphoneNumber,
                 "email" : v.email,
-                "nationalityLevel" : v.nationalityLevel,
-                "gender" : <SelectComponent contentData={config.sex} value={v.gender} onChange={(index)=>{this._updateGender(i,index)}}/>,
-                "snack" : v.snack,
-                "spokenLevel" : v.spokenLevel,
-                "teachingExperience" : v.teachingExperience,
-                "interviewTime" : <DataPicker onChange={(date)=>{this._updateInterviewTime(i,date)}}/>,
+                "nationalityLevel" : getById(configData.nationalLevel, v.nationalityLevel),
+                "interviewTime" : <TimePicker onChange={(date)=>{this.updateInterviewTime(i,date)}}/>,
+                "gender" : <SelectComponent contentData={configData.gender} value={v.gender} onChange={(index)=>{this.updateGender(i,index)}}/>,
+                "snack" : getById(configData.snacks, v.snack),
+                "spokenLevel" : getById(configData.spokenLevel, v.spokenLevel),
+                "teachingExperience" : getById(configData.experienceDetail, v.teachingExperience),
                 "operate" : (
                     <div>
-                        <button className="btn btn-default btn-xs" onClick={(e)=>{this._arangeAdopt(i)}}>通过</button>
-                        <button className="btn btn-default btn-xs" onClick={(e)=>{this._arangeInPond(i)}}>入池</button>
-                        <a onClick={(e)=>{this._arangeMore(i)}}>详情</a>
+                        <button className="btn btn-success btn-xs" onClick={(e)=>{this.arangeAdopt(i)}}>通过</button>
+                        <button className="btn btn-warning btn-xs" onClick={(e)=>{this.arangeInPond(i)}}>入池</button>
+                        <button className="btn btn-link btn-xs" onClick={(e)=>{this.arangeMore(i)}}>详情</button>
                     </div>
                 )
             };
         });
+        console.log(tableList);
         return(
             <div className="TeacherInterview">
                 <ModalInterview info={this.state.curInfo} callback={(e)=>{this._getPage(this.state.curPage)}}/>
@@ -132,14 +151,14 @@ var TeacherInterview = React.createClass({
                             </div>
                         </div>
                         <div className="form row">
-                            <SelectComponent ref="gender" contentData={config.sex} />
-                            <SelectComponent ref="spokenLevel" contentData={config.spokenLevel} />
-                            <SelectComponent ref="snack" contentData={config.snacks} />
-                            <SelectComponent ref="nationalLevel" contentData={config.nationalLevel} />
+                            <SelectComponent ref="gender" contentData={configData.gender} />
+                            <SelectComponent ref="spokenLevel" contentData={configData.spokenLevel} />
+                            <SelectComponent ref="snack" contentData={configData.snacks} />
+                            <SelectComponent ref="nationalLevel" contentData={configData.nationalLevel} />
                             <DataPicker ref="checkDate" name="审核日期"/>
                             <TimePicker ref="interviewTime" name="面试时间"/>
-                            <SelectComponent ref="experience" contentData={config.experience} />
-                            <SelectComponent ref="reservationInterview" contentData={config.reservationInterview} />
+                            <SelectComponent ref="experience" contentData={configData.experience} />
+                            <SelectComponent ref="reservationInterview" contentData={configData.reservationInterview} />
                         </div>
                     </div>
                     <div className="search">
@@ -151,21 +170,21 @@ var TeacherInterview = React.createClass({
                 </div>
                 <div className="main-btn">
                     <div className="btn-right">
-                        <button className="btn btn-default btn-sm" onClick={this._arangeInPonds}>批量入池</button>
+                        <button className="btn btn-warning btn-sm" onClick={this._arangeInPonds}>批量入池</button>
                         <div className="btn-right-select">
                             <label>国家级别</label>
-                            <SelectComponent size="small" contentData={config.nationalLevel} onChange={(index)=>{this.setState({nationalLevel : index})}}/>
-                            <button className="btn btn-default btn-sm" onClick={(e)=>{this._edit("nationalLevel")}}>确定</button>
+                            <SelectComponent size="small" contentData={configData.nationalLevel} onChange={(index)=>{this.setState({nationalLevel : index})}}/>
+                            <button className="btn btn-primary btn-sm" onClick={(e)=>{this._edit("nationalLevel")}}>确定</button>
                         </div>
                         <div className="btn-right-select">
                             <label>零食</label>
-                            <SelectComponent size="small" contentData={config.snacks} onChange={(index)=>{this.setState({snack : index})}}/>
-                            <button className="btn btn-default btn-sm" onClick={(e)=>{this._edit("snack")}}>确定</button>
+                            <SelectComponent size="small" contentData={configData.snacks} onChange={(index)=>{this.setState({snack : index})}}/>
+                            <button className="btn btn-primary btn-sm" onClick={(e)=>{this._edit("snack")}}>确定</button>
                         </div>
                         <div className="btn-right-select">
                             <label>口语水平</label>
-                            <SelectComponent size="small" contentData={config.spokenLevel} onChange={(index)=>{this.setState({spokenLevel : index})}}/>
-                            <button className="btn btn-default btn-sm" onClick={(e)=>{this._edit("spokenLevel")}}>确定</button>
+                            <SelectComponent size="small" contentData={configData.spokenLevel} onChange={(index)=>{this.setState({spokenLevel : index})}}/>
+                            <button className="btn btn-primary btn-sm" onClick={(e)=>{this._edit("spokenLevel")}}>确定</button>
                         </div>
                     </div>
                 </div>
@@ -173,9 +192,19 @@ var TeacherInterview = React.createClass({
             </div>
         );
     },
-    _changeForm : function(event) {
+
+    /**
+     * 查询表单的展开动画
+     * @private
+     */
+    _changeForm : function() {
         $("#forms").toggleClass("forms-extern-more");
     },
+
+    /**
+     * 点击"筛选"按钮,触发ajax请求,刷新列表
+     * @private
+     */
     _search : function () {
         let firstName = this.refs.contentInput.state.firstName,
             lastName = this.refs.contentInput.state.lastName,
@@ -183,7 +212,7 @@ var TeacherInterview = React.createClass({
             timezone = this.refs.contentInput.state.timeZone,
             telNum = this.refs.contentInput.state.telNum,
             email = this.refs.contentInput.state.email,
-            gender = configData.sex.id[this.refs.gender.state.index],
+            gender = configData.gender.id[this.refs.gender.state.index],
             spokenLevel = configData.spokenLevel.id[this.refs.spokenLevel.state.index],
             snack = configData.snacks.id[this.refs.snack.state.index],
             nationalLevel = configData.nationalLevel.id[this.refs.nationalLevel.state.index],
@@ -191,8 +220,8 @@ var TeacherInterview = React.createClass({
             auditTimeEnd = this.refs.checkDate.state.end,
             interviewTimeStart = this.refs.interviewTime.state.start,
             interviewTimeEnd = this.refs.interviewTime.state.end,
-            isHasInterviewTime = config.reservationInterview.id[this.refs.reservationInterview.state.index],
-            teachingExperience = config.experience.id[this.refs.experience.state.index],
+            isHasInterviewTime = configData.reservationInterview.id[this.refs.reservationInterview.state.index],
+            teachingExperience = configData.experience.id[this.refs.experience.state.index],
             myurl = `${searchUrl}page=0&size=${this.state.pageSize}`;
 
         myurl += (firstName.length >0) ? `&firstName=${firstName}` : '';
@@ -235,7 +264,6 @@ var TeacherInterview = React.createClass({
                         select : selectList
                     });
                 }
-                console.log(data);
             },
             ()=> {
                 alert("查询失败!");
@@ -251,6 +279,12 @@ var TeacherInterview = React.createClass({
         });
 
     },
+
+    /**
+     * 不改变url,获取第page页数据
+     * @param page: 表示需要获取的页面,从1开始
+     * @private
+     */
     _getPage : function (page) {
         let myurl = this.state.curURL.replace(/page=0/,`page=${page-1}`);
         Get({
@@ -266,52 +300,80 @@ var TeacherInterview = React.createClass({
             console.log(err);
         });
     },
+
+    /**
+     * 跳转到上一页
+     * @private
+     */
     _prePage : function () {
         if(this.state.curPage == 1)
             return;
         this._getPage(this.state.curPage - 1);
     },
+
+    /**
+     * 跳转到首页
+     * @private
+     */
     _firstPage : function () {
         if(this.state.curPage == 1)
             return;
         this._getPage(1);
     },
+
+    /**
+     * 跳转到尾页
+     * @private
+     */
     _lastPage : function () {
         if(this.state.curPage == this.state.totalPages)
             return;
         this._getPage(this.state.totalPages);
     },
+
+    /**
+     * 跳转到下一页
+     * @private
+     */
     _nextPage : function () {
         if(this.state.curPage == this.state.totalPages)
             return;
         this._getPage(this.state.curPage + 1);
     },
-    _updateGender : function (i,index) {
-        let email = this.state.list[i].email;
-        let gender = configData.sex.id[index];
-        Post({
-            url : genderUrl,
-            data : {
-                "email": email,
-                "gener": gender
-            }
-        }).then(
-            () =>{
-                let line = this.state.list[i];
-                line.gender = gender;
-                let newList = [].concat(this.state.list.slice(0,i), line, this.state.list.slice(i + 1));
-                this.setState({
-                    list : newList
-                });
-            },
-            () =>{
-                console.log("更改性别失败!");
-            }
-        ).catch(
-            (err) =>{console.log(err);}
-        );
+
+    /**
+     * 点击表格中的复选框,触发当前行选中事件
+     * @param e: 点击事件
+     * @param index: 选中的行在表格中的序号
+     * @public (子组件"表格"调用)
+     */
+    select : function (e,index) {
+        let selectList = this.state.select;
+        selectList[index] = e.target.checked;
+        this.setState({
+            selected : selectList
+        });
     },
-    _updateInterviewTime : function (i,date) {
+
+    /**
+     * 点击表头中的复选框,触发全选事件
+     * @param state: 全选状态. false表示不选中,true表示选中
+     * @public (子组件"表格"调用)
+     */
+    selectAll : function (state) {
+        let selectList = this.state.list.map(() => {return (state);});
+        this.setState({
+            selected : selectList
+        });
+    },
+
+    /**
+     * 点击表格中的时间选择部件,触发安排面试时间事件.向后台发送ajax请求,并更新当前教师的信息
+     * @param i: 表示选择的是表格中的第i个教师,从0开始
+     * @param date: 表示选择的面试时间
+     * @public (子组件"表格"调用)
+     */
+    updateInterviewTime : function (i,date) {
         let email = this.state.list[i].email;
         Post({
             url : interviewTimeUrl,
@@ -335,19 +397,62 @@ var TeacherInterview = React.createClass({
             (err) =>{console.log(err);}
         );
     },
-    _arangeAdopt : function(i){
+
+    /**
+     * 点击表格中的性别下拉列表,触发为当前教师选择性别事件.向后台发送ajax请求,并更新当前教师的信息
+     * @param i: 表示选择的是表格中的第i个教师,从0开始
+     * @param index: 表示性别,0为女,1为男
+     * @public (子组件"表格"调用)
+     */
+    updateGender : function (i,index) {
+        let email = this.state.list[i].email;
+        let gender = configData.gender.id[index];
+        Post({
+            url : genderUrl,
+            data : {
+                "email": email,
+                "gener": gender
+            }
+        }).then(
+            () =>{
+                let line = this.state.list[i];
+                line.gender = gender;
+                let newList = [].concat(this.state.list.slice(0,i), line, this.state.list.slice(i + 1));
+                this.setState({
+                    list : newList
+                });
+            },
+            () =>{
+                console.log("更改性别失败!");
+            }
+        ).catch(
+            (err) =>{console.log(err);}
+        );
+    },
+
+    /**
+     * 点击"通过"按钮,触发通过模态框,确定当前通过的教师序号
+     * @param i: 表示选择的是表格中的第i个教师,从0开始
+     * @public (子组件"表格"调用)
+     */
+    arangeAdopt : function(i){
         this.setState({
             curRow: i
         });
         $(".modalInterviewAdopt .modal").modal();
     },
+
+    /**
+     * 通过模态框中点击"确定"按钮,触发通过事件.通过ajax请求将当前教师的email发送给后台,然后ajax请求重新获取教师列表
+     * @public (子组件"通过模态框"调用)
+     */
     adopt : function () {
         let emails = [].concat(this.state.list[this.state.curRow].email);
         Post({
             url : passUrl,
             data : {
                 "emails": emails,
-                "stateStep":2
+                "stateStep": this.state.stateStep
             }
         }).then(
             () => {
@@ -360,15 +465,33 @@ var TeacherInterview = React.createClass({
                 alert("该教师性别为空,不能通过!");
             }).catch();
     },
-    _arangeInPond : function(i){
+
+    /**
+     * 点击"入池"按钮,触发入池模态框,确定当前入池的教师序号
+     * @param i: 表示选择的是表格中的第i个教师,从0开始
+     * @public (子组件"表格"调用)
+     */
+    arangeInPond : function(i){
         this.setState({
             curRow: i
         });
         $(".modalInPond .modal").modal();
     },
+
+    /**
+     * 点击"批量入池"按钮,触发批量入池模态框
+     * @private
+     */
     _arangeInPonds : function(){
         $(".modalInPonds .modal").modal();
     },
+
+    /**
+     * 入池模态框和批量入池模态框中点击"确定"按钮,触发入池事件.通过ajax请求将选中的教师的emails数组发送给后台,然后ajax请求重新获取教师列表
+     * @param num: 表明需要执行"入池"还是"批量入池"操作. 1表示"入池",2表示"批量入池".
+     * @param reason: 表明"入池"或"批量入池"的原因,不能为空.
+     * @public (子组件"入池模态框"和"批量入池模态框"调用)
+     */
     inPonds : function (num,reason) {
         let line = this.state.list[this.state.curRow];
         let emails = [];
@@ -401,7 +524,13 @@ var TeacherInterview = React.createClass({
                 alert("入池失败,请重试!");
             }).catch();
     },
-    _arangeMore : function (i) {
+
+    /**
+     * 点击"详情"按钮,触发详情模态框,通过ajax请求获取当前教师的信息,显示在详情模态框中
+     * @param i: 表示选择的是表格中的第i个教师,从0开始
+     * @public (子组件"表格"调用)
+     */
+    arangeMore : function (i) {
         this.setState({
             curRow: i
         });
@@ -426,6 +555,12 @@ var TeacherInterview = React.createClass({
             console.log(err);
         });
     },
+
+    /**
+     * 表格下方可以批量修改"国家级别","零食"和"口语水平".点击"确定"按钮即可提交更改,触发批量修改事件
+     * @param attr: 需要批量更改的属性名称. nationalLevel表示更改"国家级别", snack表示更改"零食", spokenLevel表示更改"口语水平".
+     * @private
+     */
     _edit : function (attr) {
         let emails = [],
             myurl = '',
@@ -441,25 +576,41 @@ var TeacherInterview = React.createClass({
         }
         switch (attr){
             case "nationalLevel" :
-                myurl = updateNationalLevelUrl; data = this.state.nationalityLevel; break;
+                myurl = updateNationalLevelUrl;
+                data = {
+                    "emails": emails,
+                    "nationalLevel": this.state.nationalityLevel
+                };
+                break;
             case "snack" :
-                myurl = updateSnackUrl; data = this.state.snack; break;
+                myurl = updateSnackUrl;
+                data = {
+                    "emails": emails,
+                    "snack": this.state.snack
+                };
+                break;
             default:
-                myurl = updateSpokenLevelUrl; data = this.state.spokenLevel; break;
+                myurl = updateSpokenLevelUrl;
+                data = {
+                    "emails": emails,
+                    "spokenLevel": this.state.spokenLevel
+                };
+                break;
         }
         Post({
             url : myurl,
-            data : {
-                "emails": emails,
-                "nationalLevel": data
-            }
+            data : data
         }).then(
             () => {
                 this._getPage(this.state.curPage);
             },
             () => {
                 alert("修改失败,请重试!");
-            }).catch();
+            }).catch(
+            (err) => {
+                console.log(err);
+            }
+        );
     }
 });
 
