@@ -173,7 +173,7 @@ var TeacherLecture = React.createClass({
             <div className="TeacherLecture">
                 <ModalLecture info={this.state.curInfo} callback={(e)=>{this._getPage(this.state.curPage)}}/>
                 <TryLesson row={rowContent} teacher={this.state.teacherAccounts} student={this.state.studentAccounts}
-                           time={this.state.timeSlot} course={this.state.demoCourse} callback={this.updateTime}/>
+                           time={this.state.timeSlot} course={this.state.demoCourse} callback={()=>{this._getPage(this.state.curPage)}}/>
                 <ModalTryScore value={this.state.list[this.state.curRow]} callback={this.score}/>
                 <ModalAdopt callback={this.adopt}/>
                 <ModalInPond callback={this.inPonds}/>

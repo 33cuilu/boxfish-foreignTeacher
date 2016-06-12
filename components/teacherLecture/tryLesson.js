@@ -70,7 +70,6 @@ var TryLesson = React.createClass({
             "courseName": this.props.course.arr[this.refs.course.state.index],
             "startTime": `${date} ${startHour}`,
             "endTime": `${date} ${endHour}`,
-            "courseType": this.props.course.type[this.refs.course.state.index],
             "timeSlotId": this.props.time.id[this.refs.timeSlot.state.index]
             };
 
@@ -85,9 +84,9 @@ var TryLesson = React.createClass({
             url : submitUrl,
             data : data
         }).then(
-            ({data}) => {
+            () => {
             //显示更改后的时间
-                this.props.callback(`${startTime}`, `${endTime}`);
+                this.props.callback();
             },
             ()=>{
                 alert("安排试讲失败,可能因为网络原因,也可能是安排出现冲突!");

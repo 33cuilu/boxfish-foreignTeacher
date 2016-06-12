@@ -111,7 +111,7 @@ var TeacherExamine = React.createClass({
                 "telNum" : v.cellphoneNumber,
                 "email" : v.email,
                 "snack" : getById(configData.snacks, v.snack),
-                "teachingExperience" : v.teachingExperience,
+                "teachingExperience" : getById(configData.experienceDetail, v.teachingExperience),
                 "operate" : (
                     <div>
                         <button className="btn btn-success btn-xs" onClick={(e)=>{this.arangeAdopt(i)}}>通过</button>
