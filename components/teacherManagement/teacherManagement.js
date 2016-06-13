@@ -73,20 +73,21 @@ var TeacherManagement = React.createClass({
         };
         Get(getHead).then(
             ({data})=> {
+                let selectList = new Array(data.content.length);
+                for(let i=0; i<selectList.length; i++){
+                    selectList[i] = false;
+                }
                 if (data == null) {
                     this.setState({
-                        getHead : getHead
+                        getHead : getHead,
+                        selected : selectList
                     });
                 } else {
-                    let selectList = new Array(data.content.length);
-                    for(let i=0; i<selectList.length; i++){
-                        selectList[i] = false;
-                    }
                     this.setState({
                         getHead: getHead,
                         totalPages: data.totalPages,
                         list: data.content,
-                        select : selectList
+                        selected : selectList
                     });
                 }
             },
@@ -234,24 +235,25 @@ var TeacherManagement = React.createClass({
         console.log(data);
         Get(getHead).then(
             ({data})=> {
+                let selectList = new Array(data.content.length);
+                for(let i=0; i<selectList.length; i++){
+                    selectList[i] = false;
+                }
                 if (data == null) {
                     this.setState({
                         curPage: 1,
                         totalPages: 1,
                         getHead : getHead,
-                        list: []
+                        list: [],
+                        selected : selectList
                     });
                 } else {
-                    let selectList = new Array(data.content.length);
-                    for(let i=0; i<selectList.length; i++){
-                        selectList[i] = false;
-                    }
                     this.setState({
                         getHead: getHead,
                         curPage: 1,
                         totalPages: data.totalPages,
                         list: data.content,
-                        select : selectList
+                        selected : selectList
                     });
                 }
             },
@@ -280,11 +282,18 @@ var TeacherManagement = React.createClass({
         getHead.data.page = page - 1;
         Get(getHead).then(
             ({data}) => {
-                if(data == null )
+                let selectList = new Array(data.content.length);
+                for(let i=0; i<selectList.length; i++){
+                    selectList[i] = false;
+                }
+                if(data == null ){
+                    alert("没有数据!");
                     return;
+                }
                 this.setState({
                     curPage : page,
-                    list : data.content
+                    list : data.content,
+                    selected : selectList
                 });
             },
             () => {
@@ -432,7 +441,7 @@ var TeacherManagement = React.createClass({
      * @public (子组件"表格"调用)
      */
     select : function (e,index) {
-        let selectList = this.state.select;
+        let selectList = this.state.selected.concat([]);
         selectList[index] = e.target.checked;
         this.setState({
             selected : selectList

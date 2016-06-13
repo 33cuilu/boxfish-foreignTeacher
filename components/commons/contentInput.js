@@ -44,12 +44,12 @@ var ContentInput = React.createClass({
     },
     _getFirstName : function () {
         this.setState({
-            firstName : this.refs.firstName.value
+            firstName : this.refs.firstName.value.trim()
         });
     },
     _getLastName : function () {
         this.setState({
-            lastName : this.refs.lastName.value
+            lastName : this.refs.lastName.value.trim()
         });
     },
     _getNationality : function (index) {
@@ -66,12 +66,12 @@ var ContentInput = React.createClass({
     },
     _getCellphoneNumber : function () {
         this.setState({
-            cellphoneNumber : this.refs.cellphoneNumber.value
+            cellphoneNumber : this.refs.cellphoneNumber.value.trim()
         });
     },
     _getEmail : function () {
         this.setState({
-            email : this.refs.email.value
+            email : this.refs.email.value.trim()
         });
     }
 });

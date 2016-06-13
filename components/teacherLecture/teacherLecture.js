@@ -45,6 +45,7 @@ var TeacherLecture = React.createClass({
     getInitialState : function () {
         return {
             stateStep : 2,
+            nextState : 3,
             pageSize : 10,
             totalPages : 1,
             curPage : 1,
@@ -92,22 +93,24 @@ var TeacherLecture = React.createClass({
                 stateStep : this.state.stateStep
             }
         };
+
         Get(getHead).then(
             ({data})=> {
+                let selectList = new Array(data.content.length);
+                for(let i=0; i<selectList.length; i++){
+                    selectList[i] = false;
+                }
                 if (data == null) {
                     this.setState({
-                        getHead : getHead
+                        getHead : getHead,
+                        selected : selectList
                     });
                 } else {
-                    let selectList = new Array(data.content.length);
-                    for(let i=0; i<selectList.length; i++){
-                        selectList[i] = false;
-                    }
                     this.setState({
                         getHead: getHead,
                         totalPages: data.totalPages,
                         list: data.content,
-                        select : selectList
+                        selected : selectList
                     });
                 }
             },
@@ -193,8 +196,8 @@ var TeacherLecture = React.createClass({
                             </div>
                         </div>
                         <div className="form row extend">
-                            <TimePicker ref="interviewTime" name="面试时间"/>
-                            <TimePicker ref="triallectureTime" name="试讲时间"/>
+                            <TimePicker type="2" ref="interviewTime" name="面试时间"/>
+                            <TimePicker type="2" ref="triallectureTime" name="试讲时间"/>
                             <SelectComponent ref="reservationTry" contentData={configData.reservationTry} />
                         </div>
                     </div>
@@ -394,24 +397,25 @@ var TeacherLecture = React.createClass({
         console.log(getHead);
         Get(getHead).then(
             ({data})=> {
+                let selectList = new Array(data.content.length);
+                for(let i=0; i<selectList.length; i++){
+                    selectList[i] = false;
+                }
                 if (data == null) {
                     this.setState({
                         curPage: 1,
                         totalPages: 1,
                         getHead : getHead,
-                        list: []
+                        list: [],
+                        selected: selectList
                     });
                 } else {
-                    let selectList = new Array(data.content.length);
-                    for(let i=0; i<selectList.length; i++){
-                        selectList[i] = false;
-                    }
                     this.setState({
                         getHead: getHead,
                         curPage: 1,
                         totalPages: data.totalPages,
                         list: data.content,
-                        select : selectList
+                        selected : selectList
                     });
                 }
             },
@@ -442,9 +446,14 @@ var TeacherLecture = React.createClass({
             ({data}) => {
                 if(data == null )
                     return;
+                let selectList = new Array(data.content.length);
+                for(let i=0; i<selectList.length; i++){
+                    selectList[i] = false;
+                }
                 this.setState({
                     curPage : page,
-                    list : data.content
+                    list : data.content,
+                    selected : selectList
                 });
             },
             () => {
@@ -502,7 +511,7 @@ var TeacherLecture = React.createClass({
      * @public (子组件"表格"调用)
      */
     select : function (e,index) {
-        let selectList = this.state.select;
+        let selectList = this.state.selected.concat([]);
         selectList[index] = e.target.checked;
         this.setState({
             selected : selectList
@@ -597,14 +606,20 @@ var TeacherLecture = React.createClass({
         let postHead = {
             url : passUrl,
             data : {
-                "emails": [].concat(this.state.list[this.state.curRow].email),
-                "stateStep": this.state.stateStep
+                "email": this.state.list[this.state.curRow].email,
+                "stateStep": this.state.nextState
             }
         };
         Post(postHead).then(
-            () => {
-                $(".modalAdopt .modal").modal('hide');
-                this._getPage(this.state.curPage);
+            ({returnMsg}) => {
+                if(returnMsg !== "success"){
+                    /*此处需要判断返回信息,决定提示信息*/
+                    alert(returnMsg);
+                    $(".modalAdopt .modal").modal('hide');
+                }else{
+                    $(".modalAdopt .modal").modal('hide');
+                    this._getPage(this.state.curPage);
+                }
             },
             () => {
                 alert("通过操作失败,请重试!");

@@ -30,8 +30,8 @@ var searchUrl = `http://${configData.ip}/web/teacherOralEn/teacherStepList?`;
 var infoUrl = `http://${configData.ip}/web/teacherOralEn/teacherDetail?`;
 var inPondsUrl = `http://${configData.ip}/web/teacherOralEn/putPond`;
 var passUrl = `http://${configData.ip}/web/teacherOralEn/updateStatePass`;
-var genderUrl = `http://${configData.ip}/web/teacherOralEn/updateGener`;
-var interviewTimeUrl = '';
+var genderUrl = `http://${configData.ip}/web/teacherOralEn/updateGender`;
+var interviewTimeUrl = `http://${configData.ip}/web/teacherOralEn/updateDate`;
 var updateNationalLevelUrl = '';
 var updateSnackUrl = '';
 var updateSpokenLevelUrl = '';
@@ -46,6 +46,7 @@ var TeacherInterview = React.createClass({
     getInitialState : function () {
         return {
             stateStep : 1,
+            nextState : 2,
             pageSize : 10,
             totalPages : 1,
             curPage : 1,
@@ -79,22 +80,24 @@ var TeacherInterview = React.createClass({
                 stateStep : this.state.stateStep
             }
         };
+
         Get(getHead).then(
             ({data})=> {
+                let selectList = new Array(data.content.length);
+                for(let i=0; i<selectList.length; i++){
+                    selectList[i] = false;
+                }
                 if (data == null) {
                     this.setState({
-                        getHead : getHead
+                        getHead : getHead,
+                        selected : selectList
                     });
                 } else {
-                    let selectList = new Array(data.content.length);
-                    for(let i=0; i<selectList.length; i++){
-                        selectList[i] = false;
-                    }
                     this.setState({
                         getHead: getHead,
                         totalPages: data.totalPages,
                         list: data.content,
-                        select : selectList
+                        selected : selectList
                     });
                 }
             },
@@ -115,7 +118,6 @@ var TeacherInterview = React.createClass({
      */
     render : function(){
         let tableList = this.state.list.map((v,i) => {
-            console.log(v.teachingExperience);
             return {
                 "checkbox" : <input type="checkbox" onChange={(e)=>{this.select(e,i)}}/>,
                 "auditTime" : v.auditTime,
@@ -126,7 +128,7 @@ var TeacherInterview = React.createClass({
                 "cellphoneNumber" : v.cellphoneNumber,
                 "email" : v.email,
                 "nationalityLevel" : getById(configData.nationalLevel, v.nationalityLevel),
-                "interviewTime" : <TimePicker onChange={(date)=>{this.updateInterviewTime(i,date)}}/>,
+                "interviewTime" : <TimePicker type="1" value={v.interviewTime} onChange={(date)=>{this.updateInterviewTime(i,date)}}/>,
                 "gender" : <SelectComponent contentData={configData.gender} value={v.gender} onChange={(index)=>{this.updateGender(i,index)}}/>,
                 "snack" : getById(configData.snack, v.snack),
                 "spokenLevel" : getById(configData.spokenLevel, v.spokenLevel),
@@ -140,7 +142,6 @@ var TeacherInterview = React.createClass({
                 )
             };
         });
-        console.log(tableList);
         return(
             <div className="TeacherInterview">
                 <ModalInterview info={this.state.curInfo} callback={(e)=>{this._getPage(this.state.curPage)}}/>
@@ -161,7 +162,7 @@ var TeacherInterview = React.createClass({
                             <SelectComponent ref="snack" contentData={configData.snack} />
                             <SelectComponent ref="nationalLevel" contentData={configData.nationalLevel} />
                             <DataPicker ref="checkDate" name="审核日期"/>
-                            <TimePicker ref="interviewTime" name="面试时间"/>
+                            <TimePicker type="2" ref="interviewTime" name="面试时间"/>
                             <SelectComponent ref="experience" contentData={configData.experience} />
                             <SelectComponent ref="reservationInterview" contentData={configData.reservationInterview} />
                         </div>
@@ -256,24 +257,25 @@ var TeacherInterview = React.createClass({
         console.log(getHead);
         Get(getHead).then(
             ({data})=> {
+                let selectList = new Array(data.content.length);
+                for(let i=0; i<selectList.length; i++){
+                    selectList[i] = false;
+                }
                 if (data == null) {
                     this.setState({
                         curPage: 1,
                         totalPages: 1,
                         getHead : getHead,
-                        list: []
+                        list: [],
+                        selected : selectList
                     });
                 } else {
-                    let selectList = new Array(data.content.length);
-                    for(let i=0; i<selectList.length; i++){
-                        selectList[i] = false;
-                    }
                     this.setState({
                         getHead: getHead,
                         curPage: 1,
                         totalPages: data.totalPages,
                         list: data.content,
-                        select : selectList
+                        selected : selectList
                     });
                 }
             },
@@ -302,11 +304,18 @@ var TeacherInterview = React.createClass({
         getHead.data.page = page - 1;
         Get(getHead).then(
             ({data}) => {
-                if(data == null )
+                let selectList = new Array(data.content.length);
+                for(let i=0; i<selectList.length; i++){
+                    selectList[i] = false;
+                }
+                if(data == null ){
+                    alert("没有数据!");
                     return;
+                }
                 this.setState({
                     curPage : page,
-                    list : data.content
+                    list : data.content,
+                    selected : selectList
                 });
             },
             () => {
@@ -364,7 +373,7 @@ var TeacherInterview = React.createClass({
      * @public (子组件"表格"调用)
      */
     select : function (e,index) {
-        let selectList = this.state.select;
+        let selectList = this.state.selected.concat([]);
         selectList[index] = e.target.checked;
         this.setState({
             selected : selectList
@@ -394,7 +403,8 @@ var TeacherInterview = React.createClass({
                 url : interviewTimeUrl,
                 data : {
                     "email": this.state.list[i].email,
-                    "interviewTime": date
+                    "dateColumn": 1,
+                    "dateValue": date
                 }
             };
         Post(postHead).then(
@@ -420,7 +430,7 @@ var TeacherInterview = React.createClass({
                 url : genderUrl,
                 data : {
                     "email": this.state.list[i].email,
-                    "gener": configData.gender.id[index]
+                    "gender": configData.gender.id[index]
                 }
             };
         Post(postHead).then(
@@ -456,18 +466,22 @@ var TeacherInterview = React.createClass({
                 url : passUrl,
                 data : {
                     "email": this.state.list[this.state.curRow].email,
-                    "stateStep": this.state.stateStep
+                    "stateStep": this.state.nextState
                 }
             };
         Post(postHead).then(
-            () => {
-                $(".modalInterviewAdopt .modal").modal('hide');
-                this._getPage(this.state.curPage);
+            ({returnMsg}) => {
+                if(returnMsg !== "success"){
+                    /*此处需要判断返回信息,决定提示信息*/
+                    alert(returnMsg);
+                    $(".modalInterviewAdopt .modal").modal('hide');
+                }else{
+                    $(".modalInterviewAdopt .modal").modal('hide');
+                    this._getPage(this.state.curPage);
+                }
             },
             () => {
-                /*此处需要判断返回信息,决定提示信息*/
-                alert("该教师得分不合格,不能通过!");
-                alert("该教师性别为空,不能通过!");
+                alert("通过操作失败,请重试!");
             }).catch();
     },
 

@@ -9,14 +9,14 @@ import React from 'react';
 var SelectComponent = React.createClass({
     getInitialState : function () {
         return {
-            defaultValue : -100,
+            defaultValue : this.props.value + "",
             index : 0
         };
     },
     componentWillReceiveProps : function (nextProps) {
         if(nextProps.value !== null){
             this.setState({
-                value : nextProps.value+""
+                defaultValue : nextProps.value+"",
             });
         } 
     },

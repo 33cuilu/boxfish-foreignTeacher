@@ -38,6 +38,7 @@ var TeacherExamine = React.createClass({
     getInitialState : function () {
         return {
             stateStep : 0,
+            nextState : 1,
             pageSize : 10,
             totalPages : 1,
             curPage : 1,
@@ -71,20 +72,21 @@ var TeacherExamine = React.createClass({
         };
         Get(getHead).then(
             ({data})=> {
+                let selectList = new Array(data.content.length);
+                for(let i=0; i<selectList.length; i++){
+                    selectList[i] = false;
+                }
                 if (data == null) {
                     this.setState({
-                        getHead : getHead
+                        getHead : getHead,
+                        selected : selectList
                     });
                 } else {
-                    let selectList = new Array(data.content.length);
-                    for(let i=0; i<selectList.length; i++){
-                        selectList[i] = false;
-                    }
                     this.setState({
                         getHead: getHead,
                         totalPages: data.totalPages,
                         list: data.content,
-                        select : selectList
+                        selected : selectList
                     });
                 }
             },
@@ -213,24 +215,25 @@ var TeacherExamine = React.createClass({
         console.log(getHead);
         Get(getHead).then(
             ({data})=> {
+                let selectList = new Array(data.content.length);
+                for(let i=0; i<selectList.length; i++){
+                    selectList[i] = false;
+                }
                 if (data == null) {
                     this.setState({
                         curPage: 1,
                         totalPages: 1,
                         getHead : getHead,
-                        list: []
+                        list: [],
+                        selected : selectList
                     });
                 } else {
-                    let selectList = new Array(data.content.length);
-                    for(let i=0; i<selectList.length; i++){
-                        selectList[i] = false;
-                    }
                     this.setState({
                         getHead: getHead,
                         curPage: 1,
                         totalPages: data.totalPages,
                         list: data.content,
-                        select : selectList
+                        selected : selectList
                     });
                 }
             },
@@ -260,11 +263,18 @@ var TeacherExamine = React.createClass({
         console.log(getHead);
         Get(getHead).then(
             ({data}) => {
-                if(data == null )
+                let selectList = new Array(data.content.length);
+                for(let i=0; i<selectList.length; i++){
+                    selectList[i] = false;
+                }
+                if(data == null ){
+                    alert("没有数据!");
                     return;
+                }
                 this.setState({
                     curPage : page,
-                    list : data.content
+                    list : data.content,
+                    selected : selectList
                 });
             },
             () => {
@@ -322,7 +332,7 @@ var TeacherExamine = React.createClass({
      * @public (子组件"表格"调用)
      */
     select : function (e,index) {
-        let selectList = this.state.select;
+        let selectList = this.state.selected.concat([]);
         selectList[index] = e.target.checked;
         this.setState({
             selected : selectList
@@ -362,13 +372,19 @@ var TeacherExamine = React.createClass({
             url : passUrl,
             data : {
                 "email": this.state.list[this.state.curRow].email,
-                "stateStep": this.state.stateStep
+                "stateStep": this.state.nextState
             }
         };
         Post(postHead).then(
-            () => {
-                $(".modalExamineAdopt .modal").modal('hide');
-                this._getPage(this.state.curPage);
+            ({returnMsg}) => {
+                if(returnMsg !== "success"){
+                    /*此处需要判断返回信息,决定提示信息*/
+                    alert(returnMsg);
+                    $(".modalExamineAdopt .modal").modal('hide');
+                }else {
+                    $(".modalExamineAdopt .modal").modal('hide');
+                    this._getPage(this.state.curPage);
+                }
             },
             () => {
                 alert("通过操作失败,请重试!");
@@ -417,6 +433,7 @@ var TeacherExamine = React.createClass({
                 }
             }
         }
+        console.log(this.state.selected);
         if(emails.length <=0){
             alert("请选中入池的教师!");
             return;

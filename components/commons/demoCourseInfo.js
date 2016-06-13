@@ -31,7 +31,7 @@ var ModalCourseInfo = React.createClass({
                 </div>
                 <div className="field">
                     <label>试讲时间:</label>
-                    <TimePicker ref="tryTime"/>
+                    <TimePicker type="2" ref="tryTime"/>
                 </div>
             </div>
         );

@@ -37,6 +37,7 @@ var TeacherPond = React.createClass({
      */
     getInitialState : function () {
         return {
+            stateStep : 10,
             pageSize : 10,
             totalPages : 1,
             curPage : 1,
@@ -73,20 +74,21 @@ var TeacherPond = React.createClass({
         };
         Get(getHead).then(
             ({data})=> {
+                let selectList = new Array(data.content.length);
+                for(let i=0; i<selectList.length; i++){
+                    selectList[i] = false;
+                }
                 if (data == null) {
                     this.setState({
-                        getHead : getHead
+                        getHead : getHead,
+                        selected : selectList
                     });
                 } else {
-                    let selectList = new Array(data.content.length);
-                    for(let i=0; i<selectList.length; i++){
-                        selectList[i] = false;
-                    }
                     this.setState({
                         getHead: getHead,
                         totalPages: data.totalPages,
                         list: data.content,
-                        select : selectList
+                        selected : selectList
                     });
                 }
             },
@@ -130,7 +132,7 @@ var TeacherPond = React.createClass({
                 "stateStep" : getById(configData.stateStep, v.stateStep),
                 "operate" : (
                     <div>
-                        <button className="btn btn-primary btn-xs" onClick={(e)=>{this.arrangeish(i)}}>捕捞</button>
+                        <button className="btn btn-primary btn-xs" onClick={(e)=>{this.arrangeFish(i)}}>捕捞</button>
                         <button className="btn btn-link btn-xs" onClick={(e)=>{this.arangeMore(i)}}>详情</button>
                     </div>
                 )
@@ -153,8 +155,8 @@ var TeacherPond = React.createClass({
                         <div className="form row">
                             <DataPicker ref="createTime" name="报名日期"/>
                             <DataPicker ref="auditTime" name="审核日期"/>
-                            <TimePicker ref="interviewTime" name="面试时间"/>
-                            <TimePicker ref="tryLessonTime" name="试讲时间"/>
+                            <TimePicker type="2" ref="interviewTime" name="面试时间"/>
+                            <TimePicker type="2" ref="tryLessonTime" name="试讲时间"/>
                             <SelectComponent ref="snack" contentData={configData.snack} />
                             <SelectComponent ref="stateStep" contentData={configData.stateStep} />
                         </div>
@@ -262,24 +264,25 @@ var TeacherPond = React.createClass({
         console.log(getHead);
         Get(getHead).then(
             ({data})=> {
+                let selectList = new Array(data.content.length);
+                for(let i=0; i<selectList.length; i++){
+                    selectList[i] = false;
+                }
                 if (data == null) {
                     this.setState({
                         curPage: 1,
                         totalPages: 1,
                         getHead : getHead,
-                        list: []
+                        list: [],
+                        selected: selectList
                     });
                 } else {
-                    let selectList = new Array(data.content.length);
-                    for(let i=0; i<selectList.length; i++){
-                        selectList[i] = false;
-                    }
                     this.setState({
                         getHead: getHead,
                         curPage: 1,
                         totalPages: data.totalPages,
                         list: data.content,
-                        select : selectList
+                        selected : selectList
                     });
                 }
             },
@@ -308,11 +311,18 @@ var TeacherPond = React.createClass({
         getHead.data.page = page - 1;
         Get(getHead).then(
             ({data}) => {
-                if(data == null )
+                let selectList = new Array(data.content.length);
+                for(let i=0; i<selectList.length; i++){
+                    selectList[i] = false;
+                }
+                if(data == null ){
+                    alert("没有数据!");
                     return;
+                }
                 this.setState({
                     curPage : page,
-                    list : data.content
+                    list : data.content,
+                    selected : selectList
                 });
             },
             () => {
@@ -370,7 +380,7 @@ var TeacherPond = React.createClass({
      * @public (子组件"表格"调用)
      */
     select : function (e,index) {
-        let selectList = this.state.select;
+        let selectList = this.state.selected.concat([]);
         selectList[index] = e.target.checked;
         this.setState({
             selected : selectList
@@ -409,6 +419,7 @@ var TeacherPond = React.createClass({
                 $(".modalPoolToTryLesson .modal").modal();
                 break;
             default:
+                $(".modalPoolToTryLesson .modal").modal();
                 break;
         }
     },

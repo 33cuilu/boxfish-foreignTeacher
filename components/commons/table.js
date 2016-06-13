@@ -58,6 +58,7 @@ var Table = React.createClass({
         }else{
             $("tbody :checkbox").prop("checked",false);
         }
+        console.log(e.target.checked);
         this.props.selectAll(e.target.checked);
     }
 });

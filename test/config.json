@@ -1,5 +1,5 @@
 {
-  "ip" : "101.201.66.32:8099",
+  "ip" : "192.168.0.162:8099",
   "gender" :{
     "name":"性别",
     "arr": ["性别","男","女"],
@@ -41,7 +41,7 @@
   "nationality" :{
     "name":"国家",
     "otherName":"nationality",
-    "arr": ["国家", "Afghanistan", "Albania", "Algeria", "American Samoa", "Andorra", "Angola", "Anguilla", "Antarctica",
+    "arr": ["国家","American","Afghanistan", "Albania", "Algeria", "American Samoa", "Andorra", "Angola", "Anguilla", "Antarctica",
       "Antigua and Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas",
       "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia",
       "Bosnia and Herzegovina", "Botswana", "Bouvet Island", "Brazil", "British Indian Ocean Territory", "Brunei Darussalam",
@@ -76,7 +76,7 @@
       "Wallis and Futuna", "Western Sahara", "Yemen", "Zambia", "Zimbabwe", "Serbia", "Asia / Pacific Region",
       "Montenegro", "Aland Islands", "Bonaire, Sint Eustatius and Saba", "Curacao", "Guernsey", "Isle of Man", "Jersey",
       "Kosovo", "Saint Barthelemy", "Saint Martin", "Sint Maarten", "South Sudan"],
-    "id": ["-1", "Afghanistan", "Albania", "Algeria", "American Samoa", "Andorra", "Angola", "Anguilla", "Antarctica",
+    "id": ["-1", "American", "Afghanistan", "Albania", "Algeria", "American Samoa", "Andorra", "Angola", "Anguilla", "Antarctica",
       "Antigua and Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas",
       "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia",
       "Bosnia and Herzegovina", "Botswana", "Bouvet Island", "Brazil", "British Indian Ocean Territory", "Brunei Darussalam",

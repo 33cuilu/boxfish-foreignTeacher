@@ -30,7 +30,7 @@ var ModalLecture = React.createClass({
                                 <div className="modal-body-header">
                                     <div className="field">
                                         <label>面试时间:</label>
-                                        <TimePicker ref="interviewTime" value={this.props.info.interviewTime}/>
+                                        <TimePicker type="1" ref="interviewTime" value={this.props.info.interviewTime}/>
                                     </div>
                                     <div className="field">
                                         <label>性别:</label>
