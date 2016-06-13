@@ -51,42 +51,43 @@ var ModalLecture = React.createClass({
     },
     _submit : function () {
         let content = {
-            "gender": this.refs.gender.state.index,
-            "interviewTime": this.refs.interviewTime.state.value,
-            "email": this.props.info.email,
-            "firstName": this.refs.basicInfo.state.firstName,
-            "lastName": this.refs.basicInfo.state.lastName,
-            "cellphoneNumber": this.refs.basicInfo.state.tel,
-            "degree": this.refs.basicInfo.state.degree,
-            "nationality": this.refs.basicInfo.state.nationality,
-            "occupation": this.refs.basicInfo.state.occupation,
-            "timezone": this.refs.basicInfo.state.timezone,
-            "skype": this.refs.basicInfo.state.skype,
-            "schoolCountry": this.refs.basicInfo.state.schoolCountry,
-            "specialty": this.refs.basicInfo.state.specialty,
-            "schoolTime": this.refs.basicInfo.state.schoolingTime,
-            // "schoolStartYear": this.refs.basicInfo.state.schoolingTime.substr(0,4),
-            // "schoolEndYear": this.refs.basicInfo.state.schoolingTime.substr(13,4),
-            "city": this.refs.basicInfo.state.city,
-            "school": this.refs.basicInfo.state.school,
-            "job": null,
-            "snack": null,
-            "spokenLevel": null,
-            "triallectureStartTime": null,
-            "triallectureEndTime": null,
-            "demoCourse": null,
-            "initAccount": null,
-            "teachingExperience": 0,
-            "schoolStartYear": null,
-            "schoolEndYear": null,
-            "triallectureTeacher": null,
-            "triallectureStudent": null
-        };
-        console.log(content);
-        Post({
-            url : submitUrl,
-            data : content
-        }).then(
+                "gender": this.refs.gender.state.index,
+                "interviewTime": this.refs.interviewTime.state.value,
+                "email": this.props.info.email,
+                "firstName": this.refs.basicInfo.state.firstName,
+                "lastName": this.refs.basicInfo.state.lastName,
+                "cellphoneNumber": this.refs.basicInfo.state.cellphoneNumber,
+                "degree": this.refs.basicInfo.state.degree,
+                "nationality": this.refs.basicInfo.state.nationality,
+                "occupation": this.refs.basicInfo.state.occupation,
+                "timezone": this.refs.basicInfo.state.timezone,
+                "skype": this.refs.basicInfo.state.skype,
+                "schoolCountry": this.refs.basicInfo.state.schoolCountry,
+                "specialty": this.refs.basicInfo.state.specialty,
+                "schoolTime": this.refs.basicInfo.state.schoolingTime,
+                // "schoolStartYear": this.refs.basicInfo.state.schoolingTime.substr(0,4),
+                // "schoolEndYear": this.refs.basicInfo.state.schoolingTime.substr(13,4),
+                "city": this.refs.basicInfo.state.city,
+                "school": this.refs.basicInfo.state.school,
+                "job": null,
+                "snack": null,
+                "spokenLevel": null,
+                "triallectureStartTime": null,
+                "triallectureEndTime": null,
+                "demoCourse": null,
+                "initAccount": null,
+                "teachingExperience": 0,
+                "schoolStartYear": null,
+                "schoolEndYear": null,
+                "triallectureTeacher": null,
+                "triallectureStudent": null
+            },
+            postHead = {
+                url : submitUrl,
+                data : content
+            }
+        console.log(postHead);
+        Post(postHead).then(
             ({data}) => {
                 //显示更改后的数据
                 $(".modalLecture .modal").modal('hide');

@@ -14,7 +14,7 @@ var SingleDataPicker = React.createClass({
         //初始化表格的日期选择控件
         $(this.refs.dateInput).daterangepicker({ singleDatePicker: true , startDate: new Date()}, (start,end) => {
             this.setState({
-                value : start.format("YYYY-MM-DD")
+                value : start.format("YYYY-MM-DD HH:mm:ss")
             });
         });
     },

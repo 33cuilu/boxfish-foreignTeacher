@@ -40,7 +40,7 @@ var TeacherPond = React.createClass({
             pageSize : 10,
             totalPages : 1,
             curPage : 1,
-            curURL : '',
+            getHead : {},
             curRow : 0,
             demoCourse : {
                 arr: [],  //课程名称
@@ -63,14 +63,19 @@ var TeacherPond = React.createClass({
      */
     componentDidMount : function () {
         //获取空列表
-        let myurl = `${searchUrl}page=0&size=10`;
-        Get({
-            url : myurl
-        }).then(
+        let getHead = {
+            url : searchUrl,
+            data : {
+                page : 0,
+                size : this.state.pageSize,
+                stateStep : this.state.stateStep
+            }
+        };
+        Get(getHead).then(
             ({data})=> {
                 if (data == null) {
                     this.setState({
-                        curURL : myurl
+                        getHead : getHead
                     });
                 } else {
                     let selectList = new Array(data.content.length);
@@ -78,7 +83,7 @@ var TeacherPond = React.createClass({
                         selectList[i] = false;
                     }
                     this.setState({
-                        curURL: myurl,
+                        getHead: getHead,
                         totalPages: data.totalPages,
                         list: data.content,
                         select : selectList
@@ -88,7 +93,7 @@ var TeacherPond = React.createClass({
             ()=> {
                 alert("查询失败!");
                 this.setState({
-                    curURL : myurl
+                    getHead : getHead
                 });
             }
         ).catch((err)=>{
@@ -114,15 +119,15 @@ var TeacherPond = React.createClass({
                 "triallectureTime" : v.triallectureTime,
                 "firstName" : v.firstName,
                 "lastName" : v.lastName,
-                "country" : v.nationality,
-                "timeZone" : v.timezone,
-                "telNum" : v.cellphoneNumber,
+                "nationality" : v.nationality,
+                "timezone" : v.timezone,
+                "cellphoneNumber" : v.cellphoneNumber,
                 "email" : v.email,
-                "snack" : getById(configData.snacks, v.snack),
+                "snack" : getById(configData.snack, v.snack),
                 "interviewScore" : v.interviewScore,
-                "triallectureScore" : v.triallectureScore,
-                "combinedScore" : v.combinedScore,
-                "notPassType" : getById(configData.notPass, v.notPassType),
+                "trialScore" : v.trialScore,
+                "markScore" : v.markScore,
+                "stateStep" : getById(configData.stateStep, v.stateStep),
                 "operate" : (
                     <div>
                         <button className="btn btn-primary btn-xs" onClick={(e)=>{this.arrangeish(i)}}>捕捞</button>
@@ -150,8 +155,8 @@ var TeacherPond = React.createClass({
                             <DataPicker ref="auditTime" name="审核日期"/>
                             <TimePicker ref="interviewTime" name="面试时间"/>
                             <TimePicker ref="tryLessonTime" name="试讲时间"/>
-                            <SelectComponent ref="snack" contentData={configData.snacks} />
-                            <SelectComponent ref="notPass" contentData={configData.notPass} />
+                            <SelectComponent ref="snack" contentData={configData.snack} />
+                            <SelectComponent ref="stateStep" contentData={configData.stateStep} />
                         </div>
                     </div>
                     <div className="search">
@@ -215,9 +220,9 @@ var TeacherPond = React.createClass({
     _search : function () {
         let firstName = this.refs.contentInput.state.firstName,
             lastName = this.refs.contentInput.state.lastName,
-            country = this.refs.contentInput.state.country,
-            timeZone = this.refs.contentInput.state.timeZone,
-            telNum = this.refs.contentInput.state.telNum,
+            nationality = this.refs.contentInput.state.nationality,
+            timezone = this.refs.contentInput.state.timezone,
+            cellphoneNumber = this.refs.contentInput.state.cellphoneNumber,
             email = this.refs.contentInput.state.email,
             createTimeStart = this.refs.createTime.state.start,
             createTimeEnd = this.refs.createTime.state.end,
@@ -225,35 +230,43 @@ var TeacherPond = React.createClass({
             auditTimeEnd = this.refs.auditTime.state.end,
             interviewTimeStart = this.refs.interviewTime.state.start,
             interviewTimeEnd = this.refs.interviewTime.state.end,
-            tryTimeStart = this.refs.tryLessonTime.state.start,
-            tryTimeEnd = this.refs.tryLessonTime.state.end,
-            snack = configData.snacks.id[this.refs.snack.state.index],
-            notPass = configData.notPass.id[this.refs.notPass.state.index],
-            myurl = `${searchUrl}page=0&size=${this.state.pageSize}`;
+            triallectureStartTime = this.refs.triallectureTime.state.start,
+            triallectureEndTime = this.refs.triallectureTime.state.end,
+            snack = configData.snack.id[this.refs.snack.state.index],
+            stateStep = configData.stateStep.id[this.refs.stateStep.state.index],
+            data = {
+                page : 0,
+                size : this.state.pageSize,
+                stateStep : this.state.stateStep
+            };
 
-        myurl += (firstName.length >0) ? `&firstName=${firstName}` : '';
-        myurl += (lastName.length >0) ? `&lastName=${lastName}` : '';
-        myurl += (country != -1) ? `&nationality=${country}` : '';
-        myurl += (timeZone != "时区") ? `&timeZone=${timeZone}` : '';
-        myurl += (telNum.length >0) ? `&cellphoneNumber=${telNum}`: '';
-        myurl += (email.length >0) ? `&email=${email}`: '';
-        myurl += (createTimeStart.length >0) ? `&createTimeStart=${createTimeStart}&createTimeEnd=${createTimeEnd}`: '';
-        myurl += (auditTimeStart.length >0) ? `&auditTimeStart=${auditTimeStart}&auditTimeEnd=${auditTimeEnd}`: '';
-        myurl += (interviewTimeStart.length >0) ? `&interviewTimeStart=${interviewTimeStart}&interviewTimeEnd=${interviewTimeEnd}`: '';
-        myurl += (tryTimeStart.length >0) ? `&triallectureStartTimeStart=${tryTimeStart}&triallectureStartTimeEnd=${tryTimeEnd}`: '';
-        myurl += (snack != -1) ? `&snack=${snack}`: '';
-        myurl += (notPass != -1) ? `&notPassType=${notPass}`: '';
 
-        console.log(myurl);
-        Get({
-            url : myurl
-        }).then(
+        (firstName.length >0) && (data.firstName = firstName);
+        (lastName.length >0) && (data.lastName=lastName);
+        (nationality != -1) && (data.nationality=nationality);
+        (timezone != "时区") && (data.timezone=timezone);
+        (cellphoneNumber.length >0) && (data.cellphoneNumber=cellphoneNumber);
+        (email.length >0) && (data.email=email);
+        (createTimeStart.length >0) && (data.createTimeStart=createTimeStart) &&(data.createTimeEnd=createTimeEnd);
+        (auditTimeStart.length >0) && (data.auditTimeStart=auditTimeStart) &&(data.auditTimeEnd=auditTimeEnd);
+        (interviewTimeStart.length >0) && (data.interviewTimeStart=interviewTimeStart) &&(data.interviewTimeEnd=interviewTimeEnd);
+        (triallectureStartTime.length >0) && (data.triallectureStartTime=triallectureStartTime) &&(data.triallectureEndTime=triallectureEndTime);
+        (snack != -1) && (data.snack=snack);
+        (stateStep != -1) && (data.stateStep=stateStep);
+
+        let getHead = {
+            url : searchUrl,
+            data : data
+        };
+
+        console.log(getHead);
+        Get(getHead).then(
             ({data})=> {
                 if (data == null) {
                     this.setState({
                         curPage: 1,
                         totalPages: 1,
-                        curURL : myurl,
+                        getHead : getHead,
                         list: []
                     });
                 } else {
@@ -262,7 +275,7 @@ var TeacherPond = React.createClass({
                         selectList[i] = false;
                     }
                     this.setState({
-                        curURL: myurl,
+                        getHead: getHead,
                         curPage: 1,
                         totalPages: data.totalPages,
                         list: data.content,
@@ -275,7 +288,7 @@ var TeacherPond = React.createClass({
                 this.setState({
                     curPage: 1,
                     totalPages: 1,
-                    curURL : myurl,
+                    getHead : getHead,
                     list: []
                 });
             }
@@ -291,17 +304,21 @@ var TeacherPond = React.createClass({
      * @private
      */
     _getPage : function (page) {
-        let myurl = this.state.curURL.replace(/page=0/,`page=${page-1}`);
-        Get({
-            url : myurl
-        }).then(({code,message,data})=>{
-            if(data == null )
-                return;
-            this.setState({
-                curPage : page,
-                list : data.content
-            });
-        }).catch((err)=>{
+        let getHead = Object.assign({},this.state.getHead);
+        getHead.data.page = page - 1;
+        Get(getHead).then(
+            ({data}) => {
+                if(data == null )
+                    return;
+                this.setState({
+                    curPage : page,
+                    list : data.content
+                });
+            },
+            () => {
+                console.log("获取教师列表失败!");
+            }
+        ).catch((err)=>{
             console.log(err);
         });
     },
@@ -373,15 +390,15 @@ var TeacherPond = React.createClass({
     },
 
     /**
-     *
-     * @param i
+     * 点击"表格"中的"捕捞"按钮,触发"捕捞模态框"
+     * @param i : 表示选择的是表格中的第i个教师,从0开始
      * @public (子组件"表格"调用)
      */
     arrangeFish : function (i) {
         this.setState({
             curRow : i
         });
-        switch(this.state.list[i].notPassType){
+        switch(this.state.list[i].stateStep){
             case 1:
                 $(".modalPoolToCheck .modal").modal();
                 break;
@@ -395,15 +412,20 @@ var TeacherPond = React.createClass({
                 break;
         }
     },
+
+    /**
+     * 点击"捕捞模态框"中的"确定"按钮,触发捕捞事件
+     * @param stagestep: 表示捕捞到哪一个流程. 1表示审核,2表示面试,3表示试讲
+     */
     fish : function (stagestep) {
-        let email = this.state.lsit[this.state.curRow].email;
-        Post({
+        let postHead = {
             url : fishUrl,
             data : {
-                email : email,
+                email : this.state.lsit[this.state.curRow].email,
                 stateStep: stagestep
             }
-        }).then(
+        };
+        Post(postHead).then(
             () => {
                 this._getPage(this.state.curPage);
             },
@@ -415,6 +437,38 @@ var TeacherPond = React.createClass({
                 console.log(err);
             }
         );
+    },
+
+    /**
+     * 点击"详情"按钮,触发详情模态框,通过ajax请求获取当前教师的信息,显示在详情模态框中
+     * @param i: 表示选择的是表格中的第i个教师,从0开始
+     * @public (子组件"表格"调用)
+     */
+    arangeMore : function(i){
+        this.setState({
+            curRow : i
+        });
+        let getHead = {
+            url : infoUrl,
+            email : this.state.list[i].email
+        };
+        Get(getHead).then(
+            ({data})=>{
+                if(data){
+                    this.setState({
+                        curInfo : data
+                    });
+                    $(".modalPond .modal").modal();
+                }else{
+                    alert("该用户的信息为空!");
+                }
+            },
+            ()=>{
+                alert("获取该用户的信息失败!")
+            }
+        ).catch((err)=>{
+            console.log(err);
+        });
     }
 });
 

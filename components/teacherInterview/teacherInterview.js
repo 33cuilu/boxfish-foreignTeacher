@@ -45,11 +45,11 @@ var TeacherInterview = React.createClass({
      */
     getInitialState : function () {
         return {
-            stateStep : 2,
+            stateStep : 1,
             pageSize : 10,
             totalPages : 1,
             curPage : 1,
-            curURL : '',
+            getHead : {},
             curRow : 0,
             curInfo : {},
             tableStyle : {
@@ -71,14 +71,19 @@ var TeacherInterview = React.createClass({
      */
     componentDidMount : function () {
         //获取空列表
-        let myurl = `${searchUrl}page=0&size=10`;
-        Get({
-            url : myurl
-        }).then(
+        let getHead = {
+            url : searchUrl,
+            data : {
+                page : 0,
+                size : this.state.pageSize,
+                stateStep : this.state.stateStep
+            }
+        };
+        Get(getHead).then(
             ({data})=> {
                 if (data == null) {
                     this.setState({
-                        curURL : myurl
+                        getHead : getHead
                     });
                 } else {
                     let selectList = new Array(data.content.length);
@@ -86,7 +91,7 @@ var TeacherInterview = React.createClass({
                         selectList[i] = false;
                     }
                     this.setState({
-                        curURL: myurl,
+                        getHead: getHead,
                         totalPages: data.totalPages,
                         list: data.content,
                         select : selectList
@@ -96,7 +101,7 @@ var TeacherInterview = React.createClass({
             ()=> {
                 alert("查询失败!");
                 this.setState({
-                    curURL : myurl
+                    getHead : getHead
                 });
             }
         ).catch((err)=>{
@@ -116,14 +121,14 @@ var TeacherInterview = React.createClass({
                 "auditTime" : v.auditTime,
                 "firstName" : v.firstName,
                 "lastName" : v.lastName,
-                "country" : v.nationality,
-                "timeZone" : v.timezone,
-                "telNum" : v.cellphoneNumber,
+                "nationality" : v.nationality,
+                "timezone" : v.timezone,
+                "cellphoneNumber" : v.cellphoneNumber,
                 "email" : v.email,
                 "nationalityLevel" : getById(configData.nationalLevel, v.nationalityLevel),
                 "interviewTime" : <TimePicker onChange={(date)=>{this.updateInterviewTime(i,date)}}/>,
                 "gender" : <SelectComponent contentData={configData.gender} value={v.gender} onChange={(index)=>{this.updateGender(i,index)}}/>,
-                "snack" : getById(configData.snacks, v.snack),
+                "snack" : getById(configData.snack, v.snack),
                 "spokenLevel" : getById(configData.spokenLevel, v.spokenLevel),
                 "teachingExperience" : getById(configData.experienceDetail, v.teachingExperience),
                 "operate" : (
@@ -153,7 +158,7 @@ var TeacherInterview = React.createClass({
                         <div className="form row">
                             <SelectComponent ref="gender" contentData={configData.gender} />
                             <SelectComponent ref="spokenLevel" contentData={configData.spokenLevel} />
-                            <SelectComponent ref="snack" contentData={configData.snacks} />
+                            <SelectComponent ref="snack" contentData={configData.snack} />
                             <SelectComponent ref="nationalLevel" contentData={configData.nationalLevel} />
                             <DataPicker ref="checkDate" name="审核日期"/>
                             <TimePicker ref="interviewTime" name="面试时间"/>
@@ -178,7 +183,7 @@ var TeacherInterview = React.createClass({
                         </div>
                         <div className="btn-right-select">
                             <label>零食</label>
-                            <SelectComponent size="small" contentData={configData.snacks} onChange={(index)=>{this.setState({snack : index})}}/>
+                            <SelectComponent size="small" contentData={configData.snack} onChange={(index)=>{this.setState({snack : index})}}/>
                             <button className="btn btn-primary btn-sm" onClick={(e)=>{this._edit("snack")}}>确定</button>
                         </div>
                         <div className="btn-right-select">
@@ -206,49 +211,56 @@ var TeacherInterview = React.createClass({
      * @private
      */
     _search : function () {
-        let firstName = this.refs.contentInput.state.firstName,
-            lastName = this.refs.contentInput.state.lastName,
-            country = this.refs.contentInput.state.country,
-            timezone = this.refs.contentInput.state.timeZone,
-            telNum = this.refs.contentInput.state.telNum,
-            email = this.refs.contentInput.state.email,
-            gender = configData.gender.id[this.refs.gender.state.index],
-            spokenLevel = configData.spokenLevel.id[this.refs.spokenLevel.state.index],
-            snack = configData.snacks.id[this.refs.snack.state.index],
-            nationalLevel = configData.nationalLevel.id[this.refs.nationalLevel.state.index],
-            auditTimeStart = this.refs.checkDate.state.start,
+        let auditTimeStart = this.refs.checkDate.state.start,
             auditTimeEnd = this.refs.checkDate.state.end,
+            firstName = this.refs.contentInput.state.firstName,
+            lastName = this.refs.contentInput.state.lastName,
+            nationality = this.refs.contentInput.state.nationality,
+            timezone = this.refs.contentInput.state.timezone,
+            cellphoneNumber = this.refs.contentInput.state.cellphoneNumber,
+            email = this.refs.contentInput.state.email,
+            snack = configData.snack.id[this.refs.snack.state.index],
+            gender = configData.gender.id[this.refs.gender.state.index],
+            nationalLevel = configData.nationalLevel.id[this.refs.nationalLevel.state.index],
+            spokenLevel = configData.spokenLevel.id[this.refs.spokenLevel.state.index],
+            teachingExperience = configData.experience.id[this.refs.experience.state.index],
             interviewTimeStart = this.refs.interviewTime.state.start,
             interviewTimeEnd = this.refs.interviewTime.state.end,
             isHasInterviewTime = configData.reservationInterview.id[this.refs.reservationInterview.state.index],
-            teachingExperience = configData.experience.id[this.refs.experience.state.index],
-            myurl = `${searchUrl}page=0&size=${this.state.pageSize}`;
+            data = {
+                page : 0,
+                size : this.state.pageSize,
+                stateStep : this.state.stateStep
+            };
 
-        myurl += (firstName.length >0) ? `&firstName=${firstName}` : '';
-        myurl += (lastName.length >0) ? `&lastName=${lastName}` : '';
-        myurl += (country != "-1") ? `&nationality=${country}` : '';
-        myurl += (timezone != "时区") ? `&timezone=${timezone}` : '';
-        myurl += (telNum.length >0) ? `&cellphoneNumber=${telNum}`: '';
-        myurl += (email.length >0) ? `&email=${email}`: '';
-        myurl += (gender != -1)? `&gender=${gender}`:'';
-        myurl += (spokenLevel != -1)? `&spokenLevel=${spokenLevel}`:'';
-        myurl += (snack != -1)? `&snack=${snack}`:'';
-        myurl += (nationalLevel != -1)? `&nationalLevel=${nationalLevel}`:'';
-        myurl += (auditTimeStart.length >0)? `&auditTimeStart=${auditTimeStart}&auditTimeEnd=${auditTimeEnd}`:'';
-        myurl += (interviewTimeStart.length >0) ? `&interviewTimeStart=${interviewTimeStart}&interviewTimeEnd=${interviewTimeEnd}`: '';
-        myurl += (isHasInterviewTime != -1)? `&isHasInterviewTime=${isHasInterviewTime}`: '';
-        myurl += (teachingExperience != -1)? `&teachingExperience=${teachingExperience}`:'';
+        (auditTimeStart.length >0) && (data.auditTimeStart=auditTimeStart) &&(data.auditTimeEnd=auditTimeEnd);
+        (firstName.length >0) && (data.firstName = firstName);
+        (lastName.length >0) && (data.lastName=lastName);
+        (nationality != -1) && (data.nationality=nationality);
+        (timezone != "时区") && (data.timezone=timezone);
+        (cellphoneNumber.length >0) && (data.cellphoneNumber=cellphoneNumber);
+        (email.length >0) && (data.email=email);
+        (snack != -1) && (data.snack=snack);
+        (gender != -1) && (data.gender=gender);
+        (nationalLevel != -1) && (data.nationalLevel=nationalLevel);
+        (spokenLevel != -1) && (data.spokenLevel=spokenLevel);
+        (teachingExperience != -1) && (data.teachingExperience=teachingExperience);
+        (interviewTimeStart.length >0) && (data.interviewTimeStart=interviewTimeStart) &&(data.interviewTimeEnd=interviewTimeEnd);
+        (isHasInterviewTime != -1) && (data.isHasInterviewTime=isHasInterviewTime);
 
-        console.log(myurl);
-        Get({
-            url : myurl
-        }).then(
+        let getHead = {
+            url : searchUrl,
+            data : data
+        };
+
+        console.log(getHead);
+        Get(getHead).then(
             ({data})=> {
                 if (data == null) {
                     this.setState({
                         curPage: 1,
                         totalPages: 1,
-                        curURL : myurl,
+                        getHead : getHead,
                         list: []
                     });
                 } else {
@@ -257,7 +269,7 @@ var TeacherInterview = React.createClass({
                         selectList[i] = false;
                     }
                     this.setState({
-                        curURL: myurl,
+                        getHead: getHead,
                         curPage: 1,
                         totalPages: data.totalPages,
                         list: data.content,
@@ -270,7 +282,7 @@ var TeacherInterview = React.createClass({
                 this.setState({
                     curPage: 1,
                     totalPages: 1,
-                    curURL : myurl,
+                    getHead : getHead,
                     list: []
                 });
             }
@@ -286,17 +298,21 @@ var TeacherInterview = React.createClass({
      * @private
      */
     _getPage : function (page) {
-        let myurl = this.state.curURL.replace(/page=0/,`page=${page-1}`);
-        Get({
-            url : myurl
-        }).then(({code,message,data})=>{
-            if(data == null )
-                return;
-            this.setState({
-                curPage : page,
-                list : data.content
-            });
-        }).catch((err)=>{
+        let getHead = Object.assign({},this.state.getHead);
+        getHead.data.page = page - 1;
+        Get(getHead).then(
+            ({data}) => {
+                if(data == null )
+                    return;
+                this.setState({
+                    curPage : page,
+                    list : data.content
+                });
+            },
+            () => {
+                console.log("获取教师列表失败!");
+            }
+        ).catch((err)=>{
             console.log(err);
         });
     },
@@ -374,21 +390,16 @@ var TeacherInterview = React.createClass({
      * @public (子组件"表格"调用)
      */
     updateInterviewTime : function (i,date) {
-        let email = this.state.list[i].email;
-        Post({
-            url : interviewTimeUrl,
-            data : {
-                "email": email,
-                "interviewTime": date
-            }
-        }).then(
+        let postHead = {
+                url : interviewTimeUrl,
+                data : {
+                    "email": this.state.list[i].email,
+                    "interviewTime": date
+                }
+            };
+        Post(postHead).then(
             () =>{
-                let line = this.state.list[i];
-                line.interviewTime = date;
-                let newList = [].concat(this.state.list.slice(0,i), line, this.state.list.slice(i + 1));
-                this.setState({
-                    list : newList
-                });
+                this._getPage(this.state.curPage);
             },
             () =>{
                 console.log("安排面试时间失败!");
@@ -405,22 +416,16 @@ var TeacherInterview = React.createClass({
      * @public (子组件"表格"调用)
      */
     updateGender : function (i,index) {
-        let email = this.state.list[i].email;
-        let gender = configData.gender.id[index];
-        Post({
-            url : genderUrl,
-            data : {
-                "email": email,
-                "gener": gender
-            }
-        }).then(
+        let postHead = {
+                url : genderUrl,
+                data : {
+                    "email": this.state.list[i].email,
+                    "gener": configData.gender.id[index]
+                }
+            };
+        Post(postHead).then(
             () =>{
-                let line = this.state.list[i];
-                line.gender = gender;
-                let newList = [].concat(this.state.list.slice(0,i), line, this.state.list.slice(i + 1));
-                this.setState({
-                    list : newList
-                });
+                this._getPage(this.state.curPage);
             },
             () =>{
                 console.log("更改性别失败!");
@@ -447,14 +452,14 @@ var TeacherInterview = React.createClass({
      * @public (子组件"通过模态框"调用)
      */
     adopt : function () {
-        let emails = [].concat(this.state.list[this.state.curRow].email);
-        Post({
-            url : passUrl,
-            data : {
-                "emails": emails,
-                "stateStep": this.state.stateStep
-            }
-        }).then(
+        let postHead = {
+                url : passUrl,
+                data : {
+                    "email": this.state.list[this.state.curRow].email,
+                    "stateStep": this.state.stateStep
+                }
+            };
+        Post(postHead).then(
             () => {
                 $(".modalInterviewAdopt .modal").modal('hide');
                 this._getPage(this.state.curPage);
@@ -508,13 +513,14 @@ var TeacherInterview = React.createClass({
             alert("请选中入池的教师!");
             return;
         }
-        Post({
+        let postHead = {
             url : inPondsUrl,
             data : {
                 "emails": emails,
                 "noPassReason": reason
             }
-        }).then(
+        };
+        Post(postHead).then(
             ({code,data}) => {
                 $(".modalInPond .modal").modal('hide');
                 $(".modalInPonds .modal").modal('hide');
@@ -534,10 +540,11 @@ var TeacherInterview = React.createClass({
         this.setState({
             curRow: i
         });
-        let curEmail = this.state.list[i].email;
-        Get({
-            url : `${infoUrl}email=${curEmail}`
-        }).then(
+        let getHead = {
+            url : infoUrl,
+            email : this.state.list[i].email
+        };
+        Get(getHead).then(
             ({data})=>{
                 if(data){
                     this.setState({
@@ -563,8 +570,7 @@ var TeacherInterview = React.createClass({
      */
     _edit : function (attr) {
         let emails = [],
-            myurl = '',
-            data = '';
+            postHead = {};
         for(let i=0; i<this.state.list.length; i++){
             if(this.state.selected[i] == true){
                 emails.push(this.state.list[i].email);
@@ -576,31 +582,35 @@ var TeacherInterview = React.createClass({
         }
         switch (attr){
             case "nationalLevel" :
-                myurl = updateNationalLevelUrl;
-                data = {
-                    "emails": emails,
-                    "nationalLevel": this.state.nationalityLevel
+                postHead = {
+                    myurl : updateNationalLevelUrl,
+                    data : {
+                        "emails": emails,
+                        "nationalLevel": this.state.nationalityLevel
+                    }
                 };
                 break;
             case "snack" :
-                myurl = updateSnackUrl;
-                data = {
-                    "emails": emails,
-                    "snack": this.state.snack
+                postHead = {
+                    myurl : updateSnackUrl,
+                    data : {
+                        "emails": emails,
+                        "snack": this.state.snack
+                    }
                 };
                 break;
             default:
-                myurl = updateSpokenLevelUrl;
-                data = {
-                    "emails": emails,
-                    "spokenLevel": this.state.spokenLevel
+                postHead = {
+                    myurl : updateSpokenLevelUrl,
+                    data : {
+                        "emails": emails,
+                        "spokenLevel": this.state.spokenLevel
+                    }
                 };
+                
                 break;
         }
-        Post({
-            url : myurl,
-            data : data
-        }).then(
+        Post(postHead).then(
             () => {
                 this._getPage(this.state.curPage);
             },

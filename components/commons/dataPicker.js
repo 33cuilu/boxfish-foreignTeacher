@@ -13,12 +13,12 @@ var DataPicker = React.createClass({
         //初始化表格的日期选择控件
         $(this.refs.dateInput).daterangepicker({},(start, end)=>{
             this.setState({ //每次将新的日期赋给状态
-                start: start.format("YYYY-MM-DD"),
-                end: end.format("YYYY-MM-DD"),
-                value: `${start.format("YYYY-MM-DD")} - ${end.format("YYYY-MM-DD")}`
+                start: start.format("YYYY-MM-DD HH:mm:ss"),
+                end: end.format("YYYY-MM-DD HH:mm:ss"),
+                value: `${start.format("YYYY-MM-DD HH:mm:ss")} - ${end.format("YYYY-MM-DD HH:mm:ss")}`
             });
             if(this.props.onChange){
-                this.props.onChange(`${start.format("YYYY-MM-DD")} - ${end.format("YYYY-MM-DD")}`);
+                this.props.onChange(`${start.format("YYYY-MM-DD h:mm:ss")} - ${end.format("YYYY-MM-DD h:mm:ss")}`);
             }
         });
     },

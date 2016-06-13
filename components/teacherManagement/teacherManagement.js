@@ -24,10 +24,10 @@ import "../../less/teacherManagement.less";
 
 var configData = require('../../test/config.json');
 
-var searchUrl = `http://${configData.ip}/web/teacherOralEn/teacherStepList?`;
+var searchUrl = `http://${configData.ip}/web/teacherOralEn/teacherStepList`;
 var frozenUrl = ``;
 var activationUrl = ``;
-var infoUrl = `http://${configData.ip}/web/teacherOralEn/teacherDetail?`;
+var infoUrl = `http://${configData.ip}/web/teacherOralEn/teacherDetail`;
 var arrangeAccountUrl = '';
 var tryScoreUrl = '';
 var interviewScoreUrl = '';
@@ -40,10 +40,11 @@ var TeacherManagement = React.createClass({
      */
     getInitialState : function () {
         return {
+            stateStep : 4,
             pageSize : 10,
             totalPages : 1,
             curPage : 1,
-            curURL : '',
+            getHead : {},
             curRow : 0,
             curInfo : {},
             tableStyle: {
@@ -62,14 +63,19 @@ var TeacherManagement = React.createClass({
      */
     componentDidMount : function () {
         //获取空列表
-        let myurl = `${searchUrl}page=0&size=10`;
-        Get({
-            url : myurl
-        }).then(
+        let getHead = {
+            url : searchUrl,
+            data : {
+                page : 0,
+                size : this.state.pageSize,
+                stateStep : this.state.stateStep
+            }
+        };
+        Get(getHead).then(
             ({data})=> {
                 if (data == null) {
                     this.setState({
-                        curURL : myurl
+                        getHead : getHead
                     });
                 } else {
                     let selectList = new Array(data.content.length);
@@ -77,7 +83,7 @@ var TeacherManagement = React.createClass({
                         selectList[i] = false;
                     }
                     this.setState({
-                        curURL: myurl,
+                        getHead: getHead,
                         totalPages: data.totalPages,
                         list: data.content,
                         select : selectList
@@ -87,7 +93,7 @@ var TeacherManagement = React.createClass({
             ()=> {
                 alert("查询失败!");
                 this.setState({
-                    curURL : myurl
+                    getHead : getHead
                 });
             }
         ).catch((err)=>{
@@ -104,21 +110,21 @@ var TeacherManagement = React.createClass({
         let tableList = this.state.list.map((v,i) => {
             return {
                 "checkbox" : <input type="checkbox" onChange={(e)=>{this.select(e,i)}}/>,
-                "createTimeStart" : v.createTimeStart,
+                "createTime" : v.createTime,
                 "firstName" : v.firstName,
                 "lastName" : v.lastName,
                 "nickName" : v.nickName,
                 "gender" : getById(configData.gender, v.gender),
                 "country" : v.nationality,
                 "timezone" : v.timezone,
-                "telNum" : v.cellphoneNumber,
+                "cellphoneNumber" : v.cellphoneNumber,
                 "email" : v.email,
-                "snack" : getById(configData.snacks, v.snack),
+                "snack" : getById(configData.snack, v.snack),
                 "city" : v.city,
                 "interviewScore" : v.interviewScore,
-                "triallectureScore" : v.triallectureScore,
-                "combinedScore" : v.combinedScore,
-                "accountStatus" : getById(configData.accountStatus, v.accountStatus),
+                "trialScore" : v.trialScore,
+                "markScore" : v.markScore,
+                "isActive" : getById(configData.isActive, v.isActive),
                 "operate" : (
                     <div>
                         <button className="btn btn-primary btn-xs" onClick={(e)=>{this.arrangeAccount(i)}}>分配账号</button>
@@ -134,8 +140,8 @@ var TeacherManagement = React.createClass({
                 <ModalManagement info={this.state.curInfo} callback={(e)=>{this._getPage(this.state.curPage)}}/>
                 <ModalManagementFrozen callback={this.frozen}/>
                 <ModalManagementActivation callback={this.activation}/>
-                <ModalTryScore callback={this.tryScore}/>
-                <ModalInterviewScore callback={this.interviewScore}/>
+                <ModalTryScore callback={()=>{this._getPage(this.state.curPage)}}/>
+                <ModalInterviewScore callback={()=>{this._getPage(this.state.curPage)}}/>
                 <div className="forms" id="forms">
                     <div className="input">
                         <div className="form row">
@@ -153,8 +159,8 @@ var TeacherManagement = React.createClass({
                                 <input type="text" className="form-control" ref="city" placeholder="城市"/>
                             </div>
                             <SelectComponent ref="gender" contentData={configData.gender} />
-                            <SelectComponent ref="snack" contentData={configData.snacks} />
-                            <SelectComponent ref="accountStatu" contentData={configData.accountStatus} />
+                            <SelectComponent ref="snack" contentData={configData.snack} />
+                            <SelectComponent ref="isActive" contentData={configData.isActive} />
                         </div>
                     </div>
                     <div className="search">
@@ -191,42 +197,48 @@ var TeacherManagement = React.createClass({
     _search : function () {
         let firstName = this.refs.contentInput.state.firstName,
             lastName = this.refs.contentInput.state.lastName,
-            country = this.refs.contentInput.state.country,
-            timeZone = this.refs.contentInput.state.timeZone,
-            telNum = this.refs.contentInput.state.telNum,
+            nationality = this.refs.contentInput.state.nationality,
+            timezone = this.refs.contentInput.state.timezone,
+            cellphoneNumber = this.refs.contentInput.state.cellphoneNumber,
             email = this.refs.contentInput.state.email,
             createTimeStart = this.refs.createTime.state.start,
             createTimeEnd = this.refs.createTime.state.end,
             nickName = this.refs.nickName.value,
             city = this.refs.city.value.trim(),
             gender = configData.gender.id[this.refs.gender.state.index],
-            snack = configData.snacks.id[this.refs.snack.state.index],
-            statu = configData.accountStatus.id[this.refs.accountStatu.state.index],
-            myurl = `${searchUrl}page=0&size=${this.state.pageSize}`;
+            snack = configData.snack.id[this.refs.snack.state.index],
+            isActive = configData.isActive.id[this.refs.isActive.state.index],
+            data = {
+                page : 0,
+                size : this.state.pageSize,
+                stateStep : this.state.stateStep
+            };
+        (firstName.length >0) && (data.firstName = firstName);
+        (lastName.length >0) && (data.lastName=lastName);
+        (nationality != -1) && (data.nationality=nationality);
+        (timezone != "时区") && (data.timezone=timezone);
+        (cellphoneNumber.length >0) && (data.cellphoneNumber=cellphoneNumber);
+        (email.length >0) && (data.email=email);
+        (createTimeStart.length >0) && (data.createTimeStart=createTimeStart) &&(data.createTimeEnd=createTimeEnd);
+        (nickName.length >0) && (data.nickName=nickName);
+        (city.length >0) && (data.city=city);
+        (gender != -1) && (data.gender=gender);
+        (snack != -1) && (data.snack=snack);
+        (isActive != -1) && (data.isActive=isActive);
 
-        myurl += (firstName.length >0) ? `&firstName=${firstName}` : '';
-        myurl += (lastName.length >0) ? `&lastName=${lastName}` : '';
-        myurl += (country != -1) ? `&nationality=${country}` : '';
-        myurl += (timeZone != "时区") ? `&timeZone=${timeZone}` : '';
-        myurl += (telNum.length >0) ? `&cellphoneNumber=${telNum}`: '';
-        myurl += (email.length >0) ? `&email=${email}`: '';
-        myurl += (createTimeStart.length >0) ? `&createTimeStart=${interviewTimeStart}&createTimeEnd=${interviewTimeEnd}`: '';
-        myurl += (nickName.length >0) ? `&nickName=${nickName}`: '';
-        myurl += (city.length >0) ? `&city=${city}`: '';
-        myurl += (gender != -1) ? `&gender=${gender}`: '';
-        myurl += (snack != -1) ? `&snack=${snack}`: '';
-        myurl += (statu != -1) ? `&accountStatus=${statu}`: '';
+        let getHead = {
+            url : searchUrl,
+            data : data
+        };
 
-        console.log(myurl);
-        Get({
-            url : myurl
-        }).then(
+        console.log(data);
+        Get(getHead).then(
             ({data})=> {
                 if (data == null) {
                     this.setState({
                         curPage: 1,
                         totalPages: 1,
-                        curURL : myurl,
+                        getHead : getHead,
                         list: []
                     });
                 } else {
@@ -235,7 +247,7 @@ var TeacherManagement = React.createClass({
                         selectList[i] = false;
                     }
                     this.setState({
-                        curURL: myurl,
+                        getHead: getHead,
                         curPage: 1,
                         totalPages: data.totalPages,
                         list: data.content,
@@ -248,7 +260,7 @@ var TeacherManagement = React.createClass({
                 this.setState({
                     curPage: 1,
                     totalPages: 1,
-                    curURL : myurl,
+                    getHead : getHead,
                     list: []
                 });
             }
@@ -264,10 +276,9 @@ var TeacherManagement = React.createClass({
      * @private
      */
     _getPage : function (page) {
-        let myurl = this.state.curURL.replace(/page=0/,`page=${page-1}`);
-        Get({
-            url : myurl
-        }).then(
+        let getHead = Object.assign({},this.state.getHead);
+        getHead.data.page = page - 1;
+        Get(getHead).then(
             ({data}) => {
                 if(data == null )
                     return;
@@ -342,7 +353,7 @@ var TeacherManagement = React.createClass({
         for(let i=0; i<this.state.list.length; i++){
             if(this.state.selected[i] == true){
                 emails.push(this.state.list[i].email);
-                newList.accountStatus = 0;
+                newList.isActive = 0;
             }
         }
         if(emails.length <=0){
@@ -387,7 +398,7 @@ var TeacherManagement = React.createClass({
         for(let i=0; i<this.state.list.length; i++){
             if(this.state.selected[i] == true){
                 emails.push(this.state.list[i].email);
-                newList.accountStatus = 1;
+                newList.isActive = 1;
             }
         }
         if(emails.length <=0){
@@ -446,7 +457,7 @@ var TeacherManagement = React.createClass({
      * @public (子组件"表格"调用)
      */
     arrangeAccount : function (i) {
-        if(this.state.initAccount){
+        if(this.state.nickName){
             alert("该教师已经分配账号!");
             return;
         }
@@ -462,7 +473,11 @@ var TeacherManagement = React.createClass({
             () => {
                 alert("分配账号失败,请重试!");
             }
-        ).catch();
+        ).catch(
+            (err) => {
+                console.log(err);
+            }
+        );
     },
 
     /**
@@ -478,54 +493,43 @@ var TeacherManagement = React.createClass({
     },
 
     /**
-     * 点击"面试评分模态框"中的确定,触发面试评分事件
-     * @param index1: 国家水平选项
-     * @param index2: 口语水平选项
-     * @param index3: 零食选项
-     * @param index4: 教师经验选项
-     * @public (子组件"面试评分模态框"调用)
+     * 点击"面试评分模态框"中的"确定"按钮,触发面试评分事件.
+     * @param index1: 国家水平选项序号
+     * @param index2: 口语水平选项序号
+     * @param index3: 零食选项序号
+     * @param index4: 教学经验选项序号
+     * @public (子组件"评分模态框"调用)
      */
     interviewScore : function (index1,index2,index3,index4) {
-        let index = this.state.curRow,
-            line = this.state.list[index],
-            score1 = configData.nationalLevel.score[index1],
-            score2 = configData.spokenLevel.score[index2],
-            score3 = configData.snacks.score[index3],
-            score4 = configData.experienceDetail.score[index4];
-        line.interviewScore = score1 + score2 + score3 + score4;
-        line.combinedScore = line.interviewScore + line.triallectureScore;
-        let newList = [].concat(this.state.list.slice(0,index), line, this.state.list.slice(index + 1));
-        console.log({
-            "email": this.state.list[index].email,
-            "trialScoresMap": {
-                "nationalLevel": score1,
-                "spokenLevel": score2,
-                "snack": score3,
-                "exprience": score4
-            }
-        });
-        return;
-        Post({
-            url : interviewScoreUrl,
-            data : {
-                "email": this.state.list[index].email,
-                "trialScoresMap": {
-                    "nationalLevel": score1,
-                    "spokenLevel": score2,
-                    "snack": score3,
-                    "exprience": score4
+        let id1 = configData.nationalLevel.id[index1],
+            id2 = configData.spokenLevel.id[index2],
+            id3 = configData.snack.id[index3],
+            id4 = configData.experienceDetail.id[index4],
+            getHead = {
+                url : interviewScoreUrl,
+                data : {
+                    "email" : this.state.list[this.state.curRow].email,
+                    "interviewScoresMap" : {
+                        "nationalLevel": id1,
+                        "spokenLevel": id2,
+                        "snack": id3,
+                        "teachingExperience": id4
+                    }
                 }
-            }
-        }).then(
+            };
+        Post(getHead).then(
             () => {
-                $(".tryScore .modal").modal('hide');
-                this.setState({
-                    list : newList
-                });
+                $(".interviewScore .modal").modal('hide');
+                this._getPage(this.state.curPage);
             },
             () => {
-                alert("评分操作失败,请重试!");
-            }).catch((err) => { console.log(err)});
+                alert("面试评分失败,请重试");
+            }
+        ).catch(
+            (err) => {
+                concole.log(err);
+            }
+        );
     },
 
     /**
@@ -541,38 +545,35 @@ var TeacherManagement = React.createClass({
     },
 
     /**
-     * "试讲评分模态框"中点击"确定"按钮,触发评分事件.
-     * @param index1: 创意和表达选择的ID
-     * @param index2: 适应和引导选择的ID
+     * 点击"试讲评分模态框"中"确定"按钮,触发试讲评分事件.
+     * @param index1: 创意和表达选择序号
+     * @param index2: 适应和引导选择序号
      * @public (子组件"评分模态框"调用)
      */
-    tryScore : function (index1,index2) {
-        let index = this.state.curRow,
-            line = this.state.list[index],
-            score1 = configData.creativeAndExpression.id[index1],
-            score2 = configData.adaptAndLead.id[index2];
-        line.triallectureScore = score1 + score2;
-        line.combinedScore = line.interviewScore + score1 + score2;
-        let newList = [].concat(this.state.list.slice(0,index), line, this.state.list.slice(index + 1));
-        Post({
-            url : tryScoreUrl,
-            data : {
-                "email": this.state.list[index].email,
-                "trialScoresMap": {
-                    "creativeAndExpression": score1,
-                    "adaptAndLead": score2
+    trialScore : function(index1,index2) {
+        let id1 = configData.creativeAndExpression.id[index1],
+            id2 = configData.adaptAndLead.id[index2],
+            getHead = {
+                url: trialScoreUrl,
+                data: {
+                    "email": this.state.list[this.state.curRow].email,
+                    "trialScoresMap": {
+                        "creativeAndExpression": id1,
+                        "adaptAndLead": id2
+                    }
                 }
-            }
-        }).then(
+            };
+        Post(getHead).then(
             () => {
-                $(".tryScore .modal").modal('hide');
-                this.setState({
-                    list : newList
-                });
+                $(".trialScore .modal").modal('hide');
+                this._getPage(this.state.curPage);
             },
             () => {
-                alert("评分操作失败,请重试!");
-            }).catch((err) => { console.log(err)});
+                alert("试讲评分操作失败,请重试!");
+            }
+        ).catch(
+            (err) => { console.log(err)}
+        );
     },
 
     /**
@@ -586,7 +587,10 @@ var TeacherManagement = React.createClass({
         });
         let curEmail = this.state.list[i].email;
         Get({
-            url : `${infoUrl}email=${curEmail}`
+            url : infoUrl,
+            data : {
+                email : curEmail
+            }
         }).then(
             ({data})=>{
                 if(data){

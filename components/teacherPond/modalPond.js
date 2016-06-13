@@ -13,6 +13,7 @@ import {Post,Get,getById} from '../../util/ajax.js';
 import '../../less/modalPond.less';
 
 var configData = require('./../../test/config.json');
+
 var ModalPond = React.createClass({
     render : function(){
         let info = this.props.info || {};
@@ -102,7 +103,7 @@ var ModalPond = React.createClass({
                                     </div>
                                     <div className="field">
                                         <label>零食:</label>
-                                        <p>{getById(configData.snacks, info.snack)}</p>
+                                        <p>{getById(configData.snack, info.snack)}</p>
                                         <p>{info.snack}</p>
                                     </div>
                                     <div className="field">

@@ -23,8 +23,8 @@ import "../../less/teacherExamine.less";
 
 var configData = require('../../test/config.json');
 
-var searchUrl = `http://${configData.ip}/web/teacherOralEn/teacherStepList?`;
-var infoUrl = `http://${configData.ip}/web/teacherOralEn/teacherDetail?`;
+var searchUrl = `http://${configData.ip}/web/teacherOralEn/teacherStepList`;
+var infoUrl = `http://${configData.ip}/web/teacherOralEn/teacherDetail`;
 var inPondsUrl = `http://${configData.ip}/web/teacherOralEn/putPond`;
 var passUrl = `http://${configData.ip}/web/teacherOralEn/updateStatePass`;
 var updateSnackUrl = '';
@@ -37,11 +37,11 @@ var TeacherExamine = React.createClass({
      */
     getInitialState : function () {
         return {
-            stateStep : 1,
+            stateStep : 0,
             pageSize : 10,
             totalPages : 1,
             curPage : 1,
-            curURL : '',
+            getHead : {},
             curRow : 0,
             curInfo : {},
             tableStyle: {
@@ -61,14 +61,19 @@ var TeacherExamine = React.createClass({
      */
     componentDidMount : function () {
         //获取空列表
-        let myurl = `${searchUrl}page=0&size=10`;
-        Get({
-            url : myurl
-        }).then(
+        let getHead = {
+            url : searchUrl,
+            data : {
+                page : 0,
+                size : this.state.pageSize,
+                stateStep : this.state.stateStep
+            }
+        };
+        Get(getHead).then(
             ({data})=> {
                 if (data == null) {
                     this.setState({
-                        curURL : myurl
+                        getHead : getHead
                     });
                 } else {
                     let selectList = new Array(data.content.length);
@@ -76,7 +81,7 @@ var TeacherExamine = React.createClass({
                         selectList[i] = false;
                     }
                     this.setState({
-                        curURL: myurl,
+                        getHead: getHead,
                         totalPages: data.totalPages,
                         list: data.content,
                         select : selectList
@@ -86,7 +91,7 @@ var TeacherExamine = React.createClass({
             ()=> {
                 alert("查询失败!");
                 this.setState({
-                    curURL : myurl
+                    getHead : getHead
                 });
             }
         ).catch((err)=>{
@@ -107,10 +112,10 @@ var TeacherExamine = React.createClass({
                 "firstName" : v.firstName,
                 "lastName" : v.lastName,
                 "country" : v.nationality,
-                "timeZone" : v.timezone,
-                "telNum" : v.cellphoneNumber,
+                "timezone" : v.timezone,
+                "cellphoneNumber" : v.cellphoneNumber,
                 "email" : v.email,
-                "snack" : getById(configData.snacks, v.snack),
+                "snack" : getById(configData.snack, v.snack),
                 "teachingExperience" : getById(configData.experienceDetail, v.teachingExperience),
                 "operate" : (
                     <div>
@@ -137,12 +142,12 @@ var TeacherExamine = React.createClass({
                         </div>
                         <div className="form row">
                             <DataPicker ref="createTime" name="报名日期"/>
-                            <SelectComponent ref="snack" contentData={configData.snacks} />
+                            <SelectComponent ref="snack" contentData={configData.snack} />
                             <SelectComponent ref="experience" contentData={configData.experience} />
                         </div>
                     </div>
                     <div className="search">
-                        <button className="btn btn-primary">筛选</button>
+                        <button className="btn btn-primary" onClick={this._search}>筛选</button>
                     </div>
                 </div>
                 <div className="tableContainer" ref="tableContainer">
@@ -153,7 +158,7 @@ var TeacherExamine = React.createClass({
                         <button className="btn btn-warning btn-sm" onClick={this._arangeInPonds}>批量入池</button>
                         <div className="btn-right-select">
                             <label>零食:</label>
-                            <SelectComponent ref="bottomSnack" size="small" contentData={configData.snacks} onChange={(index)=>{this.setState({snack : index})}}/>
+                            <SelectComponent ref="bottomSnack" size="small" contentData={configData.snack} onChange={(index)=>{this.setState({snack : index})}}/>
                             <button className="btn btn-primary btn-sm" onClick={this._updateSnack}>确定</button>
                         </div>
                     </div>
@@ -177,36 +182,42 @@ var TeacherExamine = React.createClass({
     _search : function () {
         let firstName = this.refs.contentInput.state.firstName,
             lastName = this.refs.contentInput.state.lastName,
-            country = this.refs.contentInput.state.country,
-            timeZone = this.refs.contentInput.state.timeZone,
-            telNum = this.refs.contentInput.state.telNum,
+            nationality = this.refs.contentInput.state.nationality,
+            timezone = this.refs.contentInput.state.timezone,
+            cellphoneNumber = this.refs.contentInput.state.cellphoneNumber,
             email = this.refs.contentInput.state.email,
             createTimeStart = this.refs.createTime.state.start,
             createTimeEnd = this.refs.createTime.state.end,
-            snack = configData.snacks.id[this.refs.snack.state.index],
+            snack = configData.snack.id[this.refs.snack.state.index],
             teachingExperience = configData.experience.id[this.refs.experience.state.index],
-            myurl = `${searchUrl}page=0&size=${this.state.pageSize}`;
+            data = {
+                page : 0,
+                size : this.state.pageSize,
+                stateStep : this.state.stateStep
+            };
+        (firstName.length >0) && (data.firstName = firstName);
+        (lastName.length >0) && (data.lastName=lastName);
+        (nationality != -1) && (data.nationality=nationality);
+        (timezone != "时区") && (data.timezone=timezone);
+        (cellphoneNumber.length >0) && (data.cellphoneNumber=cellphoneNumber);
+        (email.length >0) && (data.email=email);
+        (createTimeStart.length >0) && (data.createTimeStart=createTimeStart) &&(data.createTimeEnd=createTimeEnd);
+        (snack != -1) && (data.snack=snack);
+        (teachingExperience != -1) && (data.teachingExperience=teachingExperience);
 
-        myurl += (firstName.length >0) ? `&firstName=${firstName}` : '';
-        myurl += (lastName.length >0) ? `&lastName=${lastName}` : '';
-        myurl += (country != -1) ? `&nationality=${country}` : '';
-        myurl += (timeZone != "时区") ? `&timeZone=${timeZone}` : '';
-        myurl += (telNum.length >0) ? `&cellphoneNumber=${telNum}`: '';
-        myurl += (email.length >0) ? `&email=${email}`: '';
-        myurl += (createTimeStart.length >0) ? `&createTimeStart=${createTimeStart}&createTimeEnd=${createTimeEnd}`: '';
-        myurl += (snack != -1) ? `&snack=${snack}`: '';
-        myurl += (teachingExperience != -1) ? `&teachingExperience=${teachingExperience}`: '';
+        let getHead = {
+            url : searchUrl,
+            data : data
+        };
 
-        console.log(myurl);
-        Get({
-            url : myurl
-        }).then(
+        console.log(getHead);
+        Get(getHead).then(
             ({data})=> {
                 if (data == null) {
                     this.setState({
                         curPage: 1,
                         totalPages: 1,
-                        curURL : myurl,
+                        getHead : getHead,
                         list: []
                     });
                 } else {
@@ -215,7 +226,7 @@ var TeacherExamine = React.createClass({
                         selectList[i] = false;
                     }
                     this.setState({
-                        curURL: myurl,
+                        getHead: getHead,
                         curPage: 1,
                         totalPages: data.totalPages,
                         list: data.content,
@@ -228,7 +239,7 @@ var TeacherExamine = React.createClass({
                 this.setState({
                     curPage: 1,
                     totalPages: 1,
-                    curURL : myurl,
+                    getHead : getHead,
                     list: []
                 });
             }
@@ -244,17 +255,22 @@ var TeacherExamine = React.createClass({
      * @private
      */
     _getPage : function (page) {
-        let myurl = this.state.curURL.replace(/page=0/,`page=${page-1}`);
-        Get({
-            url : myurl
-        }).then(({code,message,data})=>{
-            if(data == null )
-                return;
-            this.setState({
-                curPage : page,
-                list : data.content
-            });
-        }).catch((err)=>{
+        let getHead = Object.assign({},this.state.getHead);
+        getHead.data.page = page - 1;
+        console.log(getHead);
+        Get(getHead).then(
+            ({data}) => {
+                if(data == null )
+                    return;
+                this.setState({
+                    curPage : page,
+                    list : data.content
+                });
+            },
+            () => {
+                console.log("获取教师列表失败!");
+            }
+        ).catch((err)=>{
             console.log(err);
         });
     },
@@ -342,14 +358,14 @@ var TeacherExamine = React.createClass({
      * @public (子组件"通过模态框"调用)
      */
     adopt : function () {
-        let emails = [].concat(this.state.list[this.state.curRow].email);
-        Post({
+        let postHead = {
             url : passUrl,
             data : {
-                "emails": emails,
+                "email": this.state.list[this.state.curRow].email,
                 "stateStep": this.state.stateStep
             }
-        }).then(
+        };
+        Post(postHead).then(
             () => {
                 $(".modalExamineAdopt .modal").modal('hide');
                 this._getPage(this.state.curPage);
@@ -433,7 +449,10 @@ var TeacherExamine = React.createClass({
         });
         let curEmail = this.state.list[i].email;
         Get({
-            url : `${infoUrl}email=${curEmail}`
+            url : infoUrl,
+            data : {
+                email : curEmail
+            }
         }).then(
             ({data})=>{
                 if(data){

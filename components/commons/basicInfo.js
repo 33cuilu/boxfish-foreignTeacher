@@ -88,7 +88,7 @@ var BasicInfo = React.createClass({
                 </div>
                 <div className="field">
                     <label>学校所在国家:</label>
-                    <SelectComponent ref="schoolCountry" contentData={configData.country} value={info.schoolCountry||''} onChange={(index)=>{this._changeSchoolCountry(index)}}/>
+                    <SelectComponent ref="schoolCountry" contentData={configData.nationality} value={info.schoolCountry||''} onChange={(index)=>{this._changeSchoolCountry(index)}}/>
                 </div>
                 <div className="field">
                     <label>专业:</label>
@@ -104,11 +104,11 @@ var BasicInfo = React.createClass({
                 </div>
                 <div className="field">
                     <label>国家:</label>
-                    <SelectComponent contentData={configData.country} value={info.nationality||''} onChange={(index)=>{this._changeCountry(index)}}/>
+                    <SelectComponent contentData={configData.nationality} value={info.nationality||''} onChange={(index)=>{this._changeCountry(index)}}/>
                 </div>
                 <div className="field">
                     <label>时区:</label>
-                    <SelectComponent contentData={configData.timeZone} value={info.timezone||''} onChange={(index)=>{this._changeTimeZone(index)}}/>
+                    <SelectComponent contentData={configData.timezone} value={info.timezone||''} onChange={(index)=>{this._changeTimezone(index)}}/>
                 </div>
                 <div className="field">
                     <label>城市:</label>
@@ -151,7 +151,7 @@ var BasicInfo = React.createClass({
         });
     },
     _changeSchoolCountry : function (index) {
-        let schoolCountry = configData.country.id[index];
+        let schoolCountry = configData.nationality.id[index];
         this.setState({
             schoolCountry : schoolCountry
         });
@@ -172,13 +172,13 @@ var BasicInfo = React.createClass({
         });
     },
     _changeCountry : function (index) {
-        let country = configData.country.id[index];
+        let nationality = configData.nationality.id[index];
         this.setState({
-            nationality : country
+            nationality : nationality
         });
     },
-    _changeTimeZone : function (index) {
-        let timezone = configData.timeZone.id[index];
+    _changeTimezone : function (index) {
+        let timezone = configData.timezone.id[index];
         this.setState({
             timezone : timezone
         });

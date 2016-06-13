@@ -18,7 +18,9 @@ import '../../less/modalExamine.less';
 var configData = require("../../test/config.json");
 
 var ModalExamine = React.createClass({
+
     render : function(){
+        let info = this.props.info || {};
         return(
             <div className="modalExamine">
                 <div className="modal fade">
@@ -28,16 +30,16 @@ var ModalExamine = React.createClass({
                                 <div className="modal-body-header">
                                     <div className="field">
                                         <label>报名日期:</label>
-                                        <DataPicker ref="createTime" value={this.props.info.createTime}/>
+                                        <DataPicker ref="createTime" value={info.createTime}/>
                                     </div>
                                     <div className="field">
                                         <label>性别:</label>
-                                        <SelectComponent ref="gender" value={this.props.info.gender} contentData={configData.gender} />
+                                        <SelectComponent ref="gender" value={info.gender} contentData={configData.gender} />
                                     </div>
-                                    <BasicInfo value={this.props.info} ref="basicInfo"/>
+                                    <BasicInfo value={info} ref="basicInfo"/>
                                     <div className="field">
                                         <label>教学经验:</label>
-                                        <SelectComponent ref="teachingExperience" value={this.props.info.teachingExperience} contentData={configData.experienceDetail} />
+                                        <SelectComponent ref="teachingExperience" value={info.teachingExperience} contentData={configData.experienceDetail} />
                                     </div>
                                 </div>
                             </div>
@@ -56,7 +58,7 @@ var ModalExamine = React.createClass({
             "createTime": this.refs.createTime.state.value,
             "firstName": this.refs.basicInfo.state.firstName,
             "lastName": this.refs.basicInfo.state.lastName,
-            "cellphoneNumber": this.refs.basicInfo.state.tel,
+            "cellphoneNumber": this.refs.basicInfo.state.cellphoneNumber,
             "email": this.props.info.email,
             "gender": configData.gender.id[this.refs.gender.state.index],
             "skype": this.refs.basicInfo.state.skype,

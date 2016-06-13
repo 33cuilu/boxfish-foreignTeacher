@@ -46,7 +46,7 @@ var ModalManagement = React.createClass({
                                     </div>
                                     <div className="field">
                                         <label>试讲时间:</label>
-                                        <TimePicker ref="tryTime" value={info.triallectureTime}/>
+                                        <TimePicker ref="triallectureTime" value={info.triallectureTime}/>
                                     </div>
                                     <BasicInfo ref="basicInfo" value={info}/>
                                     <div className="field">
@@ -55,7 +55,7 @@ var ModalManagement = React.createClass({
                                     </div>
                                     <div className="field">
                                         <label>综合评分:</label>
-                                        <input type="text" className="form-control" value={info.combinedScore}/>
+                                        <input type="text" className="form-control" value={info.markScore}/>
                                     </div>
                                 </div>
                             </div>
@@ -73,15 +73,17 @@ var ModalManagement = React.createClass({
         console.log(this.props.info);
         let content = {
             "createTime": this.refs.createTime.state.value,
-            "auditTime": this.refs.auditTime.state.value,
-            "triallectureTime": this.refs.tryTime.state.start,
-            "triallectureEndTime": this.refs.tryTime.state.end,
-            "interviewTime": this.refs.interviewTime.state.value,
+            "auditTimeStart": this.refs.auditTime.state.start,
+            "auditTimeEnd": this.refs.auditTime.state.end,
+            "triallectureStartTimeStart": this.refs.triallectureTime.state.start,
+            "triallectureStartTimeEnd": this.refs.triallectureTime.state.end,
+            "interviewTimeStart": this.refs.interviewTime.state.start,
+            "interviewTimeStart": this.refs.interviewTime.state.end,
             "firstName": this.refs.basicInfo.state.firstName,
             "lastName": this.refs.basicInfo.state.lastName,
-            "cellphoneNumber": this.refs.basicInfo.state.tel,
+            "cellphoneNumber": this.refs.basicInfo.state.cellphoneNumber,
             "email": this.props.info.email,
-            "gender": this.refs.gender.state.index,
+            "gender": configData.gender.id[this.refs.gender.state.index],
             "skype": this.refs.basicInfo.state.skype,
             "nationality": this.refs.basicInfo.state.nationality,
             "timezone": this.refs.basicInfo.state.timezone,

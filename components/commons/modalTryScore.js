@@ -19,7 +19,7 @@ var submitUrl = ``;
 var ModalTryScore = React.createClass({
     render : function(){
         return(
-            <div className="tryScore">
+            <div className="trialScore">
                 <div className="modal fade">
                     <div className="modal-dialog">
                         <div className="modal-content">

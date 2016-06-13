@@ -17,9 +17,9 @@ var TimePicker = React.createClass({
             format: 'YYYY-MM-DD h:mm:ss'
         },(start, end)=>{
             this.setState({ //每次将新的日期赋给状态
-                start: start.format("YYYY-MM-DD h:mm:ss"),
-                end: end.format("YYYY-MM-DD h:mm:ss"),
-                value: `${start.format("YYYY-MM-DD h:mm:ss")} - ${end.format("YYYY-MM-DD h:mm:ss")}`
+                start: start.format("YYYY-MM-DD HH:mm:ss"),
+                end: end.format("YYYY-MM-DD HH:mm:ss"),
+                value: `${start.format("YYYY-MM-DD HH:mm:ss")} - ${end.format("YYYY-MM-DD HH:mm:ss")}`
             });
         });
     },

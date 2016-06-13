@@ -15,6 +15,8 @@ import "../../less/modalInterviewScore.less";
 
 var configData = require("../../test/config.json");
 
+var submitUrl = '';
+
 var ModalInterviewScore = React.createClass({
     render : function(){
         return (
@@ -26,7 +28,7 @@ var ModalInterviewScore = React.createClass({
                                     <label>国家级别:</label>
                                     <SelectComponent contentData={configData.nationalLevel} ref="nationalLevel"/> <span>100</span>
                                     <label>零食:</label>
-                                    <SelectComponent contentData={configData.snacks} ref="snack"/> <span>100</span>
+                                    <SelectComponent contentData={configData.snack} ref="snack"/> <span>100</span>
                                     <label>口语水平:</label>
                                     <SelectComponent contentData={configData.spokenLevel} ref="spokenLevel"/> <span>100</span>
                                     <label>教学经验:</label>
@@ -43,8 +45,8 @@ var ModalInterviewScore = React.createClass({
         );
     },
     _submit : function () {
-        this.props.callback(this.refs.nationalLevel.state.index, this.refs.snack.state.index,
-                            this.refs.spokenLevel.state.index, this.refs.teachingExperience.state.index);
+        this.props.callback(this.refs.nationalityLevel.state.index,this.refs.snack.state.index,
+            this.refs.spokenLevel.state.index,this.refs.teachingExperience.state.index);
     }
 });
 

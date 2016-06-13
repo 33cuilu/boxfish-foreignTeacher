@@ -16,9 +16,9 @@ var ContentInput = React.createClass({
         return {
             firstName : '',
             lastName : '',
-            country : "-1",
-            timeZone : "时区",
-            telNum : '',
+            nationality : "-1",
+            timezone : "时区",
+            cellphoneNumber : '',
             email : ''
         }
     },
@@ -31,10 +31,10 @@ var ContentInput = React.createClass({
                 <div className="field">
                     <input type="text" className="form-control" ref="lastName" onChange={this._getLastName} placeholder="Last Name"/>
                 </div>
-                <SelectComponent contentData={configData.country} ref="country" onChange={(value)=>{this._getCountry(value)}}/>
-                <SelectComponent contentData={configData.timeZone} ref="timeZone" onChange={(value)=>{this._getTimeZone(value)}}/>
+                <SelectComponent contentData={configData.nationality} ref="nationality" onChange={(value)=>{this._getNationality(value)}}/>
+                <SelectComponent contentData={configData.timezone} ref="timezone" onChange={(value)=>{this._getTimezone(value)}}/>
                 <div className="field">
-                    <input type="text" className="form-control" ref="telNum" onChange={this._getTelNum} style={{width:"150px"}} placeholder="手机号"/>
+                    <input type="text" className="form-control" ref="cellphoneNumber" onChange={this._getCellphoneNumber} style={{width:"150px"}} placeholder="手机号"/>
                 </div>
                 <div className="field">
                     <input type="text" className="form-control" ref="email" onChange={this._getEmail} placeholder="邮箱"/>
@@ -52,21 +52,21 @@ var ContentInput = React.createClass({
             lastName : this.refs.lastName.value
         });
     },
-    _getCountry : function (index) {
-        let newCountry = configData.country.id[index];
+    _getNationality : function (index) {
+        let newNationality = configData.nationality.id[index];
         this.setState({
-            country : newCountry
+            nationality : newNationality
         });
     },
-    _getTimeZone : function (index) {
-        let newTime = configData.timeZone.id[index];
+    _getTimezone : function (index) {
+        let newTime = configData.timezone.id[index];
         this.setState({
-            timeZone : newTime
+            timezone : newTime
         });
     },
-    _getTelNum : function () {
+    _getCellphoneNumber : function () {
         this.setState({
-            telNum : this.refs.telNum.value
+            cellphoneNumber : this.refs.cellphoneNumber.value
         });
     },
     _getEmail : function () {
