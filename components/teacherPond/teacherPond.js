@@ -15,19 +15,17 @@ import TimePicker from './../commons/timePicker.js';
 import SelectComponent from './../commons/selectComponent.js';
 import Table from './../commons/table.js';
 import PageList from './../commons/page.js';
-import ModalToCheck from './modalToCheck.js';
-import ModalToInterview from './modalToInterview.js';
-import MadalToTryLesson from './modalToTryLesson.js';
+import ModalFish from './modalFish.js';
 
 //引入样式
 import "../../less/teacherPond.less";
 
-var configData = require('../../test/config.json');
+var configData = require('../../config/config.json');
 
 var demoCourseUrl = `http://${configData.ip}/web/common/demoCourses/2`;
 var searchUrl = `http://${configData.ip}/web/teacherOralEn/teacherStepList?`;
 var infoUrl = `http://${configData.ip}/web/teacherOralEn/teacherDetail?`;
-var fishUrl = ``;
+var fishUrl = `http://${configData.ip}/web/teacherOralEn/fishOutPond`;
 
 var TeacherPond = React.createClass({
     /**
@@ -74,21 +72,17 @@ var TeacherPond = React.createClass({
         };
         Get(getHead).then(
             ({data})=> {
-                let selectList = new Array(data.content.length);
-                for(let i=0; i<selectList.length; i++){
-                    selectList[i] = false;
-                }
                 if (data == null) {
                     this.setState({
                         getHead : getHead,
-                        selected : selectList
+                        selected : []
                     });
                 } else {
                     this.setState({
                         getHead: getHead,
                         totalPages: data.totalPages,
                         list: data.content,
-                        selected : selectList
+                        selected : []
                     });
                 }
             },
@@ -113,8 +107,9 @@ var TeacherPond = React.createClass({
      */
     render : function(){
         let tableList = this.state.list.map((v,i) => {
+            let isCheck = ($.inArray(v.email,this.state.selected) != -1);
             return {
-                "checkbox" : <input type="checkbox" onChange={(e)=>{this.select(e,i)}}/>,
+                "checkbox" : <input type="checkbox" checked={isCheck}  onChange={(e)=>{this.select(e,i)}}/>,
                 "createTime" : v.createTime,
                 "auditTime" : v.auditTime,
                 "interviewTime" : v.interviewTime,
@@ -141,9 +136,7 @@ var TeacherPond = React.createClass({
         return(
             <div className="TeacherLecture">
                 <ModalPond info={this.state.curInfo} callback={(e)=>{this._getPage(this.state.curPage)}} course={this.state.demoCourse}/>
-                <ModalToCheck callback={this.fish} />
-                <ModalToInterview callback={this.fish}/>
-                <MadalToTryLesson callback={this.fish}/>
+                <ModalFish callback={this.fish} />
                 <div className="forms" id="forms">
                     <div className="input">
                         <div className="form row">
@@ -183,9 +176,9 @@ var TeacherPond = React.createClass({
             url : myUrl
         }).then(
             ({data}) =>{
-                let newCourseArr = [],
-                    newCourseId = [],
-                    newCourseType = [];
+                let newCourseArr = ["课程名称"],
+                    newCourseId = [-100],
+                    newCourseType = [-100];
                 for(let i=0 ; i<data.length; i++){
                     newCourseArr.push(data[i].name);
                     newCourseId.push(data[i].courseId);
@@ -234,8 +227,8 @@ var TeacherPond = React.createClass({
             interviewTimeEnd = this.refs.interviewTime.state.end,
             triallectureStartTime = this.refs.triallectureTime.state.start,
             triallectureEndTime = this.refs.triallectureTime.state.end,
-            snack = configData.snack.id[this.refs.snack.state.index],
-            stateStep = configData.stateStep.id[this.refs.stateStep.state.index],
+            snack = this.refs.snack.state.value - 0,
+            stateStep = this.refs.stateStep.state.value - 0,
             data = {
                 page : 0,
                 size : this.state.pageSize,
@@ -245,16 +238,17 @@ var TeacherPond = React.createClass({
 
         (firstName.length >0) && (data.firstName = firstName);
         (lastName.length >0) && (data.lastName=lastName);
-        (nationality != -1) && (data.nationality=nationality);
-        (timezone != "时区") && (data.timezone=timezone);
+        (nationality != -100) && (data.nationality=nationality);
+        (timezone != -100) && (data.timezone=timezone);
         (cellphoneNumber.length >0) && (data.cellphoneNumber=cellphoneNumber);
         (email.length >0) && (data.email=email);
         (createTimeStart.length >0) && (data.createTimeStart=createTimeStart) &&(data.createTimeEnd=createTimeEnd);
         (auditTimeStart.length >0) && (data.auditTimeStart=auditTimeStart) &&(data.auditTimeEnd=auditTimeEnd);
         (interviewTimeStart.length >0) && (data.interviewTimeStart=interviewTimeStart) &&(data.interviewTimeEnd=interviewTimeEnd);
         (triallectureStartTime.length >0) && (data.triallectureStartTime=triallectureStartTime) &&(data.triallectureEndTime=triallectureEndTime);
-        (snack != -1) && (data.snack=snack);
-        (stateStep != -1) && (data.stateStep=stateStep);
+        (snack != -100 && snack != 4) && (data.snack=snack);
+        (snack == 4) && (data.snack="");
+        (stateStep != -100) && (data.stateStep=stateStep);
 
         let getHead = {
             url : searchUrl,
@@ -264,17 +258,13 @@ var TeacherPond = React.createClass({
         console.log(getHead);
         Get(getHead).then(
             ({data})=> {
-                let selectList = new Array(data.content.length);
-                for(let i=0; i<selectList.length; i++){
-                    selectList[i] = false;
-                }
                 if (data == null) {
                     this.setState({
                         curPage: 1,
                         totalPages: 1,
                         getHead : getHead,
                         list: [],
-                        selected: selectList
+                        selected: []
                     });
                 } else {
                     this.setState({
@@ -282,7 +272,7 @@ var TeacherPond = React.createClass({
                         curPage: 1,
                         totalPages: data.totalPages,
                         list: data.content,
-                        selected : selectList
+                        selected : []
                     });
                 }
             },
@@ -311,10 +301,6 @@ var TeacherPond = React.createClass({
         getHead.data.page = page - 1;
         Get(getHead).then(
             ({data}) => {
-                let selectList = new Array(data.content.length);
-                for(let i=0; i<selectList.length; i++){
-                    selectList[i] = false;
-                }
                 if(data == null ){
                     alert("没有数据!");
                     return;
@@ -322,7 +308,7 @@ var TeacherPond = React.createClass({
                 this.setState({
                     curPage : page,
                     list : data.content,
-                    selected : selectList
+                    selected : []
                 });
             },
             () => {
@@ -376,12 +362,17 @@ var TeacherPond = React.createClass({
     /**
      * 点击表格中的复选框,触发当前行选中事件
      * @param e: 点击事件
-     * @param index: 选中的行在表格中的序号
+     * @param i: 选中的行在表格中的序号
      * @public (子组件"表格"调用)
      */
-    select : function (e,index) {
-        let selectList = this.state.selected.concat([]);
-        selectList[index] = e.target.checked;
+    select : function (e,i) {
+        let selectList = this.state.selected;
+        if(e.target.checked){
+            selectList = this.state.selected.concat(this.state.list[i].email);
+        }else{
+            selectList = this.state.selected.concat([]);
+            selectList.splice(this.state.selected.indexOf(this.state.list[i].email),1);
+        }
         this.setState({
             selected : selectList
         });
@@ -393,7 +384,12 @@ var TeacherPond = React.createClass({
      * @public (子组件"表格"调用)
      */
     selectAll : function (state) {
-        let selectList = this.state.list.map(() => {return (state);});
+        let selectList = [];
+        if(state){
+            for(let i=0; i< this.state.list.length; i++){
+                selectList.push(this.state.list[i].email);
+            }
+        }
         this.setState({
             selected : selectList
         });
@@ -408,36 +404,24 @@ var TeacherPond = React.createClass({
         this.setState({
             curRow : i
         });
-        switch(this.state.list[i].stateStep){
-            case 1:
-                $(".modalPoolToCheck .modal").modal();
-                break;
-            case 2:
-                $(".modalPoolToInterview .modal").modal();
-                break;
-            case 3:
-                $(".modalPoolToTryLesson .modal").modal();
-                break;
-            default:
-                $(".modalPoolToTryLesson .modal").modal();
-                break;
-        }
+        $(".modalFish .modal").modal();
     },
 
     /**
      * 点击"捕捞模态框"中的"确定"按钮,触发捕捞事件
      * @param stagestep: 表示捕捞到哪一个流程. 1表示审核,2表示面试,3表示试讲
      */
-    fish : function (stagestep) {
+    fish : function () {
+        let emails = [this.state.list[this.state.curRow].email];
         let postHead = {
             url : fishUrl,
             data : {
-                email : this.state.lsit[this.state.curRow].email,
-                stateStep: stagestep
+                "emails" : emails
             }
         };
         Post(postHead).then(
             () => {
+                $(".modalFish .modal").modal('hide');
                 this._getPage(this.state.curPage);
             },
             () => {

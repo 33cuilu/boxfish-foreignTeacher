@@ -18,7 +18,7 @@ import '../../less/modalManagement.less';
 import '../../less/modalLecture.less';
 
 
-var configData = require("../../test/config.json");
+var configData = require("../../config/config.json");
 
 var submitUrl = `http://${configData.ip}/web/teacherOralEn/updateTeacher`;
 
@@ -34,19 +34,19 @@ var ModalManagement = React.createClass({
                                 <div className="modal-body-header">
                                     <div className="field">
                                         <label>报名日期:</label>
-                                        <DataPicker ref="createTime" value={info.createTime}/>
+                                        <DataPicker type="1" ref="createTime" value={info.createTime} />
                                     </div>
                                     <div className="field">
                                         <label>审核日期:</label>
-                                        <DataPicker ref="auditTime" value={info.auditTime}/>
+                                        <DataPicker type="1" ref="auditTime" value={info.auditTime} />
                                     </div>
                                     <div className="field">
                                         <label>面试时间:</label>
-                                        <TimePicker type="1" ref="interviewTime" value={info.interviewTime}/>
+                                        <TimePicker type="1" ref="interviewTime" value={info.interviewTime} />
                                     </div>
                                     <div className="field">
                                         <label>试讲时间:</label>
-                                        <TimePicker type="2" ref="triallectureTime" value={info.triallectureTime}/>
+                                        <TimePicker type="2" ref="triallectureTime" value={info.triallectureTime} />
                                     </div>
                                     <BasicInfo ref="basicInfo" value={info}/>
                                     <div className="field">
@@ -78,12 +78,12 @@ var ModalManagement = React.createClass({
             "triallectureStartTimeStart": this.refs.triallectureTime.state.start,
             "triallectureStartTimeEnd": this.refs.triallectureTime.state.end,
             "interviewTimeStart": this.refs.interviewTime.state.start,
-            "interviewTimeStart": this.refs.interviewTime.state.end,
+            "interviewTimeEnd": this.refs.interviewTime.state.end,
             "firstName": this.refs.basicInfo.state.firstName,
             "lastName": this.refs.basicInfo.state.lastName,
             "cellphoneNumber": this.refs.basicInfo.state.cellphoneNumber,
             "email": this.props.info.email,
-            "gender": configData.gender.id[this.refs.gender.state.index],
+            "gender": this.refs.gender.state.value - 0,
             "skype": this.refs.basicInfo.state.skype,
             "nationality": this.refs.basicInfo.state.nationality,
             "timezone": this.refs.basicInfo.state.timezone,
@@ -92,22 +92,11 @@ var ModalManagement = React.createClass({
             "school": this.refs.basicInfo.state.school,
             "schoolCountry": this.refs.basicInfo.state.schoolCountry,
             "specialty": this.refs.basicInfo.state.specialty,
-            "schoolTime": this.refs.basicInfo.state.schoolingTime,
-            // "schoolStartYear": this.refs.basicInfo.state.schoolingTime.substr(0,4),
-            // "schoolEndYear": this.refs.basicInfo.state.schoolingTime.substr(13,4),
-            "occupation": this.refs.basicInfo.state.occupation,
-            "job": null,
-            "snack": null,
-            "spokenLevel": null,
-            "demoCourse": null,
-            "initAccount": null,
-            "teachingExperience": 0,
-            "schoolStartYear": null,
-            "schoolEndYear": null,
-            "triallectureTeacher": null,
-            "triallectureStudent": null
+            "schoolStartYear": this.refs.basicInfo.state.schoolStartYear,
+            "schoolEndYear": this.refs.basicInfo.state.schoolEndYear,
+            "occupation": this.refs.basicInfo.state.occupation
         };
-        console.log(content);
+        //console.log(content);
         Post({
             url : submitUrl,
             data : content

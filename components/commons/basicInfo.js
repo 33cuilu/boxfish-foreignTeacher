@@ -8,9 +8,9 @@ import React from 'react';
 
 //引入组件
 import SelectComponent from './selectComponent.js';
-import DataPicker from './dataPicker.js';
+import YearPicker from './yearPicker.js';
 
-var configData = require("../../test/config.json");
+var configData = require("../../config/config.json");
 
 var BasicInfo = React.createClass({
     getInitialState : function () {
@@ -19,14 +19,15 @@ var BasicInfo = React.createClass({
             lastName : '',
             cellphoneNumber : '',
             email : '',
-            degree : -1,
+            degree : -100,
             school : '',
-            schoolingTime : '',
-            schoolCountry : -1,
-            specialty : -1,
-            occupation : -1,
+            schoolStartYear : 0,
+            schoolEndYear : 0,
+            schoolCountry : -100,
+            specialty : '',
+            occupation : '',
             skype : '',
-            nationality : -1,
+            nationality : -100,
             timezone : -100,
             city : ''
         };
@@ -40,7 +41,8 @@ var BasicInfo = React.createClass({
             email: info.email,
             degree: info.degree,
             school: info.school,
-            schoolingTime: info.schoolingTime,
+            schoolStartYear : info.schoolStartYear,
+            schoolEndYear : info.schoolEndYear,
             schoolCountry: info.schoolCountry,
             specialty: info.specialty,
             occupation: info.occupation,
@@ -76,7 +78,7 @@ var BasicInfo = React.createClass({
                 </div>
                 <div className="field">
                     <label>学历:</label>
-                    <SelectComponent contentData={configData.degree} value={info.degree||''} onChange={(index)=>{this._changeDegree(index)}}/>
+                    <SelectComponent contentData={configData.degree} value={info.degree||''} onChange={(value)=>{this._changeDegree(value)}}/>
                 </div>
                 <div className="field">
                     <label>学校名称:</label>
@@ -84,11 +86,11 @@ var BasicInfo = React.createClass({
                 </div>
                 <div className="field">
                     <label>在校时间:</label>
-                    <DataPicker ref="schoolingTime" value={info.schoolingTime||''} onChange={(value)=>{this._changeSchoolingTime(value)}}/>
+                    <YearPicker ref="schoolingTime" start={info.schoolStartYear||''} end={info.schoolEndYear||''} onChange={this._changeSchoolingTime}/>
                 </div>
                 <div className="field">
                     <label>学校所在国家:</label>
-                    <SelectComponent ref="schoolCountry" contentData={configData.nationality} value={info.schoolCountry||''} onChange={(index)=>{this._changeSchoolCountry(index)}}/>
+                    <SelectComponent ref="schoolCountry" contentData={configData.nationality} value={info.schoolCountry||''} onChange={(value)=>{this._changeSchoolCountry(value)}}/>
                 </div>
                 <div className="field">
                     <label>专业:</label>
@@ -104,11 +106,11 @@ var BasicInfo = React.createClass({
                 </div>
                 <div className="field">
                     <label>国家:</label>
-                    <SelectComponent contentData={configData.nationality} value={info.nationality||''} onChange={(index)=>{this._changeCountry(index)}}/>
+                    <SelectComponent contentData={configData.nationality} value={info.nationality||''} onChange={(value)=>{this._changeCountry(value)}}/>
                 </div>
                 <div className="field">
                     <label>时区:</label>
-                    <SelectComponent contentData={configData.timezone} value={info.timezone||''} onChange={(index)=>{this._changeTimezone(index)}}/>
+                    <SelectComponent contentData={configData.timezone} value={info.timezone||''} onChange={(value)=>{this._changeTimezone(value)}}/>
                 </div>
                 <div className="field">
                     <label>城市:</label>
@@ -124,9 +126,9 @@ var BasicInfo = React.createClass({
         });
     },
     _changeTel : function () {
-        let tel = this.refs.cellphoneNumber.value;
+        let cellphoneNumber = this.refs.cellphoneNumber.value;
         this.setState({
-            tel : tel
+            cellphoneNumber : cellphoneNumber
         });
     },
     _changeLastName : function () {
@@ -134,10 +136,9 @@ var BasicInfo = React.createClass({
             lastName : this.refs.lastName.value
         });
     },
-    _changeDegree : function (index) {
-        let degree = configData.degree.id[index];
+    _changeDegree : function (value) {
         this.setState({
-            degree : degree
+            degree : value - 0  //将字符串转化为整数
         });
     },
     _changeSchoolName : function () {
@@ -145,15 +146,15 @@ var BasicInfo = React.createClass({
             school : this.refs.school.value
         });
     },
-    _changeSchoolingTime : function (value) {
+    _changeSchoolingTime : function (start,end) {
         this.setState({
-            schoolingTime : value
+            schoolStartYear : start,
+            schoolEndYear : end
         });
     },
-    _changeSchoolCountry : function (index) {
-        let schoolCountry = configData.nationality.id[index];
+    _changeSchoolCountry : function (value) {
         this.setState({
-            schoolCountry : schoolCountry
+            schoolCountry : value
         });
     },
     _changeSpecialty : function () {
@@ -171,16 +172,14 @@ var BasicInfo = React.createClass({
             skype : this.refs.skype.value
         });
     },
-    _changeCountry : function (index) {
-        let nationality = configData.nationality.id[index];
+    _changeCountry : function (value) {
         this.setState({
-            nationality : nationality
+            nationality : value
         });
     },
-    _changeTimezone : function (index) {
-        let timezone = configData.timezone.id[index];
+    _changeTimezone : function (value) {
         this.setState({
-            timezone : timezone
+            timezone : value - 0
         });
     },
     _changeCity : function () {

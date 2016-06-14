@@ -11,7 +11,7 @@ import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
 import TimePicker from './timePicker.js';
 import SelectComponent from './selectComponent.js';
 
-var config = require("../../test/config.json");
+var config = require("../../config/config.json");
 
 var ModalCourseInfo = React.createClass({
     render : function(){

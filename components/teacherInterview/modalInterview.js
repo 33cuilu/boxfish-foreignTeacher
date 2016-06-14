@@ -15,7 +15,7 @@ import BasicInfo from './../commons/basicInfo.js';
 //引入样式
 import '../../less/modalInterview.less';
 
-var configData = require("../../test/config.json");
+var configData = require("../../config/config.json");
 var submitUrl = `http://${configData.ip}/web/teacherOralEn/updateTeacher`;
 
 var ModalInterview = React.createClass({
@@ -29,7 +29,7 @@ var ModalInterview = React.createClass({
                                 <div className="modal-body-header">
                                     <div className="field">
                                         <label>审核日期:</label>
-                                        <DataPicker ref="auditTime" value={this.props.info.auditTime}/>
+                                        <DataPicker type="1" ref="auditTime" value={this.props.info.auditTime}/>
                                     </div>
                                     <BasicInfo value={this.props.info} ref="basicInfo"/>
                                     <div className="field">
@@ -50,11 +50,8 @@ var ModalInterview = React.createClass({
         );
     },
     _submit : function () {
-        console.log(this.props.info);
         let content = {
-                "createTime": null,
-                "auditTimeStart": this.refs.auditTime.state.start,
-                "auditTimeEnd": this.refs.auditTime.state.end,
+                "auditTime": this.refs.auditTime.state.value,
                 "occupation": this.refs.basicInfo.state.occupation,
                 "firstName": this.refs.basicInfo.state.firstName,
                 "lastName": this.refs.basicInfo.state.lastName,
@@ -67,25 +64,10 @@ var ModalInterview = React.createClass({
                 "school": this.refs.basicInfo.state.school,
                 "schoolCountry": this.refs.basicInfo.state.schoolCountry,
                 "specialty": this.refs.basicInfo.state.specialty,
-                "schoolTime": this.refs.basicInfo.state.schoolingTime,
-                // "schoolStartYear": this.refs.basicInfo.state.schoolingTime.substr(0,4),
-                // "schoolEndYear": this.refs.basicInfo.state.schoolingTime.substr(13,4),
+                "schoolStartYear": this.refs.basicInfo.state.schoolStartYear,
+                "schoolEndYear": this.refs.basicInfo.state.schoolEndYear,
                 "skype": this.refs.basicInfo.state.skype,
-                "teachingExperience": configData.experienceDetail.id[this.refs.teachingExperience.state.index],
-                "triallectureStartTimeStart": null,
-                "triallectureStartTimeEnd": null,
-                "interviewTimeStart": null,
-                "interviewTimeEnd": null,
-                "gender": null,
-                "job": null,
-                "snack": null,
-                "spokenLevel": null,
-                "demoCourse": null,
-                "initAccount": null,
-                "schoolStartYear": null,
-                "schoolEndYear": null,
-                "triallectureTeacher": null,
-                "triallectureStudent": null
+                "teachingExperience": (this.refs.teachingExperience.state.value != -100)? +this.refs.teachingExperience.state.value : null
             },
             postHead = {
                 url : submitUrl,

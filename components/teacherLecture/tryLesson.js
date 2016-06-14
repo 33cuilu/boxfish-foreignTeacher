@@ -5,16 +5,16 @@
 
 //引入插件
 import React from 'react';
-import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
+import {Post,Get,getById} from '../../util/ajax.js';
 
 //引入组件
-import SingleDataPicker from './../commons/singleDataPicker.js';
+import DataPicker from './../commons/dataPicker.js';
 import SelectComponent from './../commons/selectComponent.js';
 
 //引入样式
 import "../../less/tryLesson.less";
 
-var config = require("../../test/config.json");
+var config = require("../../config/config.json");
 var submitUrl = `http://${config.ip}/web/common/chooseTriallecture`;
 
 var TryLesson = React.createClass({
@@ -40,13 +40,13 @@ var TryLesson = React.createClass({
                                 <div className="element" style={{height:"65px"}}>
                                     <label>试讲时间:</label>
                                     <div className="try-time">
-                                        <SingleDataPicker ref="date" style={{width:"170px"}} />
+                                        <DataPicker type="1" ref="date" show="true"/>
                                         <SelectComponent ref="timeSlot" contentData={this.props.time}/>
                                     </div>
                                 </div>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-primary" onClick={this._submit} data-dismiss="modal">确定</button>
+                                <button type="button" className="btn btn-primary" onClick={this._submit}>确定</button>
                             </div>
                         </div>
                     </div>
@@ -58,21 +58,27 @@ var TryLesson = React.createClass({
         if(!this.props.row.email){
             alert("该用户没有邮箱,用户不存在!");
         }
-        let date = this.refs.date.state.value,
-            hour = this.props.time.arr[this.refs.timeSlot.state.index],
+        let date = this.refs.date.state.value.substr(0,10),
+            hour = getById(this.props.time, this.refs.timeSlot.state.value),
             startHour = hour.substr(0,8),
             endHour = hour.substr(-8,8),
             data = {
             "email" : this.props.row.email,
-            "teacherId": this.props.teacher.id[this.refs.teacherAccounts.state.index],
-            "studentId": this.props.student.id[this.refs.studentAccounts.state.index],
-            "courseId": this.props.course.id[this.refs.course.state.index],
-            "courseName": this.props.course.arr[this.refs.course.state.index],
+            "teacherId": this.refs.teacherAccounts.state.value - 0,
+            "studentId": this.refs.studentAccounts.state.value - 0,
+            "courseId": this.refs.course.state.value,
+            "courseName": getById(this.props.course, this.refs.course.state.value),
             "startTime": `${date} ${startHour}`,
             "endTime": `${date} ${endHour}`,
-            "timeSlotId": this.props.time.id[this.refs.timeSlot.state.index]
+            "timeSlotId": this.refs.timeSlot.state.value - 0
             };
-
+        if(date.length <= 0){
+            alert("请选择试讲日期!");
+            return;
+        }
+        console.log(this.props.course);
+        console.log(this.refs.course.state.value);
+        console.log(data);
         for(let attr in data){
             if(!data[attr]){
                 alert(`您有未选择的信息${attr},请填写!`);
@@ -86,10 +92,11 @@ var TryLesson = React.createClass({
         }).then(
             () => {
             //显示更改后的时间
+                $(".tryLesson .modal").modal('hide');
                 this.props.callback();
             },
-            ()=>{
-                alert("安排试讲失败,可能因为网络原因,也可能是安排出现冲突!");
+            (err)=>{
+                alert(err.responseJSON.message);
             }
         ).catch((err) => {
             console.log(err);

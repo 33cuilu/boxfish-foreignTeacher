@@ -13,8 +13,7 @@ import SelectComponent from './selectComponent.js';
 //引入样式
 import '../../less/modalTryScore.less';
 
-var configData = require("../../test/config.json");
-var submitUrl = ``;
+var configData = require("../../config/config.json");
 
 var ModalTryScore = React.createClass({
     render : function(){
@@ -40,7 +39,9 @@ var ModalTryScore = React.createClass({
         );
     },
     _submit : function () {
-        this.props.callback(this.refs.creativeAndExpression.state.index, this.refs.adaptAndLead.state.index);
+        let id1 = this.refs.creativeAndExpression.state.value - 0;
+        let id2 = this.refs.adaptAndLead.state.value - 0;
+        this.props.callback(id1, id2);
     }
 });
 

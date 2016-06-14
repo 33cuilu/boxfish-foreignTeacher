@@ -21,13 +21,13 @@ import ModalInPonds from './../commons/modalInPonds.js';
 //引入样式
 import "../../less/teacherExamine.less";
 
-var configData = require('../../test/config.json');
+var configData = require('../../config/config.json');
 
 var searchUrl = `http://${configData.ip}/web/teacherOralEn/teacherStepList`;
 var infoUrl = `http://${configData.ip}/web/teacherOralEn/teacherDetail`;
 var inPondsUrl = `http://${configData.ip}/web/teacherOralEn/putPond`;
 var passUrl = `http://${configData.ip}/web/teacherOralEn/updateStatePass`;
-var updateSnackUrl = '';
+var updateLevelUrl = `http://${configData.ip}/web/teacherOralEn/updateLevel`;
 
 var TeacherExamine = React.createClass({
     /**
@@ -72,21 +72,17 @@ var TeacherExamine = React.createClass({
         };
         Get(getHead).then(
             ({data})=> {
-                let selectList = new Array(data.content.length);
-                for(let i=0; i<selectList.length; i++){
-                    selectList[i] = false;
-                }
                 if (data == null) {
                     this.setState({
                         getHead : getHead,
-                        selected : selectList
+                        selected : []
                     });
-                } else {
+                }else {
                     this.setState({
                         getHead: getHead,
                         totalPages: data.totalPages,
                         list: data.content,
-                        selected : selectList
+                        selected : []
                     });
                 }
             },
@@ -108,12 +104,13 @@ var TeacherExamine = React.createClass({
      */
     render : function(){
         let tableList = this.state.list.map((v,i) => {
+            let isCheck = ($.inArray(v.email,this.state.selected) != -1);
             return {
-                "checkbox" : <input type="checkbox" onChange={(e)=>{this.select(e,i)}}/>,
+                "checkbox" : <input type="checkbox" checked={isCheck} onChange={(e)=>{this.select(e,i)}}/>,
                 "createTime" : v.createTime,
                 "firstName" : v.firstName,
                 "lastName" : v.lastName,
-                "country" : v.nationality,
+                "nationality" : v.nationality,
                 "timezone" : v.timezone,
                 "cellphoneNumber" : v.cellphoneNumber,
                 "email" : v.email,
@@ -160,7 +157,7 @@ var TeacherExamine = React.createClass({
                         <button className="btn btn-warning btn-sm" onClick={this._arangeInPonds}>批量入池</button>
                         <div className="btn-right-select">
                             <label>零食:</label>
-                            <SelectComponent ref="bottomSnack" size="small" contentData={configData.snack} onChange={(index)=>{this.setState({snack : index})}}/>
+                            <SelectComponent ref="bottomSnack" size="small" contentData={configData.snack} onChange={(index)=>{this.setState({snack : configData.snack.id[index]})}}/>
                             <button className="btn btn-primary btn-sm" onClick={this._updateSnack}>确定</button>
                         </div>
                     </div>
@@ -169,6 +166,7 @@ var TeacherExamine = React.createClass({
             </div>
         );
     },
+
     /**
      * 查询表单的展开动画
      * @private
@@ -190,8 +188,8 @@ var TeacherExamine = React.createClass({
             email = this.refs.contentInput.state.email,
             createTimeStart = this.refs.createTime.state.start,
             createTimeEnd = this.refs.createTime.state.end,
-            snack = configData.snack.id[this.refs.snack.state.index],
-            teachingExperience = configData.experience.id[this.refs.experience.state.index],
+            snack = +this.refs.snack.state.value,
+            teachingExperience = +this.refs.experience.state.value,
             data = {
                 page : 0,
                 size : this.state.pageSize,
@@ -199,20 +197,21 @@ var TeacherExamine = React.createClass({
             };
         (firstName.length >0) && (data.firstName = firstName);
         (lastName.length >0) && (data.lastName=lastName);
-        (nationality != -1) && (data.nationality=nationality);
-        (timezone != "时区") && (data.timezone=timezone);
+        (nationality != -100) && (data.nationality=nationality);
+        (timezone != -100) && (data.timezone=timezone);
         (cellphoneNumber.length >0) && (data.cellphoneNumber=cellphoneNumber);
         (email.length >0) && (data.email=email);
         (createTimeStart.length >0) && (data.createTimeStart=createTimeStart) &&(data.createTimeEnd=createTimeEnd);
-        (snack != -1) && (data.snack=snack);
-        (teachingExperience != -1) && (data.teachingExperience=teachingExperience);
+        (snack != -100 && snack != 4) && (data.snack=snack);
+        (snack == 4) && (data.snack="");
+        (teachingExperience != -100) && (data.teachingExperience=teachingExperience);
 
         let getHead = {
             url : searchUrl,
             data : data
         };
 
-        console.log(getHead);
+        console.log(data);
         Get(getHead).then(
             ({data})=> {
                 let selectList = new Array(data.content.length);
@@ -253,29 +252,26 @@ var TeacherExamine = React.createClass({
     },
 
     /**
-     * 不改变url,获取第page页数据
+     * 不改变url,获取第page页数据,所有复选框都不选
      * @param page: 表示需要获取的页面,从1开始
      * @private
      */
     _getPage : function (page) {
         let getHead = Object.assign({},this.state.getHead);
         getHead.data.page = page - 1;
-        console.log(getHead);
+        //console.log(getHead);
         Get(getHead).then(
             ({data}) => {
-                let selectList = new Array(data.content.length);
-                for(let i=0; i<selectList.length; i++){
-                    selectList[i] = false;
-                }
                 if(data == null ){
-                    alert("没有数据!");
+                    alert("获取页面失败!");
                     return;
+                }else{
+                    this.setState({
+                        curPage : page,
+                        list : data.content,
+                        selected : []  //重置复选框
+                    });
                 }
-                this.setState({
-                    curPage : page,
-                    list : data.content,
-                    selected : selectList
-                });
             },
             () => {
                 console.log("获取教师列表失败!");
@@ -328,12 +324,17 @@ var TeacherExamine = React.createClass({
     /**
      * 点击表格中的复选框,触发当前行选中事件
      * @param e: 点击事件
-     * @param index: 选中的行在表格中的序号
+     * @param i: 选中的行在表格中的序号
      * @public (子组件"表格"调用)
      */
-    select : function (e,index) {
-        let selectList = this.state.selected.concat([]);
-        selectList[index] = e.target.checked;
+    select : function (e,i) {
+        let selectList = this.state.selected;
+        if(e.target.checked){
+            selectList = this.state.selected.concat(this.state.list[i].email);
+        }else{
+            selectList = this.state.selected.concat([]);
+            selectList.splice(this.state.selected.indexOf(this.state.list[i].email),1);
+        }
         this.setState({
             selected : selectList
         });
@@ -345,7 +346,12 @@ var TeacherExamine = React.createClass({
      * @public (子组件"表格"调用)
      */
     selectAll : function (state) {
-        let selectList = this.state.list.map(() => {return (state);});
+        let selectList = [];
+        if(state){
+            for(let i=0; i< this.state.list.length; i++){
+                selectList.push(this.state.list[i].email);
+            }
+        }
         this.setState({
             selected : selectList
         });
@@ -422,18 +428,13 @@ var TeacherExamine = React.createClass({
      * @public (子组件"入池模态框"和"批量入池模态框"调用)
      */
     inPonds : function (num,reason) {
-        let line = this.state.list[this.state.curRow];
         let emails = [];
         if(num == 1){
-            emails.push(line.email);
+            emails.push(this.state.list[this.state.curRow].email);
         }else{
-            for(let i=0; i<this.state.list.length; i++){
-                if(this.state.selected[i] == true){
-                    emails.push(this.state.list[i].email);
-                }
-            }
+            emails = this.state.selected;
         }
-        console.log(this.state.selected);
+
         if(emails.length <=0){
             alert("请选中入池的教师!");
             return;
@@ -494,23 +495,20 @@ var TeacherExamine = React.createClass({
      * @private
      */
     _updateSnack : function () {
-        let emails = [];
-        for(let i=0; i<this.state.list.length; i++){
-            if(this.state.selected[i] == true){
-                emails.push(this.state.list[i].email);
-            }
-        }
+        let emails = this.state.selected;
         if(emails.length <=0){
             alert("请选中至少一个教师!");
             return;
         }
-        Post({
-            url : updateSnackUrl,
+        let postHead = {
+            url : updateLevelUrl,
             data : {
                 "emails": emails,
-                "snack": this.state.snack
+                "changeLevel":1,
+                "intValue": this.state.snack
             }
-        }).then(
+        };
+        Post(postHead).then(
             () => {
                 this._getPage(this.state.curPage);
             },

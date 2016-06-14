@@ -9,15 +9,15 @@ import React from 'react';
 //引入组件
 import SelectComponent from './selectComponent.js';
 
-var configData = require("../../test/config.json");
+var configData = require("../../config/config.json");
 
 var ContentInput = React.createClass({
     getInitialState : function () {
         return {
             firstName : '',
             lastName : '',
-            nationality : "-1",
-            timezone : "时区",
+            nationality : "-100",
+            timezone : -100,
             cellphoneNumber : '',
             email : ''
         }
@@ -52,16 +52,14 @@ var ContentInput = React.createClass({
             lastName : this.refs.lastName.value.trim()
         });
     },
-    _getNationality : function (index) {
-        let newNationality = configData.nationality.id[index];
+    _getNationality : function (value) {
         this.setState({
-            nationality : newNationality
+            nationality : value
         });
     },
-    _getTimezone : function (index) {
-        let newTime = configData.timezone.id[index];
+    _getTimezone : function (value) {
         this.setState({
-            timezone : newTime
+            timezone : value - 0
         });
     },
     _getCellphoneNumber : function () {

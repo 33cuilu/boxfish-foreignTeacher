@@ -24,7 +24,7 @@ import ModalInPonds from './../commons/modalInPonds.js';
 import "../../less/teacherInterview.less";
 
 //引入配置文件
-var configData = require('../../test/config.json');
+var configData = require('../../config/config.json');
 
 var searchUrl = `http://${configData.ip}/web/teacherOralEn/teacherStepList?`;
 var infoUrl = `http://${configData.ip}/web/teacherOralEn/teacherDetail?`;
@@ -32,15 +32,13 @@ var inPondsUrl = `http://${configData.ip}/web/teacherOralEn/putPond`;
 var passUrl = `http://${configData.ip}/web/teacherOralEn/updateStatePass`;
 var genderUrl = `http://${configData.ip}/web/teacherOralEn/updateGender`;
 var interviewTimeUrl = `http://${configData.ip}/web/teacherOralEn/updateDate`;
-var updateNationalLevelUrl = '';
-var updateSnackUrl = '';
-var updateSpokenLevelUrl = '';
+var updateLevelUrl = `http://${configData.ip}/web/teacherOralEn/updateLevel`;
 
 var TeacherInterview = React.createClass({
 
     /**
      * 设置组件的状态
-     * @returns {{pageSize: number, totalPages: number, curPage: number, curURL: string, curRow: number, curInfo: {}, tableStyle: {tableSize: number, hasCheckBox: boolean, hasOperate: boolean}, list: Array, selected: Array, nationalLevel: number, snack: number, spokenLevel: number}}
+     * @returns {{pageSize: number, totalPages: number, curPage: number, curURL: string, curRow: number, curInfo: {}, tableStyle: {tableSize: number, hasCheckBox: boolean, hasOperate: boolean}, list: Array, selected: Array, nationalityLevel: number, snack: number, spokenLevel: number}}
      * @private
      */
     getInitialState : function () {
@@ -60,7 +58,7 @@ var TeacherInterview = React.createClass({
             },
             list : [],
             selected : [],
-            nationalLevel : -1,
+            nationalityLevel : -1,
             snack : -1,
             spokenLevel : -1
         };
@@ -81,23 +79,20 @@ var TeacherInterview = React.createClass({
             }
         };
 
+        console.log(getHead);
         Get(getHead).then(
             ({data})=> {
-                let selectList = new Array(data.content.length);
-                for(let i=0; i<selectList.length; i++){
-                    selectList[i] = false;
-                }
                 if (data == null) {
                     this.setState({
                         getHead : getHead,
-                        selected : selectList
+                        selected : []
                     });
                 } else {
                     this.setState({
                         getHead: getHead,
                         totalPages: data.totalPages,
                         list: data.content,
-                        selected : selectList
+                        selected : []
                     });
                 }
             },
@@ -118,8 +113,9 @@ var TeacherInterview = React.createClass({
      */
     render : function(){
         let tableList = this.state.list.map((v,i) => {
+            let isCheck = ($.inArray(v.email,this.state.selected) != -1);
             return {
-                "checkbox" : <input type="checkbox" onChange={(e)=>{this.select(e,i)}}/>,
+                "checkbox" : <input type="checkbox" checked={isCheck}  onChange={(e)=>{this.select(e,i)}}/>,
                 "auditTime" : v.auditTime,
                 "firstName" : v.firstName,
                 "lastName" : v.lastName,
@@ -127,9 +123,9 @@ var TeacherInterview = React.createClass({
                 "timezone" : v.timezone,
                 "cellphoneNumber" : v.cellphoneNumber,
                 "email" : v.email,
-                "nationalityLevel" : getById(configData.nationalLevel, v.nationalityLevel),
+                "nationalityLevel" : getById(configData.nationalityLevel, v.nationalityLevel),
                 "interviewTime" : <TimePicker type="1" value={v.interviewTime} onChange={(date)=>{this.updateInterviewTime(i,date)}}/>,
-                "gender" : <SelectComponent contentData={configData.gender} value={v.gender} onChange={(index)=>{this.updateGender(i,index)}}/>,
+                "gender" : <SelectComponent contentData={configData.gender} value={v.gender} onChange={(value)=>{this.updateGender(i,value)}}/>,
                 "snack" : getById(configData.snack, v.snack),
                 "spokenLevel" : getById(configData.spokenLevel, v.spokenLevel),
                 "teachingExperience" : getById(configData.experienceDetail, v.teachingExperience),
@@ -160,7 +156,7 @@ var TeacherInterview = React.createClass({
                             <SelectComponent ref="gender" contentData={configData.gender} />
                             <SelectComponent ref="spokenLevel" contentData={configData.spokenLevel} />
                             <SelectComponent ref="snack" contentData={configData.snack} />
-                            <SelectComponent ref="nationalLevel" contentData={configData.nationalLevel} />
+                            <SelectComponent ref="nationalLevel" contentData={configData.nationalityLevel} />
                             <DataPicker ref="checkDate" name="审核日期"/>
                             <TimePicker type="2" ref="interviewTime" name="面试时间"/>
                             <SelectComponent ref="experience" contentData={configData.experience} />
@@ -179,17 +175,17 @@ var TeacherInterview = React.createClass({
                         <button className="btn btn-warning btn-sm" onClick={this._arangeInPonds}>批量入池</button>
                         <div className="btn-right-select">
                             <label>国家级别</label>
-                            <SelectComponent size="small" contentData={configData.nationalLevel} onChange={(index)=>{this.setState({nationalLevel : index})}}/>
-                            <button className="btn btn-primary btn-sm" onClick={(e)=>{this._edit("nationalLevel")}}>确定</button>
+                            <SelectComponent size="small" contentData={configData.nationalityLevel} onChange={(value)=>{this.setState({nationalityLevel : value - 0})}}/>
+                            <button className="btn btn-primary btn-sm" onClick={(e)=>{this._edit("nationalityLevel")}}>确定</button>
                         </div>
                         <div className="btn-right-select">
                             <label>零食</label>
-                            <SelectComponent size="small" contentData={configData.snack} onChange={(index)=>{this.setState({snack : index})}}/>
+                            <SelectComponent size="small" contentData={configData.snack} onChange={(value)=>{this.setState({snack : value - 0})}}/>
                             <button className="btn btn-primary btn-sm" onClick={(e)=>{this._edit("snack")}}>确定</button>
                         </div>
                         <div className="btn-right-select">
                             <label>口语水平</label>
-                            <SelectComponent size="small" contentData={configData.spokenLevel} onChange={(index)=>{this.setState({spokenLevel : index})}}/>
+                            <SelectComponent size="small" contentData={configData.spokenLevel} onChange={(value)=>{this.setState({spokenLevel : value - 0})}}/>
                             <button className="btn btn-primary btn-sm" onClick={(e)=>{this._edit("spokenLevel")}}>确定</button>
                         </div>
                     </div>
@@ -220,14 +216,14 @@ var TeacherInterview = React.createClass({
             timezone = this.refs.contentInput.state.timezone,
             cellphoneNumber = this.refs.contentInput.state.cellphoneNumber,
             email = this.refs.contentInput.state.email,
-            snack = configData.snack.id[this.refs.snack.state.index],
-            gender = configData.gender.id[this.refs.gender.state.index],
-            nationalLevel = configData.nationalLevel.id[this.refs.nationalLevel.state.index],
-            spokenLevel = configData.spokenLevel.id[this.refs.spokenLevel.state.index],
-            teachingExperience = configData.experience.id[this.refs.experience.state.index],
+            snack = this.refs.snack.state.value - 0,
+            gender = this.refs.gender.state.value - 0,
+            nationalityLevel = this.refs.nationalityLevel.state.value - 0,
+            spokenLevel = this.refs.spokenLevel.state.value - 0,
+            teachingExperience = this.refs.experience.state.value - 0,
             interviewTimeStart = this.refs.interviewTime.state.start,
             interviewTimeEnd = this.refs.interviewTime.state.end,
-            isHasInterviewTime = configData.reservationInterview.id[this.refs.reservationInterview.state.index],
+            isHasInterviewTime = this.refs.reservationInterview.state.value - 0,
             data = {
                 page : 0,
                 size : this.state.pageSize,
@@ -237,37 +233,34 @@ var TeacherInterview = React.createClass({
         (auditTimeStart.length >0) && (data.auditTimeStart=auditTimeStart) &&(data.auditTimeEnd=auditTimeEnd);
         (firstName.length >0) && (data.firstName = firstName);
         (lastName.length >0) && (data.lastName=lastName);
-        (nationality != -1) && (data.nationality=nationality);
-        (timezone != "时区") && (data.timezone=timezone);
+        (nationality != -100) && (data.nationality=nationality);
+        (timezone != -100) && (data.timezone=timezone);
         (cellphoneNumber.length >0) && (data.cellphoneNumber=cellphoneNumber);
         (email.length >0) && (data.email=email);
-        (snack != -1) && (data.snack=snack);
-        (gender != -1) && (data.gender=gender);
-        (nationalLevel != -1) && (data.nationalLevel=nationalLevel);
-        (spokenLevel != -1) && (data.spokenLevel=spokenLevel);
-        (teachingExperience != -1) && (data.teachingExperience=teachingExperience);
+        (snack != -100 && snack != 4) && (data.snack=snack);
+        (snack == 4) && (data.snack="");
+        (gender != -100) && (data.gender=gender);
+        (nationalityLevel != -100) && (data.nationalityLevel=nationalityLevel);
+        (spokenLevel != -100) && (data.spokenLevel=spokenLevel);
+        (teachingExperience != -100) && (data.teachingExperience=teachingExperience);
         (interviewTimeStart.length >0) && (data.interviewTimeStart=interviewTimeStart) &&(data.interviewTimeEnd=interviewTimeEnd);
-        (isHasInterviewTime != -1) && (data.isHasInterviewTime=isHasInterviewTime);
+        (isHasInterviewTime != -100) && (data.isHasInterviewTime=isHasInterviewTime);
 
         let getHead = {
             url : searchUrl,
             data : data
         };
 
-        console.log(getHead);
+        console.log(data);
         Get(getHead).then(
             ({data})=> {
-                let selectList = new Array(data.content.length);
-                for(let i=0; i<selectList.length; i++){
-                    selectList[i] = false;
-                }
                 if (data == null) {
                     this.setState({
                         curPage: 1,
                         totalPages: 1,
                         getHead : getHead,
                         list: [],
-                        selected : selectList
+                        selected : []
                     });
                 } else {
                     this.setState({
@@ -275,7 +268,7 @@ var TeacherInterview = React.createClass({
                         curPage: 1,
                         totalPages: data.totalPages,
                         list: data.content,
-                        selected : selectList
+                        selected : []
                     });
                 }
             },
@@ -285,7 +278,8 @@ var TeacherInterview = React.createClass({
                     curPage: 1,
                     totalPages: 1,
                     getHead : getHead,
-                    list: []
+                    list: [],
+                    selected: []
                 });
             }
         ).catch((err)=>{
@@ -304,10 +298,6 @@ var TeacherInterview = React.createClass({
         getHead.data.page = page - 1;
         Get(getHead).then(
             ({data}) => {
-                let selectList = new Array(data.content.length);
-                for(let i=0; i<selectList.length; i++){
-                    selectList[i] = false;
-                }
                 if(data == null ){
                     alert("没有数据!");
                     return;
@@ -315,7 +305,7 @@ var TeacherInterview = React.createClass({
                 this.setState({
                     curPage : page,
                     list : data.content,
-                    selected : selectList
+                    selected : []
                 });
             },
             () => {
@@ -369,12 +359,16 @@ var TeacherInterview = React.createClass({
     /**
      * 点击表格中的复选框,触发当前行选中事件
      * @param e: 点击事件
-     * @param index: 选中的行在表格中的序号
+     * @param i: 选中的行在表格中的序号
      * @public (子组件"表格"调用)
      */
-    select : function (e,index) {
-        let selectList = this.state.selected.concat([]);
-        selectList[index] = e.target.checked;
+    select : function (e,i) {
+        let selectList = this.state.selected;
+        if(e.target.checked){
+            selectList = this.state.selected.concat(this.state.list[i].email);
+        }else{
+            this.state.selected.splice($.inArray(this.state.list[i].email, this.state.selected),1);
+        }
         this.setState({
             selected : selectList
         });
@@ -386,7 +380,12 @@ var TeacherInterview = React.createClass({
      * @public (子组件"表格"调用)
      */
     selectAll : function (state) {
-        let selectList = this.state.list.map(() => {return (state);});
+        let selectList = [];
+        if(state){
+            for(let i=0; i< this.state.list.length; i++){
+                selectList.push(this.state.list[i].email);
+            }
+        }
         this.setState({
             selected : selectList
         });
@@ -425,12 +424,12 @@ var TeacherInterview = React.createClass({
      * @param index: 表示性别,0为女,1为男
      * @public (子组件"表格"调用)
      */
-    updateGender : function (i,index) {
+    updateGender : function (i,value) {
         let postHead = {
                 url : genderUrl,
                 data : {
                     "email": this.state.list[i].email,
-                    "gender": configData.gender.id[index]
+                    "gender": (value == -100) ? null : value - 0   ///////??????????????????
                 }
             };
         Post(postHead).then(
@@ -512,16 +511,11 @@ var TeacherInterview = React.createClass({
      * @public (子组件"入池模态框"和"批量入池模态框"调用)
      */
     inPonds : function (num,reason) {
-        let line = this.state.list[this.state.curRow];
         let emails = [];
         if(num == 1){
             emails.push(line.email);
         }else{
-            for(let i=0; i<this.state.list.length; i++){
-                if(this.state.selected[i] == true){
-                    emails.push(this.state.list[i].email);
-                }
-            }
+            emails = this.state.selected;
         }
         if(emails.length <=0){
             alert("请选中入池的教师!");
@@ -556,7 +550,9 @@ var TeacherInterview = React.createClass({
         });
         let getHead = {
             url : infoUrl,
-            email : this.state.list[i].email
+            data : {
+                email : this.state.list[i].email
+            }
         };
         Get(getHead).then(
             ({data})=>{
@@ -579,49 +575,35 @@ var TeacherInterview = React.createClass({
 
     /**
      * 表格下方可以批量修改"国家级别","零食"和"口语水平".点击"确定"按钮即可提交更改,触发批量修改事件
-     * @param attr: 需要批量更改的属性名称. nationalLevel表示更改"国家级别", snack表示更改"零食", spokenLevel表示更改"口语水平".
+     * @param attr: 需要批量更改的属性名称. nationalityLevel"国家级别", snack表示更改"零食", spokenLevel表示更改"口语水平".
      * @private
      */
     _edit : function (attr) {
-        let emails = [],
-            postHead = {};
-        for(let i=0; i<this.state.list.length; i++){
-            if(this.state.selected[i] == true){
-                emails.push(this.state.list[i].email);
-            }
-        }
+        let emails = this.state.selected;
         if(emails.length <=0){
             alert("请选中至少一个教师!");
             return;
         }
+        let postHead = {
+            url: updateLevelUrl,
+            data : {
+                "emails": emails,
+                "changeLevel":0,
+                "intValue":1
+            }
+        };
         switch (attr){
-            case "nationalLevel" :
-                postHead = {
-                    myurl : updateNationalLevelUrl,
-                    data : {
-                        "emails": emails,
-                        "nationalLevel": this.state.nationalityLevel
-                    }
-                };
+            case "nationalityLevel" :
+                postHead.data.changeLevel = 2;
+                postHead.data.intValue = this.state.nationalityLevel;
                 break;
             case "snack" :
-                postHead = {
-                    myurl : updateSnackUrl,
-                    data : {
-                        "emails": emails,
-                        "snack": this.state.snack
-                    }
-                };
+                postHead.data.changeLevel = 1;
+                postHead.data.intValue = this.state.snack;
                 break;
             default:
-                postHead = {
-                    myurl : updateSpokenLevelUrl,
-                    data : {
-                        "emails": emails,
-                        "spokenLevel": this.state.spokenLevel
-                    }
-                };
-                
+                postHead.data.changeLevel = 3;
+                postHead.data.intValue = this.state.spokenLevel;
                 break;
         }
         Post(postHead).then(

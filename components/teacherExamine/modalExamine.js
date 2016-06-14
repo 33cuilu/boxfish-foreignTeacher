@@ -15,7 +15,8 @@ import BasicInfo from './../commons/basicInfo.js';
 //引入样式
 import '../../less/modalExamine.less';
 
-var configData = require("../../test/config.json");
+var configData = require("../../config/config.json");
+var submitUrl = `http://${configData.ip}/web/teacherOralEn/updateTeacher`;
 
 var ModalExamine = React.createClass({
 
@@ -30,7 +31,7 @@ var ModalExamine = React.createClass({
                                 <div className="modal-body-header">
                                     <div className="field">
                                         <label>报名日期:</label>
-                                        <DataPicker ref="createTime" value={info.createTime}/>
+                                        <DataPicker type="1" ref="createTime" value={info.createTime} sho/>
                                     </div>
                                     <div className="field">
                                         <label>性别:</label>
@@ -60,7 +61,7 @@ var ModalExamine = React.createClass({
             "lastName": this.refs.basicInfo.state.lastName,
             "cellphoneNumber": this.refs.basicInfo.state.cellphoneNumber,
             "email": this.props.info.email,
-            "gender": configData.gender.id[this.refs.gender.state.index],
+            "gender": +this.refs.gender.state.value,
             "skype": this.refs.basicInfo.state.skype,
             "nationality": this.refs.basicInfo.state.nationality,
             "timezone": this.refs.basicInfo.state.timezone,
@@ -69,25 +70,13 @@ var ModalExamine = React.createClass({
             "school": this.refs.basicInfo.state.school,
             "schoolCountry": this.refs.basicInfo.state.schoolCountry,
             "specialty": this.refs.basicInfo.state.specialty,
-            "schoolTime": this.refs.basicInfo.state.schoolingTime,
-            // "schoolStartYear": this.refs.basicInfo.state.schoolingTime.substr(0,4),
-            // "schoolEndYear": this.refs.basicInfo.state.schoolingTime.substr(13,4),
-            "teachingExperience": configData.experienceDetail.id[this.refs.teachingExperience.state.index],
-            "occupation": null,
-            "interviewTime": null,
-            "job": null,
-            "snack": null,
-            "spokenLevel": null,
-            "triallectureStartTime": null,
-            "triallectureEndTime": null,
-            "demoCourse": null,
-            "initAccount": null,
-            "schoolStartYear": null,
-            "schoolEndYear": null,
-            "triallectureTeacher": null,
-            "triallectureStudent": null
+            "occupation": this.refs.basicInfo.state.occupation,
+            "schoolStartYear": this.refs.basicInfo.state.schoolStartYear,
+            "schoolEndYear": this.refs.basicInfo.state.schoolEndYear,
+            "teachingExperience": (this.refs.teachingExperience.state.value != -100)? +this.refs.teachingExperience.state.value : null
         };
         console.log(content);
+
         Post({
             url : submitUrl,
             data : content

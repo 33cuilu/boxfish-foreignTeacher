@@ -13,7 +13,7 @@ import SubNav from './subNav.js';
 import Accordion from '../../util/accordition.js';
 
 //引入配置数据
-var configData = require('../../test/nav.json');
+var configData = require('../../config/nav.json');
 
 
 var Nav = React.createClass({

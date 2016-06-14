@@ -12,7 +12,7 @@ import {Post,Get,getById} from '../../util/ajax.js';
 //引入样式
 import '../../less/modalPond.less';
 
-var configData = require('./../../test/config.json');
+var configData = require('./../../config/config.json');
 
 var ModalPond = React.createClass({
     render : function(){
@@ -98,7 +98,7 @@ var ModalPond = React.createClass({
                                 <div className="modal-body-body">
                                     <div className="field">
                                         <label>国家级别:</label>
-                                        <p>{getById(configData.nationalLevel, info.nationalityLevel)}</p>
+                                        <p>{getById(configData.nationalityLevel, info.nationalityLevel)}</p>
                                         <p>{info.nationalityLevel}</p>
                                     </div>
                                     <div className="field">

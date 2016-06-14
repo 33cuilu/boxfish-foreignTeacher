@@ -42,7 +42,7 @@ export function transformArrayToObj(arr) {
 }
 
 export function getById(obj,index) {
-    if(typeof index != "number"){
+    if(typeof index != "number" && typeof index != "string"){
         return '';
     }
     let arr = obj.arr,

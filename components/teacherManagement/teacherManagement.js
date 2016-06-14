@@ -22,15 +22,14 @@ import ModalInterviewScore from './modalInterviewScore.js';
 //引入样式
 import "../../less/teacherManagement.less";
 
-var configData = require('../../test/config.json');
+var configData = require('../../config/config.json');
 
 var searchUrl = `http://${configData.ip}/web/teacherOralEn/teacherStepList`;
-var frozenUrl = ``;
-var activationUrl = ``;
+var batchIsActiveUrl = `http://${configData.ip}/web/teacherOralEn/batchIsActive`;
 var infoUrl = `http://${configData.ip}/web/teacherOralEn/teacherDetail`;
-var arrangeAccountUrl = '';
-var tryScoreUrl = '';
-var interviewScoreUrl = '';
+var arrangeAccountUrl = `http://${configData.ip}/web/common/distributeAccount`;
+var trialScoreUrl = `http://${configData.ip}/web/teacherOralEn/updateTrialScore`;
+var interviewScoreUrl = ``;
 
 var TeacherManagement = React.createClass({
     /**
@@ -73,21 +72,17 @@ var TeacherManagement = React.createClass({
         };
         Get(getHead).then(
             ({data})=> {
-                let selectList = new Array(data.content.length);
-                for(let i=0; i<selectList.length; i++){
-                    selectList[i] = false;
-                }
                 if (data == null) {
                     this.setState({
                         getHead : getHead,
-                        selected : selectList
+                        selected : []
                     });
                 } else {
                     this.setState({
                         getHead: getHead,
                         totalPages: data.totalPages,
                         list: data.content,
-                        selected : selectList
+                        selected : []
                     });
                 }
             },
@@ -109,8 +104,9 @@ var TeacherManagement = React.createClass({
      */
     render : function(){
         let tableList = this.state.list.map((v,i) => {
+            let isCheck = ($.inArray(v.email,this.state.selected) != -1);
             return {
-                "checkbox" : <input type="checkbox" onChange={(e)=>{this.select(e,i)}}/>,
+                "checkbox" : <input type="checkbox" checked={isCheck}  onChange={(e)=>{this.select(e,i)}}/>,
                 "createTime" : v.createTime,
                 "firstName" : v.firstName,
                 "lastName" : v.lastName,
@@ -139,8 +135,8 @@ var TeacherManagement = React.createClass({
         return(
             <div className="teacherManagement">
                 <ModalManagement info={this.state.curInfo} callback={(e)=>{this._getPage(this.state.curPage)}}/>
-                <ModalManagementFrozen callback={this.frozen}/>
-                <ModalManagementActivation callback={this.activation}/>
+                <ModalManagementFrozen callback={this.isActive}/>
+                <ModalManagementActivation callback={this.isActive}/>
                 <ModalTryScore callback={()=>{this._getPage(this.state.curPage)}}/>
                 <ModalInterviewScore callback={()=>{this._getPage(this.state.curPage)}}/>
                 <div className="forms" id="forms">
@@ -206,9 +202,9 @@ var TeacherManagement = React.createClass({
             createTimeEnd = this.refs.createTime.state.end,
             nickName = this.refs.nickName.value,
             city = this.refs.city.value.trim(),
-            gender = configData.gender.id[this.refs.gender.state.index],
-            snack = configData.snack.id[this.refs.snack.state.index],
-            isActive = configData.isActive.id[this.refs.isActive.state.index],
+            gender = this.refs.gender.state.value - 0,
+            snack = this.refs.snack.state.value - 0,
+            isActive = this.refs.isActive.state.value - 0,
             data = {
                 page : 0,
                 size : this.state.pageSize,
@@ -217,7 +213,7 @@ var TeacherManagement = React.createClass({
         (firstName.length >0) && (data.firstName = firstName);
         (lastName.length >0) && (data.lastName=lastName);
         (nationality != -1) && (data.nationality=nationality);
-        (timezone != "时区") && (data.timezone=timezone);
+        (timezone != -100) && (data.timezone=timezone);
         (cellphoneNumber.length >0) && (data.cellphoneNumber=cellphoneNumber);
         (email.length >0) && (data.email=email);
         (createTimeStart.length >0) && (data.createTimeStart=createTimeStart) &&(data.createTimeEnd=createTimeEnd);
@@ -353,43 +349,6 @@ var TeacherManagement = React.createClass({
     },
 
     /**
-     * 点击"冻结模态框"中的"确定"按钮,触发冻结事件
-     * @public (子组件"冻结模态框"调用)
-     */
-    frozen : function () {
-        let emails = [];
-        let newList = this.state.list.concat([]);
-        for(let i=0; i<this.state.list.length; i++){
-            if(this.state.selected[i] == true){
-                emails.push(this.state.list[i].email);
-                newList.isActive = 0;
-            }
-        }
-        if(emails.length <=0){
-            alert("请选中冻结的教师!");
-            return;
-        }
-        console.log(emails);
-        console.log(newList);
-        return;
-        Post({
-            url : frozenUrl,
-            data : {
-                "emails": emails
-            }
-        }).then(
-            () => {
-                $(".modalManagementFrozen .modal").modal('hide');
-                this.setState({
-                    list : newList
-                });
-            },
-            () => {
-                alert("冻结失败,请重试!");
-            }).catch();
-    },
-
-    /**
      * 点击"激活"按钮,触发"激活模态框"
      * @private
      */
@@ -398,51 +357,57 @@ var TeacherManagement = React.createClass({
     },
 
     /**
-     * 点击"激活模态框"中的"确定"按钮,触发激活事件
-     * @public (子组件"激活模态框"调用)
+     * 点击"冻结模态框"或"激活模态框"中的"确定"按钮,触发冻结或激活事件
+     * @param state: 账号更改后的状态. 0表示冻结,1表示激活
+     * @public (子组件"冻结模态框"和"激活模态框"调用)
      */
-    activation : function () {
+    isActive : function (state) {
         let emails = [];
-        let newList = this.state.list.concat([]);
         for(let i=0; i<this.state.list.length; i++){
             if(this.state.selected[i] == true){
                 emails.push(this.state.list[i].email);
-                newList.isActive = 1;
             }
         }
         if(emails.length <=0){
-            alert("请选中激活的教师!");
+            alert("至少选中一个教师!");
             return;
         }
-        console.log(emails);
-        console.log(newList);
-        return;
-        Post({
-            url : activationUrl,
+        let postHead = {
+            url : batchIsActiveUrl,
             data : {
-                "emails": emails
+                "emails": emails,
+                "stateValue": state
             }
-        }).then(
+        };
+        //console.log(emails);
+        Post(postHead).then(
             () => {
+                $(".modalManagementFrozen .modal").modal('hide');
                 $(".modalManagementActivation .modal").modal('hide');
-                this.setState({
-                    list : newList
-                });
+                this._getPage(this.state.curPage);
             },
             () => {
-                alert("激活失败,请重试!");
-            }).catch();
+                alert("操作失败,请重试!");
+            }).catch(
+            (err) => {
+                console.log(err);
+            }
+        );
     },
 
     /**
      * 点击表格中的复选框,触发当前行选中事件
      * @param e: 点击事件
-     * @param index: 选中的行在表格中的序号
+     * @param i: 选中的行在表格中的序号
      * @public (子组件"表格"调用)
      */
-    select : function (e,index) {
-        let selectList = this.state.selected.concat([]);
-        selectList[index] = e.target.checked;
+    select : function (e,i) {
+        let selectList = this.state.selected;
+        if(e.target.checked){
+            selectList = this.state.selected.concat(this.state.list[i].email);
+        }else{
+            this.state.selected.splice($.inArray(this.state.list[i].email, this.state.selected),1);
+        }
         this.setState({
             selected : selectList
         });
@@ -454,7 +419,12 @@ var TeacherManagement = React.createClass({
      * @public (子组件"表格"调用)
      */
     selectAll : function (state) {
-        let selectList = this.state.list.map(() => {return (state);});
+        let selectList = [];
+        if(state){
+            for(let i=0; i< this.state.list.length; i++){
+                selectList.push(this.state.list[i].email);
+            }
+        }
         this.setState({
             selected : selectList
         });
@@ -470,12 +440,13 @@ var TeacherManagement = React.createClass({
             alert("该教师已经分配账号!");
             return;
         }
-        Post({
+        let postHead = {
             url : arrangeAccountUrl,
             data : {
                 "email": this.state.list[i].email
             }
-        }).then(
+        };
+        Post(postHead).then(
             () => {
                 alert("分配成功");
             },
@@ -510,7 +481,7 @@ var TeacherManagement = React.createClass({
      * @public (子组件"评分模态框"调用)
      */
     interviewScore : function (index1,index2,index3,index4) {
-        let id1 = configData.nationalLevel.id[index1],
+        let id1 = configData.nationalityLevel.id[index1],
             id2 = configData.spokenLevel.id[index2],
             id3 = configData.snack.id[index3],
             id4 = configData.experienceDetail.id[index4],
@@ -519,7 +490,7 @@ var TeacherManagement = React.createClass({
                 data : {
                     "email" : this.state.list[this.state.curRow].email,
                     "interviewScoresMap" : {
-                        "nationalLevel": id1,
+                        "nationalityLevel": id1,
                         "spokenLevel": id2,
                         "snack": id3,
                         "teachingExperience": id4
@@ -555,23 +526,26 @@ var TeacherManagement = React.createClass({
 
     /**
      * 点击"试讲评分模态框"中"确定"按钮,触发试讲评分事件.
-     * @param index1: 创意和表达选择序号
-     * @param index2: 适应和引导选择序号
+     * @param id1: 创意和表达选择序号
+     * @param id2: 适应和引导选择序号
      * @public (子组件"评分模态框"调用)
      */
-    trialScore : function(index1,index2) {
-        let id1 = configData.creativeAndExpression.id[index1],
-            id2 = configData.adaptAndLead.id[index2],
-            getHead = {
-                url: trialScoreUrl,
-                data: {
-                    "email": this.state.list[this.state.curRow].email,
-                    "trialScoresMap": {
-                        "creativeAndExpression": id1,
-                        "adaptAndLead": id2
-                    }
+    trialScore : function(id1,id2) {
+        if(id1 == -100 || id2 == -100){
+            alert("请在为每个项目打分!");
+            return;
+        }
+        let getHead = {
+            url: trialScoreUrl,
+            data: {
+                "email": this.state.list[this.state.curRow].email,
+                "trialScoresMap": {
+                    "creativeAndExpression": id1,
+                    "adaptAndLead": id2
                 }
-            };
+            }
+        };
+
         Post(getHead).then(
             () => {
                 $(".trialScore .modal").modal('hide');
@@ -594,13 +568,13 @@ var TeacherManagement = React.createClass({
         this.setState({
             curRow : i
         });
-        let curEmail = this.state.list[i].email;
-        Get({
+        let getHead = {
             url : infoUrl,
             data : {
-                email : curEmail
+                "email" : this.state.list[i].email
             }
-        }).then(
+        };
+        Get(getHead).then(
             ({data})=>{
                 if(data){
                     this.setState({

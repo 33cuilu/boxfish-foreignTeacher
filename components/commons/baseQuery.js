@@ -20,7 +20,7 @@ var BaseQuery = React.createClass({
                     <input type="text" className="form-control" ref="tel" placeholder="教师电话"/>
                 </div>
                 <TeacherAddress />
-                <DataPicker dateName="..."/>
+                <DataPicker />
                 <div className="field more" onClick={this._showHideQuery}>
                     <span className="glyphicon glyphicon-triangle-bottom"></span>
                 </div>

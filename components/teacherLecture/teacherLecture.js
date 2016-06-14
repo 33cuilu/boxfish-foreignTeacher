@@ -23,7 +23,7 @@ import ModalInPonds from './../commons/modalInPonds.js';
 //引入样式
 import "../../less/teacherLecture.less";
 
-var configData = require('../../test/config.json');
+var configData = require('../../config/config.json');
 
 var teacherAccountsUrl = `http://${configData.ip}/web/common/trialTeacherList/2`;
 var studentAccountsUrl = `http://${configData.ip}/web/common/trialStudentList/2`;
@@ -34,7 +34,7 @@ var searchUrl = `http://${configData.ip}/web/teacherOralEn/teacherStepList?`;
 var infoUrl = `http://${configData.ip}/web/teacherOralEn/teacherDetail?`;
 var inPondsUrl = `http://${configData.ip}/web/teacherOralEn/putPond`;
 var passUrl = `http://${configData.ip}/web/teacherOralEn/updateStatePass`;
-var tryScoreUrl = `http://${configData.ip}/web/teacherOralEn/updateTrialScore`;
+var trialScoreUrl = `http://${configData.ip}/web/teacherOralEn/updateTrialScore`;
 
 var TeacherLecture = React.createClass({
     /**
@@ -96,21 +96,17 @@ var TeacherLecture = React.createClass({
 
         Get(getHead).then(
             ({data})=> {
-                let selectList = new Array(data.content.length);
-                for(let i=0; i<selectList.length; i++){
-                    selectList[i] = false;
-                }
                 if (data == null) {
                     this.setState({
                         getHead : getHead,
-                        selected : selectList
+                        selected : []
                     });
                 } else {
                     this.setState({
                         getHead: getHead,
                         totalPages: data.totalPages,
                         list: data.content,
-                        selected : selectList
+                        selected : []
                     });
                 }
             },
@@ -145,18 +141,16 @@ var TeacherLecture = React.createClass({
     render : function(){
         let rowContent = this.state.list[this.state.curRow];
         let tableList = this.state.list.map((v,i) => {
-                let tryTime = v.triallectureStartTime ?
+            let tryTime = v.triallectureStartTime ?
                     <div>
                         <label>{v.triallectureStartTime} - {v.triallectureEndTime}</label>
-                        <button className="btn btn-primary btn-xs" onClick={(e)=>{this.arangeTryLesson(i)}}>
-                            修改
-                        </button>
                     </div> :
                     <button key={i} className="btn btn-primary btn-xs" onClick={(e)=>{this.arangeTryLesson(i)}}>
                         安排试讲
                     </button> ;
-                return {
-                    "checkbox" : <input type="checkbox" onChange={(e)=>{this.select(e,i)}}/>,
+            let isCheck = ($.inArray(v.email,this.state.selected) != -1);
+            return {
+                "checkbox" : <input type="checkbox" checked={isCheck}  onChange={(e)=>{this.select(e,i)}}/>,
                     "interviewTime" : v.interviewTime,
                     "firstName" : v.firstName,
                     "lastName" : v.lastName,
@@ -230,8 +224,8 @@ var TeacherLecture = React.createClass({
             url : myUrl
         }).then(
             ({data}) => {
-                let newTeacherArr = [],
-                    newTeacherId = [];
+                let newTeacherArr = ["教师账号"],
+                    newTeacherId = [-100];
                 for(let i=0 ; i<data.length; i++){
                     newTeacherArr.push(data[i].nickName);
                     newTeacherId.push(data[i].teacherId);
@@ -262,8 +256,8 @@ var TeacherLecture = React.createClass({
             url : myUrl
         }).then(
             ({data}) => {
-                let newStudentArr = [],
-                    newStudentId = [];
+                let newStudentArr = ["学生账号"],
+                    newStudentId = [-100];
                 for(let i=0 ; i<data.length; i++){
                     newStudentArr.push(data[i].nickName);
                     newStudentId.push(data[i].studentId);
@@ -293,9 +287,9 @@ var TeacherLecture = React.createClass({
             url : myUrl
         }).then(
             ({data}) =>{
-                let newCourseArr = [],
-                    newCourseId = [],
-                    newCourseType = [];
+                let newCourseArr = ["课程名称"],
+                    newCourseId = [-100],
+                    newCourseType = [-100];
                 for(let i=0 ; i<data.length; i++){
                     newCourseArr.push(data[i].name);
                     newCourseId.push(data[i].courseId);
@@ -327,8 +321,8 @@ var TeacherLecture = React.createClass({
             url : myUrl
         }).then(
             ({data}) => {
-                let newTimeArr = [],
-                    newTimeId = [];
+                let newTimeArr = ["上课时间"],
+                    newTimeId = [-100];
                 for(let i=0 ; i<data.length; i++){
                     newTimeArr.push(`${data[i].startTime} - ${data[i].endTime}`);
                     newTimeId.push(data[i].slotId);
@@ -372,7 +366,7 @@ var TeacherLecture = React.createClass({
             interviewTimeEnd = this.refs.interviewTime.state.end,
             triallectureStartTime = this.refs.triallectureTime.state.start,
             triallectureEndTime = this.refs.triallectureTime.state.end,
-            statu = configData.reservationTry.id[this.refs.reservationTry.state.index],
+            statu = this.refs.reservationTry.state.value - 0,
             data = {
                 page : 0,
                 size : this.state.pageSize,
@@ -381,13 +375,13 @@ var TeacherLecture = React.createClass({
 
         (firstName.length >0) && (data.firstName = firstName);
         (lastName.length >0) && (data.lastName=lastName);
-        (nationality != -1) && (data.nationality=nationality);
-        (timezone != "时区") && (data.timezone=timezone);
+        (nationality != -100) && (data.nationality=nationality);
+        (timezone != -100) && (data.timezone=timezone);
         (cellphoneNumber.length >0) && (data.cellphoneNumber=cellphoneNumber);
         (email.length >0) && (data.email=email);
         (interviewTimeStart.length >0) && (data.interviewTimeStart=interviewTimeStart) &&(data.interviewTimeEnd=interviewTimeEnd);
         (triallectureStartTime.length >0) && (data.triallectureStartTime=triallectureStartTime) &&(data.triallectureEndTime=triallectureEndTime);
-        (statu != -1) && (data.statu=statu);//-------?????????
+        (statu != -100) && (data.statu=statu);//-------?????????
 
         let getHead = {
             url : searchUrl,
@@ -446,18 +440,14 @@ var TeacherLecture = React.createClass({
             ({data}) => {
                 if(data == null )
                     return;
-                let selectList = new Array(data.content.length);
-                for(let i=0; i<selectList.length; i++){
-                    selectList[i] = false;
-                }
                 this.setState({
                     curPage : page,
                     list : data.content,
-                    selected : selectList
+                    selected : []
                 });
             },
             () => {
-                console.log("获取教师列表失败!");
+                alert("获取教师列表失败!");
             }
         ).catch((err)=>{
             console.log(err);
@@ -507,12 +497,16 @@ var TeacherLecture = React.createClass({
     /**
      * 点击表格中的复选框,触发当前行选中事件
      * @param e: 点击事件
-     * @param index: 选中的行在表格中的序号
+     * @param i: 选中的行在表格中的序号
      * @public (子组件"表格"调用)
      */
-    select : function (e,index) {
-        let selectList = this.state.selected.concat([]);
-        selectList[index] = e.target.checked;
+    select : function (e,i) {
+        let selectList = this.state.selected;
+        if(e.target.checked){
+            selectList = this.state.selected.concat(this.state.list[i].email);
+        }else{
+            this.state.selected.splice($.inArray(this.state.list[i].email, this.state.selected),1);
+        }
         this.setState({
             selected : selectList
         });
@@ -524,7 +518,12 @@ var TeacherLecture = React.createClass({
      * @public (子组件"表格"调用)
      */
     selectAll : function (state) {
-        let selectList = this.state.list.map(() => {return (state);});
+        let selectList = [];
+        if(state){
+            for(let i=0; i< this.state.list.length; i++){
+                selectList.push(this.state.list[i].email);
+            }
+        }
         this.setState({
             selected : selectList
         });
@@ -551,19 +550,21 @@ var TeacherLecture = React.createClass({
         this.setState({
             curRow : i
         });
-        $(".tryScore .modal").modal();
+        $(".trialScore .modal").modal();
     },
 
     /**
      * 点击"试讲评分模态框"中"确定"按钮,触发试讲评分事件.
-     * @param index1: 创意和表达选择序号
-     * @param index2: 适应和引导选择序号
+     * @param id1: 创意和表达选择序号
+     * @param id2: 适应和引导选择序号
      * @public (子组件"评分模态框"调用)
      */
-    trialScore : function(index1,index2) {
-        let id1 = configData.creativeAndExpression.id[index1],
-            id2 = configData.adaptAndLead.id[index2],
-            getHead = {
+    trialScore : function(id1,id2) {
+        if(id1 == -100 || id2 == -100){
+            alert("请在为每个项目打分!");
+            return;
+        }
+        let getHead = {
                 url: trialScoreUrl,
                 data: {
                     "email": this.state.list[this.state.curRow].email,
@@ -573,6 +574,7 @@ var TeacherLecture = React.createClass({
                     }
                 }
             };
+
         Post(getHead).then(
             () => {
                 $(".trialScore .modal").modal('hide');
@@ -657,16 +659,11 @@ var TeacherLecture = React.createClass({
      * @public (子组件"入池模态框"和"批量入池模态框"调用)
      */
     inPonds : function (num,reason) {
-        let line = this.state.list[this.state.curRow];
         let emails = [];
         if(num == 1){
-            emails.push(line.email);
+            emails.push(this.state.list[this.state.curRow].email);
         }else{
-            for(let i=0; i<this.state.list.length; i++){
-                if(this.state.selected[i] == true){
-                    emails.push(this.state.list[i].email);
-                }
-            }
+            emails = this.state.selected;
         }
         if(emails.length <=0){
             alert("请选中入池的教师!");
@@ -701,7 +698,9 @@ var TeacherLecture = React.createClass({
         });
         let getHead = {
             url : infoUrl,
-            email : this.state.list[i].email
+            data : {
+                email : this.state.list[i].email
+            }
         };
         Get(getHead).then(
             ({data})=>{

@@ -13,7 +13,7 @@ import SelectComponent from './../commons/selectComponent.js';
 //引入样式
 import "../../less/modalInterviewScore.less";
 
-var configData = require("../../test/config.json");
+var configData = require("../../config/config.json");
 
 var submitUrl = '';
 
@@ -26,7 +26,7 @@ var ModalInterviewScore = React.createClass({
                         <div className="modal-content">
                             <div className="modal-body">
                                     <label>国家级别:</label>
-                                    <SelectComponent contentData={configData.nationalLevel} ref="nationalLevel"/> <span>100</span>
+                                    <SelectComponent contentData={configData.nationalityLevel} ref="nationalLevel"/> <span>100</span>
                                     <label>零食:</label>
                                     <SelectComponent contentData={configData.snack} ref="snack"/> <span>100</span>
                                     <label>口语水平:</label>
@@ -45,8 +45,11 @@ var ModalInterviewScore = React.createClass({
         );
     },
     _submit : function () {
-        this.props.callback(this.refs.nationalityLevel.state.index,this.refs.snack.state.index,
-            this.refs.spokenLevel.state.index,this.refs.teachingExperience.state.index);
+        let id1 = this.refs.nationalityLevel.state.value - 0,
+            id2 = this.refs.snack.state.value - 0,
+            id3 = this.refs.spokenLevel.state.value - 0,
+            id4 = this.refs.teachingExperience.state.value - 0;
+        this.props.callback(id1, id2, id3, id4);
     }
 });
 

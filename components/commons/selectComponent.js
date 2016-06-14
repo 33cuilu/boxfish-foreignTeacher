@@ -9,21 +9,19 @@ import React from 'react';
 var SelectComponent = React.createClass({
     getInitialState : function () {
         return {
-            defaultValue : this.props.value + "",
-            index : 0
+            value : (this.props.value) ? this.props.value : "-100"
         };
     },
     componentWillReceiveProps : function (nextProps) {
-        if(nextProps.value !== null){
+        if(nextProps.value && nextProps.value !== this.props.value){
             this.setState({
-                defaultValue : nextProps.value+"",
+                value : nextProps.value+""
             });
         } 
     },
     render : function(){
         let arr = this.props.contentData.arr ;
         let id = this.props.contentData.id ;
-
         arr = arr.map( (v,i) => {
             return (
                 <option key={i} value={id[i]+""} >{v}</option>
@@ -32,20 +30,19 @@ var SelectComponent = React.createClass({
         let selectClassName = (this.props.size == "small")? "form-control select-sm" : "form-control";
         return(
             <div className="field">
-                <select value={this.state.defaultValue} className={selectClassName} ref="select" onChange={this._changeSelect}>
+                <select value={this.state.value} className={selectClassName} ref="select" onChange={this._changeSelect}>
                     {arr}
                 </select>
             </div>
         );
 
     },
-    _changeSelect : function () {
+    _changeSelect : function (e) {
         this.setState({
-            index : this.refs.select.selectedIndex,
-            defaultValue : this.props.contentData.id[this.refs.select.selectedIndex]
+            value : e.target.value
         });
         if(this.props.onChange){
-            this.props.onChange(this.refs.select.selectedIndex);
+            this.props.onChange(e.target.value);
         }
     }
 });

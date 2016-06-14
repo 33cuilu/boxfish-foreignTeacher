@@ -7,7 +7,9 @@ import React from 'react';
 var SingleDataPicker = React.createClass({
     getInitialState : function () {
         return {
-            value : ''
+            start : '',
+            end:'',
+            value: ''
         };
     },
     componentDidMount : function () {

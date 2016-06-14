@@ -29,7 +29,7 @@ var ModalManagementActivation = React.createClass({
         );
     },
     _submit : function () {
-        this.props.callback();
+        this.props.callback(1);
     }
 });
 

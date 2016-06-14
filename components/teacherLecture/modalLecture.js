@@ -15,7 +15,7 @@ import BasicInfo from './../commons/basicInfo.js';
 //引入样式
 import '../../less/modalLecture.less';
 
-var configData = require("../../test/config.json");
+var configData = require("../../config/config.json");
 
 var submitUrl = `http://${configData.ip}/web/teacherOralEn/updateTeacher`;
 
@@ -51,7 +51,7 @@ var ModalLecture = React.createClass({
     },
     _submit : function () {
         let content = {
-                "gender": this.refs.gender.state.index,
+                "gender": this.refs.gender.state.value - 0,
                 "interviewTime": this.refs.interviewTime.state.value,
                 "email": this.props.info.email,
                 "firstName": this.refs.basicInfo.state.firstName,
@@ -64,28 +64,15 @@ var ModalLecture = React.createClass({
                 "skype": this.refs.basicInfo.state.skype,
                 "schoolCountry": this.refs.basicInfo.state.schoolCountry,
                 "specialty": this.refs.basicInfo.state.specialty,
-                "schoolTime": this.refs.basicInfo.state.schoolingTime,
-                // "schoolStartYear": this.refs.basicInfo.state.schoolingTime.substr(0,4),
-                // "schoolEndYear": this.refs.basicInfo.state.schoolingTime.substr(13,4),
+                "schoolStartYear": this.refs.basicInfo.state.schoolStartYear,
+                "schoolEndYear": this.refs.basicInfo.state.schoolEndYear,
                 "city": this.refs.basicInfo.state.city,
-                "school": this.refs.basicInfo.state.school,
-                "job": null,
-                "snack": null,
-                "spokenLevel": null,
-                "triallectureStartTime": null,
-                "triallectureEndTime": null,
-                "demoCourse": null,
-                "initAccount": null,
-                "teachingExperience": 0,
-                "schoolStartYear": null,
-                "schoolEndYear": null,
-                "triallectureTeacher": null,
-                "triallectureStudent": null
+                "school": this.refs.basicInfo.state.school
             },
             postHead = {
                 url : submitUrl,
                 data : content
-            }
+            };
         console.log(postHead);
         Post(postHead).then(
             ({data}) => {
@@ -94,7 +81,7 @@ var ModalLecture = React.createClass({
                 this.props.callback();
             },
             ()=>{
-                alert("安排试讲失败,可能因为网络原因,也可能是安排出现冲突!");
+                alert("保存失败,请重试!");
             }
         ).catch((err) => {
             console.log(err);
