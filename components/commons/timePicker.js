@@ -23,7 +23,9 @@ var TimePicker = React.createClass({
                     start: start.format("YYYY-MM-DD HH:mm:ss"),
                     value: start.format("YYYY-MM-DD HH:mm:ss")
                 });
-                this.props.onChange(start.format("YYYY-MM-DD HH:mm:ss"));
+                if(this.props.onChange){
+                    this.props.onChange(start.format("YYYY-MM-DD HH:mm:ss"));
+                }
             });
         }else{
             $(this.refs.dateInput).daterangepicker({
@@ -36,7 +38,10 @@ var TimePicker = React.createClass({
                     end: end.format("YYYY-MM-DD HH:mm:ss"),
                     value: `${start.format("YYYY-MM-DD HH:mm:ss")} - ${end.format("YYYY-MM-DD HH:mm:ss")}`
                 });
-                this.props.onChange(`${start.format("YYYY-MM-DD HH:mm:ss")} - ${end.format("YYYY-MM-DD HH:mm:ss")}`);
+                if(this.props.onChange){
+                    this.props.onChange(`${start.format("YYYY-MM-DD HH:mm:ss")} - ${end.format("YYYY-MM-DD HH:mm:ss")}`);
+                }
+
             });
         }
 

@@ -53,6 +53,7 @@ var TeacherInterview = React.createClass({
             curInfo : {},
             tableStyle : {
                 tableSize : 10,
+                selectAll : false,
                 hasCheckBox : true,
                 hasOperate : true
             },
@@ -153,10 +154,10 @@ var TeacherInterview = React.createClass({
                             </div>
                         </div>
                         <div className="form row">
-                            <SelectComponent ref="gender" contentData={configData.gender} />
-                            <SelectComponent ref="spokenLevel" contentData={configData.spokenLevel} />
-                            <SelectComponent ref="snack" contentData={configData.snack} />
-                            <SelectComponent ref="nationalLevel" contentData={configData.nationalityLevel} />
+                            <SelectComponent ref="gender" contentData={configData.genderUndistributed} />
+                            <SelectComponent ref="spokenLevel" contentData={configData.spokenLevelUndistributed} />
+                            <SelectComponent ref="snack" contentData={configData.snackUndistributed} />
+                            <SelectComponent ref="nationalityLevel" contentData={configData.nationalityLevelUndistributed} />
                             <DataPicker ref="checkDate" name="审核日期"/>
                             <TimePicker type="2" ref="interviewTime" name="面试时间"/>
                             <SelectComponent ref="experience" contentData={configData.experience} />
@@ -175,17 +176,17 @@ var TeacherInterview = React.createClass({
                         <button className="btn btn-warning btn-sm" onClick={this._arangeInPonds}>批量入池</button>
                         <div className="btn-right-select">
                             <label>国家级别</label>
-                            <SelectComponent size="small" contentData={configData.nationalityLevel} onChange={(value)=>{this.setState({nationalityLevel : value - 0})}}/>
+                            <SelectComponent size="small" ref="nationalityLevelBottom" contentData={configData.nationalityLevel} onChange={(value)=>{this.setState({nationalityLevel : value - 0})}}/>
                             <button className="btn btn-primary btn-sm" onClick={(e)=>{this._edit("nationalityLevel")}}>确定</button>
                         </div>
                         <div className="btn-right-select">
                             <label>零食</label>
-                            <SelectComponent size="small" contentData={configData.snack} onChange={(value)=>{this.setState({snack : value - 0})}}/>
+                            <SelectComponent size="small" ref="snackBottom" contentData={configData.snack} onChange={(value)=>{this.setState({snack : value - 0})}}/>
                             <button className="btn btn-primary btn-sm" onClick={(e)=>{this._edit("snack")}}>确定</button>
                         </div>
                         <div className="btn-right-select">
                             <label>口语水平</label>
-                            <SelectComponent size="small" contentData={configData.spokenLevel} onChange={(value)=>{this.setState({spokenLevel : value - 0})}}/>
+                            <SelectComponent size="small" ref="spokenLevelBottom" contentData={configData.spokenLevel} onChange={(value)=>{this.setState({spokenLevel : value - 0})}}/>
                             <button className="btn btn-primary btn-sm" onClick={(e)=>{this._edit("spokenLevel")}}>确定</button>
                         </div>
                     </div>
@@ -220,7 +221,7 @@ var TeacherInterview = React.createClass({
             gender = this.refs.gender.state.value - 0,
             nationalityLevel = this.refs.nationalityLevel.state.value - 0,
             spokenLevel = this.refs.spokenLevel.state.value - 0,
-            teachingExperience = this.refs.experience.state.value - 0,
+            isHasTeachingExperience = this.refs.experience.state.value - 0,
             interviewTimeStart = this.refs.interviewTime.state.start,
             interviewTimeEnd = this.refs.interviewTime.state.end,
             isHasInterviewTime = this.refs.reservationInterview.state.value - 0,
@@ -237,12 +238,11 @@ var TeacherInterview = React.createClass({
         (timezone != -100) && (data.timezone=timezone);
         (cellphoneNumber.length >0) && (data.cellphoneNumber=cellphoneNumber);
         (email.length >0) && (data.email=email);
-        (snack != -100 && snack != 4) && (data.snack=snack);
-        (snack == 4) && (data.snack="");
+        (snack != -100 ) && (data.snack=snack);
         (gender != -100) && (data.gender=gender);
         (nationalityLevel != -100) && (data.nationalityLevel=nationalityLevel);
         (spokenLevel != -100) && (data.spokenLevel=spokenLevel);
-        (teachingExperience != -100) && (data.teachingExperience=teachingExperience);
+        (isHasTeachingExperience != -100) && (data.isHasTeachingExperience=isHasTeachingExperience);
         (interviewTimeStart.length >0) && (data.interviewTimeStart=interviewTimeStart) &&(data.interviewTimeEnd=interviewTimeEnd);
         (isHasInterviewTime != -100) && (data.isHasInterviewTime=isHasInterviewTime);
 
@@ -425,11 +425,16 @@ var TeacherInterview = React.createClass({
      * @public (子组件"表格"调用)
      */
     updateGender : function (i,value) {
+        if(value == -100){
+            alert("不可取消性别!");
+            this._getPage(this.state.curPage);
+            return;
+        }
         let postHead = {
                 url : genderUrl,
                 data : {
                     "email": this.state.list[i].email,
-                    "gender": (value == -100) ? null : value - 0   ///////??????????????????
+                    "gender": value - 0   ///////??????????????????
                 }
             };
         Post(postHead).then(

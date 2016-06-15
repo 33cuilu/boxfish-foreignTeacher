@@ -6,7 +6,18 @@
 import React from 'react';
 
 var Table = React.createClass({
-    //Table组件不需要有自己的state,只是作为一个显示数据的组件
+    getInitialState : function () {
+        return {
+            selectAll : this.props.tableStyle.selectAll
+        }
+    },
+    componentWillReceiveProps : function (nextProps) {
+        if(nextProps.tableStyle.selectAll !== this.state.selectAll){
+            this.setState({
+                selectAll : nextProps.tableStyle.selectAll
+            });
+        }
+    },
     render : function(){
         var tableStyle = this.props.tableStyle, //表格显示多少行,是否有复选框,是否有操作
             thList = this.props.contentData.thList, //表格的表头
@@ -23,7 +34,7 @@ var Table = React.createClass({
             return (<th key={i} >{v}</th>);
         });
         if (tableStyle.hasCheckBox) {
-            thList = <tr> <th><input type="checkbox" onChange={(e)=>{this._selectAll(e)}}/></th> {thList}  </tr>;
+            thList = <tr> <th><input type="checkbox" checked={this.state.selectAll} onChange={(e)=>{this._selectAll(e)}}/></th> {thList}  </tr>;
         }else{
             thList = <tr>{thList}</tr>
         }
@@ -53,12 +64,14 @@ var Table = React.createClass({
         );
     },
     _selectAll : function(e){
+        this.setState({
+            selectAll : e.target.checked
+        });
         if(e.target.checked){
             $("tbody :checkbox").prop("checked",true);
         }else{
             $("tbody :checkbox").prop("checked",false);
         }
-        //console.log(e.target.checked);
         this.props.selectAll(e.target.checked);
     }
 });

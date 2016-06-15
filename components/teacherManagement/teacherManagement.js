@@ -29,7 +29,7 @@ var batchIsActiveUrl = `http://${configData.ip}/web/teacherOralEn/batchIsActive`
 var infoUrl = `http://${configData.ip}/web/teacherOralEn/teacherDetail`;
 var arrangeAccountUrl = `http://${configData.ip}/web/common/distributeAccount`;
 var trialScoreUrl = `http://${configData.ip}/web/teacherOralEn/updateTrialScore`;
-var interviewScoreUrl = ``;
+var interviewScoreUrl = `http://${configData.ip}/web/teacherOralEn/updateInterviewScores`;
 
 var TeacherManagement = React.createClass({
     /**
@@ -48,6 +48,7 @@ var TeacherManagement = React.createClass({
             curInfo : {},
             tableStyle: {
                 tableSize : 10,
+                selectAll : false,
                 hasCheckBox : true,
                 hasOperate : true
             },
@@ -137,8 +138,8 @@ var TeacherManagement = React.createClass({
                 <ModalManagement info={this.state.curInfo} callback={(e)=>{this._getPage(this.state.curPage)}}/>
                 <ModalManagementFrozen callback={this.isActive}/>
                 <ModalManagementActivation callback={this.isActive}/>
-                <ModalTryScore callback={()=>{this._getPage(this.state.curPage)}}/>
-                <ModalInterviewScore callback={()=>{this._getPage(this.state.curPage)}}/>
+                <ModalTryScore callback={this.trialScore}/>
+                <ModalInterviewScore callback={this.interviewScore}/>
                 <div className="forms" id="forms">
                     <div className="input">
                         <div className="form row">
@@ -212,16 +213,16 @@ var TeacherManagement = React.createClass({
             };
         (firstName.length >0) && (data.firstName = firstName);
         (lastName.length >0) && (data.lastName=lastName);
-        (nationality != -1) && (data.nationality=nationality);
+        (nationality != -100) && (data.nationality=nationality);
         (timezone != -100) && (data.timezone=timezone);
         (cellphoneNumber.length >0) && (data.cellphoneNumber=cellphoneNumber);
         (email.length >0) && (data.email=email);
         (createTimeStart.length >0) && (data.createTimeStart=createTimeStart) &&(data.createTimeEnd=createTimeEnd);
         (nickName.length >0) && (data.nickName=nickName);
         (city.length >0) && (data.city=city);
-        (gender != -1) && (data.gender=gender);
-        (snack != -1) && (data.snack=snack);
-        (isActive != -1) && (data.isActive=isActive);
+        (gender != -100) && (data.gender=gender);
+        (snack != -100) && (data.snack=snack);
+        (isActive != -100) && (data.isActive=isActive);
 
         let getHead = {
             url : searchUrl,
@@ -362,12 +363,7 @@ var TeacherManagement = React.createClass({
      * @public (子组件"冻结模态框"和"激活模态框"调用)
      */
     isActive : function (state) {
-        let emails = [];
-        for(let i=0; i<this.state.list.length; i++){
-            if(this.state.selected[i] == true){
-                emails.push(this.state.list[i].email);
-            }
-        }
+        let emails = this.state.selected;
         if(emails.length <=0){
             alert("至少选中一个教师!");
             return;
@@ -474,27 +470,25 @@ var TeacherManagement = React.createClass({
 
     /**
      * 点击"面试评分模态框"中的"确定"按钮,触发面试评分事件.
-     * @param index1: 国家水平选项序号
-     * @param index2: 口语水平选项序号
-     * @param index3: 零食选项序号
-     * @param index4: 教学经验选项序号
+     * @param id1: 国家水平选项序号
+     * @param id2: 口语水平选项序号
+     * @param id3: 零食选项序号
+     * @param id4: 教学经验选项序号
      * @public (子组件"评分模态框"调用)
      */
-    interviewScore : function (index1,index2,index3,index4) {
-        let id1 = configData.nationalityLevel.id[index1],
-            id2 = configData.spokenLevel.id[index2],
-            id3 = configData.snack.id[index3],
-            id4 = configData.experienceDetail.id[index4],
-            getHead = {
+    interviewScore : function (id1,id2,id3,id4) {
+        if(id1 == -100 || id2 == -100 || id3 == -100 || id4 == -100){
+            alert("请为每个选项打分!");
+            return;
+        }
+        let getHead = {
                 url : interviewScoreUrl,
                 data : {
                     "email" : this.state.list[this.state.curRow].email,
-                    "interviewScoresMap" : {
-                        "nationalityLevel": id1,
-                        "spokenLevel": id2,
-                        "snack": id3,
-                        "teachingExperience": id4
-                    }
+                    "nationalityLevel": id1,
+                    "spokenLevel": id2,
+                    "snack": id3,
+                    "teachingExperience": id4
                 }
             };
         Post(getHead).then(
@@ -521,7 +515,7 @@ var TeacherManagement = React.createClass({
         this.setState({
             curRow : i
         });
-        $(".tryScore .modal").modal();
+        $(".trialScore .modal").modal();
     },
 
     /**

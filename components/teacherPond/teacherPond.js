@@ -48,6 +48,7 @@ var TeacherPond = React.createClass({
             },
             tableStyle: {
                 tableSize : 10,
+                selectAll : false,
                 hasCheckBox : true,
                 hasOperate : true
             },
@@ -107,13 +108,14 @@ var TeacherPond = React.createClass({
      */
     render : function(){
         let tableList = this.state.list.map((v,i) => {
+            let triallectureTime = (v.triallectureStartTime !== null)? (`${v.triallectureStartTime} - ${v.triallectureEndTime}`) : '';
             let isCheck = ($.inArray(v.email,this.state.selected) != -1);
             return {
                 "checkbox" : <input type="checkbox" checked={isCheck}  onChange={(e)=>{this.select(e,i)}}/>,
                 "createTime" : v.createTime,
                 "auditTime" : v.auditTime,
                 "interviewTime" : v.interviewTime,
-                "triallectureTime" : v.triallectureTime,
+                "triallectureTime" : triallectureTime,
                 "firstName" : v.firstName,
                 "lastName" : v.lastName,
                 "nationality" : v.nationality,
@@ -149,7 +151,7 @@ var TeacherPond = React.createClass({
                             <DataPicker ref="createTime" name="报名日期"/>
                             <DataPicker ref="auditTime" name="审核日期"/>
                             <TimePicker type="2" ref="interviewTime" name="面试时间"/>
-                            <TimePicker type="2" ref="tryLessonTime" name="试讲时间"/>
+                            <TimePicker type="2" ref="triallectureTime" name="试讲时间"/>
                             <SelectComponent ref="snack" contentData={configData.snack} />
                             <SelectComponent ref="stateStep" contentData={configData.stateStep} />
                         </div>
@@ -159,7 +161,7 @@ var TeacherPond = React.createClass({
                     </div>
                 </div>
                 <div className="tableContainer" ref="tableContainer">
-                    <Table contentData={configData.pondTable} list={tableList} tableStyle={this.state.tableStyle}/>
+                    <Table contentData={configData.pondTable} list={tableList} tableStyle={this.state.tableStyle} selectAll={this.selectAll}/>
                 </div>
                 <PageList curPage={this.state.curPage} totalPages={this.state.totalPages} onPre={this._prePage} onFirst={this._firstPage} onLast={this._lastPage} onNext={this._nextPage}/>
             </div>
@@ -246,8 +248,7 @@ var TeacherPond = React.createClass({
         (auditTimeStart.length >0) && (data.auditTimeStart=auditTimeStart) &&(data.auditTimeEnd=auditTimeEnd);
         (interviewTimeStart.length >0) && (data.interviewTimeStart=interviewTimeStart) &&(data.interviewTimeEnd=interviewTimeEnd);
         (triallectureStartTime.length >0) && (data.triallectureStartTime=triallectureStartTime) &&(data.triallectureEndTime=triallectureEndTime);
-        (snack != -100 && snack != 4) && (data.snack=snack);
-        (snack == 4) && (data.snack="");
+        (snack != -100 ) && (data.snack=snack);
         (stateStep != -100) && (data.stateStep=stateStep);
 
         let getHead = {
@@ -255,7 +256,7 @@ var TeacherPond = React.createClass({
             data : data
         };
 
-        console.log(getHead);
+        console.log(data);
         Get(getHead).then(
             ({data})=> {
                 if (data == null) {
@@ -282,7 +283,8 @@ var TeacherPond = React.createClass({
                     curPage: 1,
                     totalPages: 1,
                     getHead : getHead,
-                    list: []
+                    list: [],
+                    selected: []
                 });
             }
         ).catch((err)=>{
@@ -370,8 +372,7 @@ var TeacherPond = React.createClass({
         if(e.target.checked){
             selectList = this.state.selected.concat(this.state.list[i].email);
         }else{
-            selectList = this.state.selected.concat([]);
-            selectList.splice(this.state.selected.indexOf(this.state.list[i].email),1);
+            this.state.selected.splice($.inArray(this.state.list[i].email, this.state.selected),1);
         }
         this.setState({
             selected : selectList

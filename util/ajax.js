@@ -55,4 +55,18 @@ export function getById(obj,index) {
     return '';
 }
 
+export function getScoreById(obj,index) {
+    if(typeof index != "number"){
+        return '';
+    }
+    let id = obj.id,
+        score = obj.score;
+    for(let i=0; i<score.length; i++){
+        if(id[i] == index){
+            return score[i];
+        }
+    }
+    return '';
+}
+
 

@@ -5,7 +5,7 @@
 
 //引入插件
 import React from 'react'
-import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
+import {Post,Get,getScoreById} from '../../util/ajax.js';
 
 //引入组件
 import SelectComponent from './../commons/selectComponent.js';
@@ -15,9 +15,15 @@ import "../../less/modalInterviewScore.less";
 
 var configData = require("../../config/config.json");
 
-var submitUrl = '';
-
 var ModalInterviewScore = React.createClass({
+    getInitialState : function () {
+        return {
+            nationalityLevel : -100,
+            spokenLevel : -100,
+            snack : -100,
+            teachingExperience : -100
+        }
+    },
     render : function(){
         return (
             <div className="interviewScore">
@@ -26,16 +32,24 @@ var ModalInterviewScore = React.createClass({
                         <div className="modal-content">
                             <div className="modal-body">
                                     <label>国家级别:</label>
-                                    <SelectComponent contentData={configData.nationalityLevel} ref="nationalLevel"/> <span>100</span>
+                                    <SelectComponent contentData={configData.nationalityLevel} ref="nationalityLevel"
+                                                     onChange={(value)=>{this.changeNationalityLevel(value)}}/>
+                                <span>{getScoreById(configData.nationalityLevel,+this.state.nationalityLevel)}</span>
                                     <label>零食:</label>
-                                    <SelectComponent contentData={configData.snack} ref="snack"/> <span>100</span>
+                                    <SelectComponent contentData={configData.snack} ref="snack"
+                                                     onChange={(value)=>{this.changeSnack(value)}}/>
+                                <span>{getScoreById(configData.snack, +this.state.snack)}</span>
                                     <label>口语水平:</label>
-                                    <SelectComponent contentData={configData.spokenLevel} ref="spokenLevel"/> <span>100</span>
+                                    <SelectComponent contentData={configData.spokenLevel} ref="spokenLevel"
+                                                     onChange={(value)=>{this.changeSpokenLevel(value)}}/>
+                                <span>{getScoreById(configData.spokenLevel, +this.state.spokenLevel)}</span>
                                     <label>教学经验:</label>
-                                    <SelectComponent ref="teachingExperience" contentData={configData.experienceDetail}/> <span>100</span>
+                                    <SelectComponent ref="teachingExperience" contentData={configData.experienceDetail}
+                                                     onChange={(value)=>{this.changeExperience(value)}}/>
+                                <span>{getScoreById(configData.experienceDetail, +this.state.teachingExperience)}</span>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-primary" onClick={this._submit} data-dismiss="modal" onClick={this._submit}>确定</button>
+                                <button type="button" className="btn btn-primary" onClick={this._submit}>确定</button>
                                 <button type="button" className="btn btn-default" data-dismiss="modal">取消</button>
                             </div>
                         </div>
@@ -43,6 +57,26 @@ var ModalInterviewScore = React.createClass({
                 </div>
             </div>
         );
+    },
+    changeNationalityLevel : function (value) {
+        this.setState({
+            nationalityLevel: value
+        });
+    },
+    changeSnack : function (value) {
+        this.setState({
+            snack : value
+        });
+    },
+    changeSpokenLevel : function (value) {
+        this.setState({
+            spokenLevel : value
+        });
+    },
+    changeExperience : function (value) {
+        this.setState({
+            teachingExperience : value
+        })
     },
     _submit : function () {
         let id1 = this.refs.nationalityLevel.state.value - 0,

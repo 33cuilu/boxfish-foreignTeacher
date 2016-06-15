@@ -47,6 +47,7 @@ var TeacherExamine = React.createClass({
             curInfo : {},
             tableStyle: {
                 tableSize : 10,
+                selectAll : false,
                 hasCheckBox : true,
                 hasOperate : true
             },
@@ -141,7 +142,7 @@ var TeacherExamine = React.createClass({
                         </div>
                         <div className="form row">
                             <DataPicker ref="createTime" name="报名日期"/>
-                            <SelectComponent ref="snack" contentData={configData.snack} />
+                            <SelectComponent ref="snack" contentData={configData.snackUndistributed} />
                             <SelectComponent ref="experience" contentData={configData.experience} />
                         </div>
                     </div>
@@ -189,7 +190,7 @@ var TeacherExamine = React.createClass({
             createTimeStart = this.refs.createTime.state.start,
             createTimeEnd = this.refs.createTime.state.end,
             snack = +this.refs.snack.state.value,
-            teachingExperience = +this.refs.experience.state.value,
+            isHasTeachingExperience = +this.refs.experience.state.value,
             data = {
                 page : 0,
                 size : this.state.pageSize,
@@ -202,9 +203,8 @@ var TeacherExamine = React.createClass({
         (cellphoneNumber.length >0) && (data.cellphoneNumber=cellphoneNumber);
         (email.length >0) && (data.email=email);
         (createTimeStart.length >0) && (data.createTimeStart=createTimeStart) &&(data.createTimeEnd=createTimeEnd);
-        (snack != -100 && snack != 4) && (data.snack=snack);
-        (snack == 4) && (data.snack="");
-        (teachingExperience != -100) && (data.teachingExperience=teachingExperience);
+        (snack != -100 ) && (data.snack=snack);
+        (isHasTeachingExperience != -100) && (data.isHasTeachingExperience=isHasTeachingExperience);
 
         let getHead = {
             url : searchUrl,

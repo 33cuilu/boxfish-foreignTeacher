@@ -9,11 +9,11 @@ import React from 'react';
 var SelectComponent = React.createClass({
     getInitialState : function () {
         return {
-            value : (this.props.value) ? this.props.value : "-100"
+            value : (this.props.value !== undefined) ? this.props.value : "-100"
         };
     },
     componentWillReceiveProps : function (nextProps) {
-        if(nextProps.value && nextProps.value !== this.props.value){
+        if(nextProps.value !== undefined){
             this.setState({
                 value : nextProps.value+""
             });

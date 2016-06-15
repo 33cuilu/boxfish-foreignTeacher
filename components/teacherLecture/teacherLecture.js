@@ -71,6 +71,7 @@ var TeacherLecture = React.createClass({
             },
             tableStyle : {
                 tableSize : 10,
+                selectAll : false,
                 hasCheckBox : true,
                 hasOperate : true
             },
@@ -366,7 +367,7 @@ var TeacherLecture = React.createClass({
             interviewTimeEnd = this.refs.interviewTime.state.end,
             triallectureStartTime = this.refs.triallectureTime.state.start,
             triallectureEndTime = this.refs.triallectureTime.state.end,
-            statu = this.refs.reservationTry.state.value - 0,
+            isTrial = this.refs.reservationTry.state.value - 0,
             data = {
                 page : 0,
                 size : this.state.pageSize,
@@ -381,7 +382,7 @@ var TeacherLecture = React.createClass({
         (email.length >0) && (data.email=email);
         (interviewTimeStart.length >0) && (data.interviewTimeStart=interviewTimeStart) &&(data.interviewTimeEnd=interviewTimeEnd);
         (triallectureStartTime.length >0) && (data.triallectureStartTime=triallectureStartTime) &&(data.triallectureEndTime=triallectureEndTime);
-        (statu != -100) && (data.statu=statu);//-------?????????
+        (isTrial != -100) && (data.isTrial=isTrial);
 
         let getHead = {
             url : searchUrl,

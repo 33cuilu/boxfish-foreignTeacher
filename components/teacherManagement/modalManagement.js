@@ -103,7 +103,7 @@ var ModalManagement = React.createClass({
         }).then(
             () => {
                 //显示更改后的数据
-                $(".modalLecture .modal").modal('hide');
+                $(".modalManagement .modal").modal('hide');
                 this.props.callback();
             },
             ()=>{

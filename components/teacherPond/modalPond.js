@@ -119,11 +119,11 @@ var ModalPond = React.createClass({
                                 <div className="modal-body-footer">
                                     <div className="field">
                                         <label>试讲账号:</label>
-                                        <p>{info.triallectureAccount}</p>
+                                        <p>{info.triallectureTeacher}</p>
                                     </div>
                                     <div className="field">
                                         <label>学生账号:</label>
-                                        <p>{info.studentAccount}</p>
+                                        <p>{info.triallectureStudent}</p>
                                     </div>
                                     <div className="field">
                                         <label>demo 课:</label>
@@ -131,7 +131,7 @@ var ModalPond = React.createClass({
                                     </div>
                                     <div className="field">
                                         <label>试讲时间:</label>
-                                        <p>{`${info.triallectureStartTimeStart} - ${info.triallectureStartTimeEnd}`}</p>
+                                        <p>{`${info.triallectureStartTime} - ${info.triallectureEndTime}`}</p>
                                     </div>
                                 </div>
                                 <div className="modal-body-remarks">
