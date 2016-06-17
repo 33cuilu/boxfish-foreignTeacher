@@ -9,6 +9,13 @@ var TimePicker = React.createClass({
             value: this.props.value||''
         };
     },
+    componentWillReceiveProps : function (nextProps) {
+        if(nextProps.value && nextProps.value !== this.props.value){
+            this.setState({
+                value : nextProps.value
+            });
+        }
+    },
     componentDidMount : function () {
         //初始化表格的日期选择控件
         if(this.props.type == "1"){
@@ -57,18 +64,11 @@ var TimePicker = React.createClass({
             <div className="field" >
                 <div style={styleObj}>
                     <input type="text" className="form-control datePicker" value={this.state.value} placeholder={this.props.name}
-                           style={{paddingLeft:'30px'}} ref="dateInput" onChange={this._change} />
+                           readOnly={true} style={{paddingLeft:'30px'}} ref="dateInput" />
                     <i className="glyphicon glyphicon-calendar"  style={{position:'absolute',left:'10px',top:'8px'}}></i>
                 </div>
             </div>
         );
-    },
-    _change : function (e) {
-        this.setState({
-            start : '',
-            end : '',
-            value : e.target.value
-        });
     }
 });
 

@@ -74,7 +74,7 @@ var BasicInfo = React.createClass({
                 </div>
                 <div className="field">
                     <label>邮箱:</label>
-                    <label>{info.email}</label>
+                    <label className="emailInfo">{info.email}</label>
                 </div>
                 <div className="field">
                     <label>学历:</label>

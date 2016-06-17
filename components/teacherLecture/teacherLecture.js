@@ -15,6 +15,7 @@ import SelectComponent from './../commons/selectComponent.js';
 import Table from './../commons/table.js';
 import PageList from './../commons/page.js';
 import TryLesson from './tryLesson.js';
+import EditLesson from './editLesson.js';
 import ModalTryScore from './../commons/modalTryScore.js';
 import ModalAdopt from './modalAdopt.js';
 import ModalInPond from './../commons/modalInPond.js';
@@ -30,8 +31,9 @@ var studentAccountsUrl = `http://${configData.ip}/web/common/trialStudentList/2`
 var timeSlotUrl = `http://${configData.ip}/timeslot/list/0`;
 var demoCourseUrl = `http://${configData.ip}/web/common/demoCourses/2`;
 
-var searchUrl = `http://${configData.ip}/web/teacherOralEn/teacherStepList?`;
-var infoUrl = `http://${configData.ip}/web/teacherOralEn/teacherDetail?`;
+var searchUrl = `http://${configData.ip}/web/teacherOralEn/teacherStepList`;
+var editLessonUrl = `http://${configData.ip}/web/common/triallecture/en/`;
+var infoUrl = `http://${configData.ip}/web/teacherOralEn/teacherDetail`;
 var inPondsUrl = `http://${configData.ip}/web/teacherOralEn/putPond`;
 var passUrl = `http://${configData.ip}/web/teacherOralEn/updateStatePass`;
 var trialScoreUrl = `http://${configData.ip}/web/teacherOralEn/updateTrialScore`;
@@ -75,6 +77,7 @@ var TeacherLecture = React.createClass({
                 hasCheckBox : true,
                 hasOperate : true
             },
+            demoCourseInfo : {},
             list : [],
             selected : []
         };
@@ -145,10 +148,11 @@ var TeacherLecture = React.createClass({
             let tryTime = v.triallectureStartTime ?
                     <div>
                         <label>{v.triallectureStartTime} - {v.triallectureEndTime}</label>
+                        <button className="btn-primary btn-xs" onClick={(e)=>{this.arrangeEditLesson(i)}}>修改</button>
                     </div> :
-                    <button key={i} className="btn btn-primary btn-xs" onClick={(e)=>{this.arangeTryLesson(i)}}>
+                    <button key={i} className="btn btn-primary btn-xs" onClick={(e)=>{this.arrangeTryLesson(i)}}>
                         安排试讲
-                    </button> ;
+                    </button>;
             let isCheck = ($.inArray(v.email,this.state.selected) != -1);
             return {
                 "checkbox" : <input type="checkbox" checked={isCheck}  onChange={(e)=>{this.select(e,i)}}/>,
@@ -178,6 +182,8 @@ var TeacherLecture = React.createClass({
                 <ModalLecture info={this.state.curInfo} callback={(e)=>{this._getPage(this.state.curPage)}}/>
                 <TryLesson row={rowContent} teacher={this.state.teacherAccounts} student={this.state.studentAccounts}
                            time={this.state.timeSlot} course={this.state.demoCourse} callback={()=>{this._getPage(this.state.curPage)}}/>
+                <EditLesson row={rowContent} info={this.state.demoCourseInfo} teacher={this.state.teacherAccounts} student={this.state.studentAccounts}
+                            time={this.state.timeSlot} course={this.state.demoCourse} callback={()=>{this._getPage(this.state.curPage)}}/>
                 <ModalTryScore value={this.state.list[this.state.curRow]} callback={this.trialScore}/>
                 <ModalAdopt callback={this.adopt}/>
                 <ModalInPond callback={this.inPonds}/>
@@ -365,8 +371,8 @@ var TeacherLecture = React.createClass({
             email = this.refs.contentInput.state.email,
             interviewTimeStart = this.refs.interviewTime.state.start,
             interviewTimeEnd = this.refs.interviewTime.state.end,
-            triallectureStartTime = this.refs.triallectureTime.state.start,
-            triallectureEndTime = this.refs.triallectureTime.state.end,
+            triallectureStartTimeStart = this.refs.triallectureTime.state.start,
+            triallectureStartTimeEnd = this.refs.triallectureTime.state.end,
             isTrial = this.refs.reservationTry.state.value - 0,
             data = {
                 page : 0,
@@ -381,7 +387,7 @@ var TeacherLecture = React.createClass({
         (cellphoneNumber.length >0) && (data.cellphoneNumber=cellphoneNumber);
         (email.length >0) && (data.email=email);
         (interviewTimeStart.length >0) && (data.interviewTimeStart=interviewTimeStart) &&(data.interviewTimeEnd=interviewTimeEnd);
-        (triallectureStartTime.length >0) && (data.triallectureStartTime=triallectureStartTime) &&(data.triallectureEndTime=triallectureEndTime);
+        (triallectureStartTimeStart.length >0) && (data.triallectureStartTimeStart=triallectureStartTimeStart) &&(data.triallectureStartTimeEnd=triallectureStartTimeEnd);
         (isTrial != -100) && (data.isTrial=isTrial);
 
         let getHead = {
@@ -535,11 +541,47 @@ var TeacherLecture = React.createClass({
      * @param i: 表示选择的是表格中的第i个教师,从0开始
      * @public (子组件"表格"调用)
      */
-    arangeTryLesson : function(i){
+    arrangeTryLesson : function(i){
         this.setState({
             curRow : i
         });
         $(".tryLesson .modal").modal();
+    },
+
+    /** 点击表格中的"修改"按钮,触发"修改试讲安排模态框"
+     * @param i: 表示选择的是表格中的第i个教师,从0开始
+     * @public (子组件"表格"调用)
+     */
+    arrangeEditLesson : function (i) {
+        this.setState({
+            curRow : i
+        });
+        let getHead = {
+            url : editLessonUrl,
+            data : {
+                "email" : this.state.list[i].email
+            }
+        };
+        Get(getHead).then(
+            ({data})=>{
+                if(data.startTime.length <= 0){
+                    alert("未安排试讲,系统错误,请反馈给开发人员!");
+                }else{
+                    this.setState({
+                        demoCourseInfo: data
+                    });
+                    $(".editLesson .modal").modal();
+                }
+            },
+            ({returnMsg})=>{
+                console.log(returnMsg);
+            }
+        ).catch(
+            (err)=>{
+                console.log(err);
+            }
+        );
+
     },
 
     /**

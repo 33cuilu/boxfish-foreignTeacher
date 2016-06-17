@@ -113,7 +113,7 @@ var TeacherManagement = React.createClass({
                 "lastName" : v.lastName,
                 "nickName" : v.nickName,
                 "gender" : getById(configData.gender, v.gender),
-                "country" : v.nationality,
+                "nationality" : v.nationality,
                 "timezone" : v.timezone,
                 "cellphoneNumber" : v.cellphoneNumber,
                 "email" : v.email,
@@ -486,8 +486,8 @@ var TeacherManagement = React.createClass({
                 data : {
                     "email" : this.state.list[this.state.curRow].email,
                     "nationalityLevel": id1,
-                    "spokenLevel": id2,
-                    "snack": id3,
+                    "snack": id2,
+                    "spokenLevel": id3,
                     "teachingExperience": id4
                 }
             };

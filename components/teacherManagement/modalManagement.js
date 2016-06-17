@@ -46,7 +46,7 @@ var ModalManagement = React.createClass({
                                     </div>
                                     <div className="field">
                                         <label>试讲时间:</label>
-                                        <TimePicker type="2" ref="triallectureTime" value={info.triallectureTime} />
+                                        <TimePicker type="2" ref="triallectureTime" value={info.triallectureStartTime?`${info.triallectureStartTime} - ${info.triallectureEndTime}`:''} />
                                     </div>
                                     <BasicInfo ref="basicInfo" value={info}/>
                                     <div className="field">

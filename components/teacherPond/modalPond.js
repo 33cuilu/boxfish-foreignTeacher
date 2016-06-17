@@ -26,112 +26,112 @@ var ModalPond = React.createClass({
                                 <div className="modal-body-header">
                                     <div className="field">
                                         <label>审核时间:</label>
-                                        <p>{info.auditTime}</p>
+                                        <label>{info.auditTime}</label>
                                     </div>
                                     <div className="field">
                                         <label>性别:</label>
-                                        <p>{configData.gender.arr[info.gender]}</p>
+                                        <label>{configData.gender.arr[info.gender]}</label>
                                     </div>
                                     <div className="field">
                                         <label>First Name:</label>
-                                        <p>{info.firstName}</p>
+                                        <label>{info.firstName}</label>
                                     </div>
                                     <div className="field">
                                         <label>手机号:</label>
-                                        <p>{info.cellphoneNumber}</p>
+                                        <label>{info.cellphoneNumber}</label>
                                     </div>
                                     <div className="field">
                                         <label>Last Name:</label>
-                                        <p>{info.lastName}</p>
+                                        <label>{info.lastName}</label>
                                     </div>
                                     <div className="field">
                                         <label>邮箱:</label>
-                                        <p>{info.email}</p>
+                                        <label>{info.email}</label>
                                     </div>
                                     <div className="field">
                                         <label>职业:</label>
-                                        <p>{info.occupation}</p>
+                                        <label>{info.occupation}</label>
                                     </div>
                                     <div className="field">
                                         <label>Skype ID:</label>
-                                        <p>{info.skype}</p>
+                                        <label>{info.skype}</label>
                                     </div>
                                     <div className="field">
                                         <label>时区:</label>
-                                        <p>{info.timezone}</p>
+                                        <label>{info.timezone}</label>
                                     </div>
                                     <div className="field">
                                         <label>城市:</label>
-                                        <p>{info.city}</p>
+                                        <label>{info.city}</label>
                                     </div>
                                     <div className="field">
                                         <label>学历:</label>
-                                        <p>{getById(configData.degree, info.degree)}</p>
+                                        <label>{getById(configData.degree, info.degree)}</label>
                                     </div>
                                     <div className="field">
                                         <label>学校名称:</label>
-                                        <p>{info.school}</p>
+                                        <label>{info.school}</label>
                                     </div>
                                     <div className="field">
                                         <label>学校所在国家:</label>
-                                        <p>{info.schoolCountry}</p>
+                                        <label>{info.schoolCountry}</label>
                                     </div>
                                     <div className="field">
                                         <label>专业:</label>
-                                        <p>{info.specialty}</p>
+                                        <label>{info.specialty}</label>
                                     </div>
                                     <div className="field">
                                         <label>在校时间:</label>
-                                        <p>{info.schoolingTime}</p>
+                                        <label>{info.schoolingTime}</label>
                                     </div>
                                 </div>
                                 <div className="modal-body-body">
                                     <div className="field">
                                         <label>创意和表达:</label>
-                                        <p>{info.creativeAndExpression}</p>
+                                        <label>{info.creativeAndExpression}</label>
                                     </div>
                                     <div className="field">
                                         <label>适应和引导:</label>
-                                        <p>{info.adaptAndLead}</p>
+                                        <label>{info.adaptAndLead}</label>
                                     </div>
                                 </div>
                                 <div className="modal-body-body">
                                     <div className="field">
                                         <label>国家级别:</label>
-                                        <p>{getById(configData.nationalityLevel, info.nationalityLevel)}</p>
-                                        <p>{info.nationalityLevel}</p>
+                                        <label>{getById(configData.nationalityLevel, info.nationalityLevel)}</label>
+                                        <label>{info.nationalityLevel}</label>
                                     </div>
                                     <div className="field">
                                         <label>零食:</label>
-                                        <p>{getById(configData.snack, info.snack)}</p>
-                                        <p>{info.snack}</p>
+                                        <label>{getById(configData.snack, info.snack)}</label>
+                                        <label>{info.snack}</label>
                                     </div>
                                     <div className="field">
                                         <label>口语水平:</label>
-                                        <p>{getById(configData.spokenLevel, info.spokenLevel)}</p>
+                                        <label>{getById(configData.spokenLevel, info.spokenLevel)}</label>
                                     </div>
                                     <div className="field">
                                         <label>教学经验:</label>
-                                        <p>{getById(configData.experienceDetail, info.teachingExperience)}</p>
-                                        <p>{info.teachingExperience}</p>
+                                        <label>{getById(configData.experienceDetail, info.teachingExperience)}</label>
+                                        <label>{info.teachingExperience}</label>
                                     </div>
                                 </div>
                                 <div className="modal-body-footer">
                                     <div className="field">
                                         <label>试讲账号:</label>
-                                        <p>{info.triallectureTeacher}</p>
+                                        <label>{info.triallectureTeacher}</label>
                                     </div>
                                     <div className="field">
                                         <label>学生账号:</label>
-                                        <p>{info.triallectureStudent}</p>
+                                        <label>{info.triallectureStudent}</label>
                                     </div>
                                     <div className="field">
                                         <label>demo 课:</label>
-                                        <p>{getById(this.props.course, info.demoCourse)}</p>
+                                        <label>{getById(this.props.course, info.demoCourse)}</label>
                                     </div>
                                     <div className="field">
                                         <label>试讲时间:</label>
-                                        <p>{`${info.triallectureStartTime} - ${info.triallectureEndTime}`}</p>
+                                        <label>{`${info.triallectureStartTime} - ${info.triallectureEndTime}`}</label>
                                     </div>
                                 </div>
                                 <div className="modal-body-remarks">

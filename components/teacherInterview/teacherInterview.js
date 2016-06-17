@@ -59,9 +59,9 @@ var TeacherInterview = React.createClass({
             },
             list : [],
             selected : [],
-            nationalityLevel : -1,
-            snack : -1,
-            spokenLevel : -1
+            nationalityLevel : -100,
+            snack : -100,
+            spokenLevel : -100
         };
     },
 
@@ -516,9 +516,13 @@ var TeacherInterview = React.createClass({
      * @public (子组件"入池模态框"和"批量入池模态框"调用)
      */
     inPonds : function (num,reason) {
+        if(reason.length <=0){
+            alert("请填写入池理由");
+            return;
+        }
         let emails = [];
         if(num == 1){
-            emails.push(line.email);
+            emails.push(this.state.list[this.state.curRow].email);
         }else{
             emails = this.state.selected;
         }
@@ -599,14 +603,26 @@ var TeacherInterview = React.createClass({
         };
         switch (attr){
             case "nationalityLevel" :
+                if(this.state.nationalityLevel == -100){
+                    alert("请选择一个国家级别!");
+                    return;
+                }
                 postHead.data.changeLevel = 2;
                 postHead.data.intValue = this.state.nationalityLevel;
                 break;
             case "snack" :
+                if(this.state.snack == -100){
+                    alert("请选择一种零食!");
+                    return;
+                }
                 postHead.data.changeLevel = 1;
                 postHead.data.intValue = this.state.snack;
                 break;
             default:
+                if(this.state.spokenLevel == -100){
+                    alert("请选择一种口语水平!");
+                    return;
+                }
                 postHead.data.changeLevel = 3;
                 postHead.data.intValue = this.state.spokenLevel;
                 break;

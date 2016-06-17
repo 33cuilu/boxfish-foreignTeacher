@@ -23,8 +23,8 @@ import "../../less/teacherPond.less";
 var configData = require('../../config/config.json');
 
 var demoCourseUrl = `http://${configData.ip}/web/common/demoCourses/2`;
-var searchUrl = `http://${configData.ip}/web/teacherOralEn/teacherStepList?`;
-var infoUrl = `http://${configData.ip}/web/teacherOralEn/teacherDetail?`;
+var searchUrl = `http://${configData.ip}/web/teacherOralEn/teacherStepList`;
+var infoUrl = `http://${configData.ip}/web/teacherOralEn/teacherDetail`;
 var fishUrl = `http://${configData.ip}/web/teacherOralEn/fishOutPond`;
 
 var TeacherPond = React.createClass({
@@ -227,8 +227,8 @@ var TeacherPond = React.createClass({
             auditTimeEnd = this.refs.auditTime.state.end,
             interviewTimeStart = this.refs.interviewTime.state.start,
             interviewTimeEnd = this.refs.interviewTime.state.end,
-            triallectureStartTime = this.refs.triallectureTime.state.start,
-            triallectureEndTime = this.refs.triallectureTime.state.end,
+            triallectureStartTimeStart = this.refs.triallectureTime.state.start,
+            triallectureStartTimeEnd = this.refs.triallectureTime.state.end,
             snack = this.refs.snack.state.value - 0,
             stateStep = this.refs.stateStep.state.value - 0,
             data = {
@@ -247,7 +247,7 @@ var TeacherPond = React.createClass({
         (createTimeStart.length >0) && (data.createTimeStart=createTimeStart) &&(data.createTimeEnd=createTimeEnd);
         (auditTimeStart.length >0) && (data.auditTimeStart=auditTimeStart) &&(data.auditTimeEnd=auditTimeEnd);
         (interviewTimeStart.length >0) && (data.interviewTimeStart=interviewTimeStart) &&(data.interviewTimeEnd=interviewTimeEnd);
-        (triallectureStartTime.length >0) && (data.triallectureStartTime=triallectureStartTime) &&(data.triallectureEndTime=triallectureEndTime);
+        (triallectureStartTimeStart.length >0) && (data.triallectureStartTimeStart=triallectureStartTimeStart) &&(data.triallectureStartTimeEnd=triallectureStartTimeEnd);
         (snack != -100 ) && (data.snack=snack);
         (stateStep != -100) && (data.stateStep=stateStep);
 
@@ -446,8 +446,11 @@ var TeacherPond = React.createClass({
         });
         let getHead = {
             url : infoUrl,
-            email : this.state.list[i].email
+            data : {
+                email : this.state.list[i].email
+            }
         };
+        console.log(getHead);
         Get(getHead).then(
             ({data})=>{
                 if(data){

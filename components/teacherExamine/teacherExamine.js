@@ -53,7 +53,7 @@ var TeacherExamine = React.createClass({
             },
             list : [],
             selected : [],
-            snack : -1
+            snack : -100
         };
     },
 
@@ -158,7 +158,7 @@ var TeacherExamine = React.createClass({
                         <button className="btn btn-warning btn-sm" onClick={this._arangeInPonds}>批量入池</button>
                         <div className="btn-right-select">
                             <label>零食:</label>
-                            <SelectComponent ref="bottomSnack" size="small" contentData={configData.snack} onChange={(index)=>{this.setState({snack : configData.snack.id[index]})}}/>
+                            <SelectComponent ref="bottomSnack" size="small" contentData={configData.snack} onChange={(value)=>{this.setState({snack : value})}}/>
                             <button className="btn btn-primary btn-sm" onClick={this._updateSnack}>确定</button>
                         </div>
                     </div>
@@ -428,6 +428,10 @@ var TeacherExamine = React.createClass({
      * @public (子组件"入池模态框"和"批量入池模态框"调用)
      */
     inPonds : function (num,reason) {
+        if(reason.length <=0){
+            alert("请填写入池理由!");
+            return;
+        }
         let emails = [];
         if(num == 1){
             emails.push(this.state.list[this.state.curRow].email);
@@ -495,6 +499,10 @@ var TeacherExamine = React.createClass({
      * @private
      */
     _updateSnack : function () {
+        if(this.state.snack == -100){
+            alert("请选择一种零食!");
+            return;
+        }
         let emails = this.state.selected;
         if(emails.length <=0){
             alert("请选中至少一个教师!");

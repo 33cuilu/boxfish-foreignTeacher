@@ -47,7 +47,7 @@ export function getById(obj,index) {
     }
     let arr = obj.arr,
         id = obj.id;
-    for(let i = 0; i< arr.length; i++){
+    for(let i = 1; i< arr.length; i++){ //忽略第一个,因为第一个是-100
         if(id[i] == index){
             return arr[i];
         }
@@ -64,6 +64,21 @@ export function getScoreById(obj,index) {
     for(let i=0; i<score.length; i++){
         if(id[i] == index){
             return score[i];
+        }
+    }
+    return '';
+}
+
+export function getCourseTypeById(obj,index){
+    if(!index){
+        console.log("无法查询到demo课的类型,因为id是空");
+        return '';
+    }
+    let id = obj.id,
+        type = obj.type;
+    for(let i=0; i<type.length; i++){
+        if(id[i] == index){
+            return type[i];
         }
     }
     return '';
