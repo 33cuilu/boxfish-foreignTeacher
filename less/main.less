@@ -34,6 +34,19 @@ select{
   max-width: 150px;
 }
 
+.field{
+  position: relative;
+  .glyphicon-trash{
+    cursor : pointer;
+  }
+}
+
+.readOnly{
+  border: none;
+  margin-left: 1rem;
+  font-weight: bold;
+}
+
 //表单的显示和隐藏
 @transTime:0.2s;
 .forms-trans(@transAttr,@transAttrTime){

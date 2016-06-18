@@ -126,7 +126,7 @@ var TeacherPond = React.createClass({
                 "interviewScore" : v.interviewScore,
                 "trialScore" : v.trialScore,
                 "markScore" : v.markScore,
-                "stateStep" : getById(configData.stateStep, v.stateStep),
+                "stateStep" : getById(configData.stateStep, v.stepNoPassState),
                 "operate" : (
                     <div>
                         <button className="btn btn-primary btn-xs" onClick={(e)=>{this.arrangeFish(i)}}>捕捞</button>

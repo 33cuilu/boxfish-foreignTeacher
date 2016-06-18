@@ -33,7 +33,7 @@ var EditLesson = React.createClass({
                                 </div>
                                 <div className="element">
                                     <label>学生账号:</label>
-                                    <label>{getById(this.props.student, this.props.info.studentId)}</label>
+                                    <input type="text" className="readOnly" value={getById(this.props.student, this.props.info.studentId)} />
                                 </div>
                                 <div className="element">
                                     <label>demo 课:</label>

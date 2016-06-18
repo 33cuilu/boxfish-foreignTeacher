@@ -7,6 +7,7 @@
   .modal-dialog{
     margin: 10px auto;
     .modal-content{
+      width: 650px;
       .modal-body{
         padding: 10px;
         .modal-body-header {
@@ -20,17 +21,7 @@
               max-width: 190px;
               display: inline-block;
               white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
-            }
-          }
-
-          .basicInfo{
-            .emailInfo{
-              display: inline-block;
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
+              overflow: auto;
             }
           }
         }
@@ -42,9 +33,12 @@
             label{
               display: block;
             }
-            .datePicker,.singleDatePicker,.timePicker{
+            .datePicker,.timePicker{
               width: 273px;
             }
+          }
+          .dataPicker,.timePicker{
+            width : 90%;
           }
         }
         .modal-body-body,.modal-body-footer{

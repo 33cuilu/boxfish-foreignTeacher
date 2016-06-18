@@ -34,19 +34,19 @@ var ModalManagement = React.createClass({
                                 <div className="modal-body-header">
                                     <div className="field">
                                         <label>报名日期:</label>
-                                        <DataPicker type="1" ref="createTime" value={info.createTime} />
+                                        <input type="text" className="readOnly"  readOnly={true} value={info.createTime} />
                                     </div>
                                     <div className="field">
                                         <label>审核日期:</label>
-                                        <DataPicker type="1" ref="auditTime" value={info.auditTime} />
+                                        <input type="text" className="readOnly" readOnly={true} value={info.auditTime} />
                                     </div>
                                     <div className="field">
                                         <label>面试时间:</label>
-                                        <TimePicker type="1" ref="interviewTime" value={info.interviewTime} />
+                                        <input type="text" className="readOnly" readOnly={true} value={info.interviewTime} />
                                     </div>
                                     <div className="field">
                                         <label>试讲时间:</label>
-                                        <TimePicker type="2" ref="triallectureTime" value={info.triallectureStartTime?`${info.triallectureStartTime} - ${info.triallectureEndTime}`:''} />
+                                        <input type="text" className="readOnly" value={info.triallectureStartTime?`${info.triallectureStartTime} - ${info.triallectureEndTime}`:''} />
                                     </div>
                                     <BasicInfo ref="basicInfo" value={info}/>
                                     <div className="field">
@@ -72,13 +72,6 @@ var ModalManagement = React.createClass({
     _submit : function () {
         console.log(this.props.info);
         let content = {
-            "createTime": this.refs.createTime.state.value,
-            "auditTimeStart": this.refs.auditTime.state.start,
-            "auditTimeEnd": this.refs.auditTime.state.end,
-            "triallectureStartTimeStart": this.refs.triallectureTime.state.start,
-            "triallectureStartTimeEnd": this.refs.triallectureTime.state.end,
-            "interviewTimeStart": this.refs.interviewTime.state.start,
-            "interviewTimeEnd": this.refs.interviewTime.state.end,
             "firstName": this.refs.basicInfo.state.firstName,
             "lastName": this.refs.basicInfo.state.lastName,
             "cellphoneNumber": this.refs.basicInfo.state.cellphoneNumber,

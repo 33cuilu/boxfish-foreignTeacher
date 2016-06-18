@@ -29,7 +29,7 @@ var ModalInterview = React.createClass({
                                 <div className="modal-body-header">
                                     <div className="field">
                                         <label>审核日期:</label>
-                                        <DataPicker type="1" ref="auditTime" value={this.props.info.auditTime}/>
+                                        <input className="readOnly" type="text" readOnly={true} value={this.props.info.auditTime}/>
                                     </div>
                                     <BasicInfo value={this.props.info} ref="basicInfo"/>
                                     <div className="field">
@@ -51,7 +51,6 @@ var ModalInterview = React.createClass({
     },
     _submit : function () {
         let content = {
-                "auditTime": this.refs.auditTime.state.value,
                 "occupation": this.refs.basicInfo.state.occupation,
                 "firstName": this.refs.basicInfo.state.firstName,
                 "lastName": this.refs.basicInfo.state.lastName,

@@ -31,7 +31,7 @@ var ModalExamine = React.createClass({
                                 <div className="modal-body-header">
                                     <div className="field">
                                         <label>报名日期:</label>
-                                        <DataPicker type="1" ref="createTime" value={info.createTime} sho/>
+                                        <input className="readOnly" type="text" value={info.createTime} readOnly={true}/>
                                     </div>
                                     <div className="field">
                                         <label>性别:</label>
@@ -56,7 +56,6 @@ var ModalExamine = React.createClass({
     },
     _submit : function () {
         let content = {
-            "createTime": this.refs.createTime.state.value,
             "firstName": this.refs.basicInfo.state.firstName,
             "lastName": this.refs.basicInfo.state.lastName,
             "cellphoneNumber": this.refs.basicInfo.state.cellphoneNumber,

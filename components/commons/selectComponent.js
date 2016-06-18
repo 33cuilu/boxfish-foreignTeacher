@@ -13,7 +13,7 @@ var SelectComponent = React.createClass({
         };
     },
     componentWillReceiveProps : function (nextProps) {
-        if(nextProps.value !== undefined){
+        if(nextProps.value !== undefined && nextProps.value !== null){
             this.setState({
                 value : nextProps.value+""
             });

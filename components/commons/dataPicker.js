@@ -23,7 +23,7 @@ var DataPicker = React.createClass({
         };
     },
     componentWillReceiveProps : function (nextProps) {
-        if(nextProps.value && nextProps.value !== this.props.value){
+        if(nextProps.value !== undefined){
             this.setState({
                 value : nextProps.value,
                 show : nextProps.value
@@ -59,14 +59,26 @@ var DataPicker = React.createClass({
     render : function () {
 
         return (
-            <div className="field" >
+            <div className="dataPicker field" >
                 <div style={{position:'relative', width:'220px'}}>
                     <input type="text" className="form-control datePicker" placeholder={this.props.name} readOnly={true}
                            style={{paddingLeft:'30px'}} value={this.state.show} ref="dateInput" />
-                    <i className="glyphicon glyphicon-calendar"  style={{position:'absolute',left:'10px',top:'8px'}}></i>
+                    <i className="glyphicon glyphicon-calendar"  style={{position:'absolute',left:'10px',top:'9px'}}></i>
                 </div>
+                <i className="glyphicon glyphicon-trash" style={{position:'absolute',right:'10px',top:'9px',cursor:'hand'}} onClick={this._clear}></i>
             </div>
         );
+    },
+    _clear : function () {
+        this.setState({
+            start : '',
+            end : '',
+            value : '',
+            show : ''
+        });
+        if(this.props.onChange){
+            this.props.onChange('');
+        }
     }
 });
 

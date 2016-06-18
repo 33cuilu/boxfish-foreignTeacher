@@ -56,19 +56,30 @@ var TimePicker = React.createClass({
     render : function () {
         let styleObj;
         if(this.props.type == "1"){
-            styleObj = {position:'relative', width:'180px'};
+            styleObj = {position:'relative', width:'200px'};
         }else{
-            styleObj = {position:'relative', width:'320px'};
+            styleObj = {position:'relative', width:'330px'};
         }
         return (
-            <div className="field" >
+            <div className="timePicker field" >
                 <div style={styleObj}>
                     <input type="text" className="form-control datePicker" value={this.state.value} placeholder={this.props.name}
                            readOnly={true} style={{paddingLeft:'30px'}} ref="dateInput" />
-                    <i className="glyphicon glyphicon-calendar"  style={{position:'absolute',left:'10px',top:'8px'}}></i>
+                    <i className="glyphicon glyphicon-calendar"  style={{position:'absolute',left:'10px',top:'9px',cursor: 'hand'}}></i>
                 </div>
+                <i className="glyphicon glyphicon-trash" style={{position:'absolute',right:'10px',top:'9px'}} onClick={this._clear}></i>
             </div>
         );
+    },
+    _clear : function () {
+        this.setState({
+            start : '',
+            end : '',
+            value : ''
+        });
+        if(this.props.onChange){
+            this.props.onChange('');
+        }
     }
 });
 

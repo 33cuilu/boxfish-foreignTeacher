@@ -70,11 +70,11 @@ var BasicInfo = React.createClass({
                 </div>
                 <div className="field">
                     <label>Last Name:</label>
-                    <input type="text" className="form-control" ref="lastName" value={info.lastName||''} onChange={this._changeLastName}/>
+                    <input type="text" className="emailInfo form-control" ref="lastName" value={info.lastName||''} onChange={this._changeLastName}/>
                 </div>
                 <div className="field">
                     <label>邮箱:</label>
-                    <label className="emailInfo">{info.email}</label>
+                    <input type="text" className="form-control" readOnly={true} value={info.email} />
                 </div>
                 <div className="field">
                     <label>学历:</label>

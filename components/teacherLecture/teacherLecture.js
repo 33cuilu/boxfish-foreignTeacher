@@ -702,6 +702,10 @@ var TeacherLecture = React.createClass({
      * @public (子组件"入池模态框"和"批量入池模态框"调用)
      */
     inPonds : function (num,reason) {
+        if(reason.length <=0){
+            alert("请填写入池理由!");
+            return;
+        }
         let emails = [];
         if(num == 1){
             emails.push(this.state.list[this.state.curRow].email);

@@ -30,7 +30,7 @@ var ModalLecture = React.createClass({
                                 <div className="modal-body-header">
                                     <div className="field">
                                         <label>面试时间:</label>
-                                        <TimePicker type="1" ref="interviewTime" value={this.props.info.interviewTime}/>
+                                        <input type="text" className="readOnly" readOnly={true} value={this.props.info.interviewTime}/>
                                     </div>
                                     <div className="field">
                                         <label>性别:</label>
@@ -52,7 +52,6 @@ var ModalLecture = React.createClass({
     _submit : function () {
         let content = {
                 "gender": this.refs.gender.state.value - 0,
-                "interviewTime": this.refs.interviewTime.state.value,
                 "email": this.props.info.email,
                 "firstName": this.refs.basicInfo.state.firstName,
                 "lastName": this.refs.basicInfo.state.lastName,
