@@ -432,10 +432,6 @@ var TeacherManagement = React.createClass({
      * @public (子组件"表格"调用)
      */
     arrangeAccount : function (i) {
-        if(this.state.nickName){
-            alert("该教师已经分配账号!");
-            return;
-        }
         let postHead = {
             url : arrangeAccountUrl,
             data : {
@@ -445,9 +441,10 @@ var TeacherManagement = React.createClass({
         Post(postHead).then(
             () => {
                 alert("分配成功");
+                this._getPage(this.state.curPage);
             },
             () => {
-                alert("分配账号失败,请重试!");
+                alert("分配账号失败!");
             }
         ).catch(
             (err) => {

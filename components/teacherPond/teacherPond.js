@@ -126,7 +126,7 @@ var TeacherPond = React.createClass({
                 "interviewScore" : v.interviewScore,
                 "trialScore" : v.trialScore,
                 "markScore" : v.markScore,
-                "stateStep" : getById(configData.stateStep, v.stepNoPassState),
+                "stepNoPassState" : v.stepNoPassState,
                 "operate" : (
                     <div>
                         <button className="btn btn-primary btn-xs" onClick={(e)=>{this.arrangeFish(i)}}>捕捞</button>
@@ -135,6 +135,7 @@ var TeacherPond = React.createClass({
                 )
             };
         });
+        console.log(tableList);
         return(
             <div className="TeacherLecture">
                 <ModalPond info={this.state.curInfo} callback={(e)=>{this._getPage(this.state.curPage)}} course={this.state.demoCourse}/>

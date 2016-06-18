@@ -1,5 +1,5 @@
 {
-  "ip" : "192.168.77.11:8099",
+  "ip" : "101.201.66.32:8099",
   "genderUndistributed":{
     "name":"性别",
     "arr": ["性别","男","女","未指定"],
@@ -242,8 +242,8 @@
   "pondTable" :{
     "thList" : ["报名日期","审核日期","面试时间","试讲时间","First Name","Last Name","国家","时区","手机号","邮箱","零食","面试评分","试讲评分","综合评分","不通过类型","操作"],
     "tbodyList" : ["checkbox","createTime","auditTime","interviewTime","triallectureTime","firstName","lastName","nationality",
-      "timezone","cellphoneNumber","email","snack","interviewScore","trialScore","markScore","notPassType","operate"],
+      "timezone","cellphoneNumber","email","snack","interviewScore","trialScore","markScore","stepNoPassState","operate"],
     "nullEntry" : {"checkbox": null,"createTime":null,"interviewTime":null,"firstName":null,"lastName":null,"nationality":null,"timezone":null,
-      "cellphoneNumber":null,"email":null,"interviewScore":null,"trialScore":null,"markScore":null,"notPassType":null,"operate":null}
+      "cellphoneNumber":null,"email":null,"interviewScore":null,"trialScore":null,"markScore":null,"stepNoPassState":null,"operate":null}
   }
 }
