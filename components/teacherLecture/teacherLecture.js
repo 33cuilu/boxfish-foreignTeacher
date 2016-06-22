@@ -5,6 +5,7 @@
 
 //引入插件
 import React from 'react';
+import store from 'store';
 import {Post,Get} from '../../util/ajax.js';
 
 //引入组件
@@ -94,7 +95,8 @@ var TeacherLecture = React.createClass({
             data : {
                 page : 0,
                 size : this.state.pageSize,
-                stateStep : this.state.stateStep
+                stateStep : this.state.stateStep,
+                token : store.get("accessToken")
             }
         };
 
@@ -228,7 +230,10 @@ var TeacherLecture = React.createClass({
      */
     _getTeacherAccounts : function (myUrl) {
         Get({
-            url : myUrl
+            url : myUrl,
+            data : {
+                token : store.get("accessToken")
+            }
         }).then(
             ({data}) => {
                 let newTeacherArr = ["教师账号"],
@@ -260,7 +265,10 @@ var TeacherLecture = React.createClass({
      */
     _getStudentAccounts : function (myUrl) {
         Get({
-            url : myUrl
+            url : myUrl,
+            data : {
+                token : store.get("accessToken")
+            }
         }).then(
             ({data}) => {
                 let newStudentArr = ["学生账号"],
@@ -291,7 +299,10 @@ var TeacherLecture = React.createClass({
      */
     _getCourse : function (myUrl) {
         Get({
-            url : myUrl
+            url : myUrl,
+            data : {
+                token : store.get("accessToken")
+            }
         }).then(
             ({data}) =>{
                 let newCourseArr = ["课程名称"],
@@ -325,7 +336,10 @@ var TeacherLecture = React.createClass({
      */
     _getTimeSlot : function (myUrl) {
         Get({
-            url : myUrl
+            url : myUrl,
+            data : {
+                token : store.get("accessToken")
+            }
         }).then(
             ({data}) => {
                 let newTimeArr = ["上课时间"],
@@ -377,7 +391,8 @@ var TeacherLecture = React.createClass({
             data = {
                 page : 0,
                 size : this.state.pageSize,
-                stateStep : this.state.stateStep
+                stateStep : this.state.stateStep,
+                token : store.get("accessToken")
             };
 
         (firstName.length >0) && (data.firstName = firstName);
@@ -394,8 +409,7 @@ var TeacherLecture = React.createClass({
             url : searchUrl,
             data : data
         };
-
-        console.log(getHead);
+        
         Get(getHead).then(
             ({data})=> {
                 let selectList = new Array(data.content.length);
@@ -559,7 +573,8 @@ var TeacherLecture = React.createClass({
         let getHead = {
             url : editLessonUrl,
             data : {
-                "email" : this.state.list[i].email
+                "email" : this.state.list[i].email,
+                "token" : store.get("accessToken")
             }
         };
         Get(getHead).then(
@@ -607,8 +622,8 @@ var TeacherLecture = React.createClass({
             alert("请在为每个项目打分!");
             return;
         }
-        let getHead = {
-                url: trialScoreUrl,
+        let postHead = {
+                url: `${trialScoreUrl}?token=${store.get("accessToken")}`,
                 data: {
                     "email": this.state.list[this.state.curRow].email,
                     "trialScoresMap": {
@@ -618,7 +633,7 @@ var TeacherLecture = React.createClass({
                 }
             };
 
-        Post(getHead).then(
+        Post(postHead).then(
             () => {
                 $(".trialScore .modal").modal('hide');
                 this._getPage(this.state.curPage);
@@ -640,6 +655,11 @@ var TeacherLecture = React.createClass({
         this.setState({
             curRow : i
         });
+        let trialScoreMap = this.state.list[i].trialScoresMap;
+        if(trialScoreMap.adaptAndLead == 0 || trialScoreMap.creativeAndExpression == 0){
+            alert("该教师试讲评分某一项为0,不能通过!");
+            return;
+        }
         $(".modalAdopt .modal").modal();
     },
 
@@ -649,7 +669,7 @@ var TeacherLecture = React.createClass({
      */
     adopt : function () {
         let postHead = {
-            url : passUrl,
+            url : `${passUrl}?token=${store.get("accessToken")}`,
             data : {
                 "email": this.state.list[this.state.curRow].email,
                 "stateStep": this.state.nextState
@@ -717,7 +737,7 @@ var TeacherLecture = React.createClass({
             return;
         }
         let postHead = {
-            url : inPondsUrl,
+            url : `${inPondsUrl}?token=${store.get("accessToken")}`,
             data : {
                 "emails": emails,
                 "noPassReason": reason
@@ -746,7 +766,8 @@ var TeacherLecture = React.createClass({
         let getHead = {
             url : infoUrl,
             data : {
-                email : this.state.list[i].email
+                email : this.state.list[i].email,
+                token : store.get("accessToken")
             }
         };
         Get(getHead).then(

@@ -5,9 +5,11 @@
 
 //引入插件
 import React from 'react';
+import store from 'store';
 
 //引入组件
 import Nav from './commons/nav.js';
+import ModalExit from './commons/modalExit.js';
 
 //引入样式
 import '../less/app.less';
@@ -16,12 +18,22 @@ import '../less/modal.less';
 import '../less/modalAdopt.less';
 
 var App = React.createClass({
-
+    contextTypes: {
+        router : React.PropTypes.object
+    },
+    componentWillMount: function () {
+        /*let token = store.get("accessToken");
+        if(!token){
+            alert("登录信息过期,请重新登录!");
+            this.context.router.push("login");
+        }*/
+    },
     render : function () {
         let Children = this.props.children;
         let curPath = this.props.location.pathname.slice(1);
         return (
             <div>
+                <ModalExit callback={this.logout}/>
                 <div id="left">
                     <div className="logo">
                         <img src="images/logo.jpg" style={{display:'inline-block'}}></img>
@@ -34,6 +46,9 @@ var App = React.createClass({
                         <div className="item">
                             <button className="btn" onClick={this._changeMenu}>
                                 <i className="glyphicon glyphicon-align-justify" ></i>
+                            </button>
+                            <button className="logout btn" onClick={this._arrangeLogout}>
+                                <i className="glyphicon glyphicon-log-out" ></i>
                             </button>
                         </div>
                     </div>
@@ -53,7 +68,17 @@ var App = React.createClass({
         }
         $("#left").toggleClass("slideNav_left");
         $("#right").toggleClass("slideNav_right");
+    },
+
+    _arrangeLogout : function () {
+        $(".modalExit .modal").modal();
+    },
+    logout : function () {
+        store.set("accessToken","");
+        $(".modalExit .modal").modal('hide');
+        this.context.router.push("login");
     }
+
 });
 
 export default App;

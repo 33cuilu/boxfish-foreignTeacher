@@ -10,8 +10,19 @@ export function Post({url,headers,data}) {
             url:url,
             headers:headers,
             data:JSON.stringify(data),
-            success:resolve,
-            error:reject
+            success: resolve,
+            error: reject,
+            complete : function(XMLHttpRequest){
+                if(XMLHttpRequest.responseJSON.returnCode == 401){
+                    let hash = window.location.hash;
+                    console.log(hash);
+                    if(hash.substr(0,3) == "#/?" || hash.substr(0,8) == "#/login?"){
+                        return;
+                    }
+                    alert("登录信息过期,请重新登录!");
+                    window.location.href = "/#/login";
+                }
+            }
         });
     });
 }

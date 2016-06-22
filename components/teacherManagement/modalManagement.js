@@ -5,11 +5,10 @@
 
 //引入插件
 import React from 'react'
-import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
+import store from 'store'
+import {Post} from '../../util/ajax.js';
 
 //引入组件
-import DataPicker from './../commons/dataPicker.js';
-import TimePicker from './../commons/timePicker.js';
 import SelectComponent from './../commons/selectComponent.js';
 import BasicInfo from './../commons/basicInfo.js';
 
@@ -90,10 +89,11 @@ var ModalManagement = React.createClass({
             "occupation": this.refs.basicInfo.state.occupation
         };
         //console.log(content);
-        Post({
-            url : submitUrl,
+        let postHead = {
+            url : `${submitUrl}?token=${store.get("accessToken")}`,
             data : content
-        }).then(
+        };
+        Post(postHead).then(
             () => {
                 //显示更改后的数据
                 $(".modalManagement .modal").modal('hide');

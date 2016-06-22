@@ -1,5 +1,5 @@
 {
-  "ip" : "101.201.66.32:8099",
+  "ip" : "online-api.boxfish.cn/teacher",
   "genderUndistributed":{
     "name":"性别",
     "arr": ["性别","男","女","未指定"],

@@ -4,11 +4,11 @@
  */
 
 //引入插件
-import React from 'react'
-import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
+import React from 'react';
+import store from 'store';
+import {Post} from '../../util/ajax.js';
 
 //引入组件
-import DataPicker from './../commons/dataPicker.js';
 import SelectComponent from './../commons/selectComponent.js';
 import BasicInfo from './../commons/basicInfo.js';
 
@@ -74,12 +74,11 @@ var ModalExamine = React.createClass({
             "schoolEndYear": this.refs.basicInfo.state.schoolEndYear,
             "teachingExperience": (this.refs.teachingExperience.state.value != -100)? +this.refs.teachingExperience.state.value : null
         };
-        console.log(content);
-
-        Post({
-            url : submitUrl,
+        let postHead = {
+            url : `${submitUrl}?token=${store.get("accessToken")}`,
             data : content
-        }).then(
+        };
+        Post(postHead).then(
             ({data}) => {
                 //显示更改后的数据
                 $(".modalExamine .modal").modal('hide');

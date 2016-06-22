@@ -32,28 +32,40 @@ var DataPicker = React.createClass({
     },
     componentDidMount : function () {
         //初始化表格的日期选择控件
+        let place = (this.props.place == null)? '.content' : this.props.place;
         if(this.props.type == "1"){
-            $(this.refs.dateInput).daterangepicker({ singleDatePicker: true , startDate: new Date()}, (start,end,label) => {
-                this.setState({
-                    value : start.format("YYYY-MM-DD HH:mm:ss"),
-                    show : start.format("YYYY-MM-DD")
-                });
-                if(this.props.onChange){
-                    this.props.onChange(start.format("YYYY-MM-DD HH:mm:ss"));
+            $(this.refs.dateInput).daterangepicker(
+                {
+                    parentEl: place,
+                    singleDatePicker: true,
+                    startDate: new Date()
+                },
+                (start,end,label) => {
+                    this.setState({
+                        value : start.format("YYYY-MM-DD HH:mm:ss"),
+                        show : start.format("YYYY-MM-DD")
+                    });
+                    if(this.props.onChange){
+                        this.props.onChange(start.format("YYYY-MM-DD HH:mm:ss"));
+                    }
                 }
-            });
+            );
         }else{
-            $(this.refs.dateInput).daterangepicker({},(start, end, label)=>{
-                this.setState({ //每次将新的日期赋给状态
-                    start: start.format("YYYY-MM-DD HH:mm:ss"),
-                    end: end.format("YYYY-MM-DD HH:mm:ss"),
-                    value: `${start.format("YYYY-MM-DD HH:mm:ss")} - ${end.format("YYYY-MM-DD HH:mm:ss")}`,
-                    show: `${start.format("YYYY-MM-DD")} - ${end.format("YYYY-MM-DD")}`
+            $(this.refs.dateInput).daterangepicker(
+                {
+                    parentEl: place
+                },
+                (start, end, label)=>{
+                    this.setState({ //每次将新的日期赋给状态
+                        start: start.format("YYYY-MM-DD HH:mm:ss"),
+                        end: end.format("YYYY-MM-DD HH:mm:ss"),
+                        value: `${start.format("YYYY-MM-DD HH:mm:ss")} - ${end.format("YYYY-MM-DD HH:mm:ss")}`,
+                        show: `${start.format("YYYY-MM-DD")} - ${end.format("YYYY-MM-DD")}`
+                    });
+                    if(this.props.onChange){
+                        this.props.onChange(`${start.format("YYYY-MM-DD h:mm:ss")} - ${end.format("YYYY-MM-DD h:mm:ss")}`);
+                    }
                 });
-                if(this.props.onChange){
-                    this.props.onChange(`${start.format("YYYY-MM-DD h:mm:ss")} - ${end.format("YYYY-MM-DD h:mm:ss")}`);
-                }
-            });
         }
     },
     render : function () {

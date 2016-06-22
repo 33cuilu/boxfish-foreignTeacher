@@ -5,6 +5,7 @@
 
 //引入插件
 import React from 'react';
+import store from 'store';
 import {Post,Get,getById} from '../../util/ajax.js';
 
 //引入组件
@@ -68,7 +69,8 @@ var TeacherExamine = React.createClass({
             data : {
                 page : 0,
                 size : this.state.pageSize,
-                stateStep : this.state.stateStep
+                stateStep : this.state.stateStep,
+                token : store.get("accessToken")
             }
         };
         Get(getHead).then(
@@ -194,7 +196,8 @@ var TeacherExamine = React.createClass({
             data = {
                 page : 0,
                 size : this.state.pageSize,
-                stateStep : this.state.stateStep
+                stateStep : this.state.stateStep,
+                token : store.get("accessToken")
             };
         (firstName.length >0) && (data.firstName = firstName);
         (lastName.length >0) && (data.lastName=lastName);
@@ -211,7 +214,6 @@ var TeacherExamine = React.createClass({
             data : data
         };
 
-        console.log(data);
         Get(getHead).then(
             ({data})=> {
                 let selectList = new Array(data.content.length);
@@ -273,7 +275,7 @@ var TeacherExamine = React.createClass({
                     });
                 }
             },
-            () => {
+            ({returnMsg}) => {
                 console.log("获取教师列表失败!");
             }
         ).catch((err)=>{
@@ -375,7 +377,7 @@ var TeacherExamine = React.createClass({
      */
     adopt : function () {
         let postHead = {
-            url : passUrl,
+            url : `${passUrl}?token=${store.get("accessToken")}`,
             data : {
                 "email": this.state.list[this.state.curRow].email,
                 "stateStep": this.state.nextState
@@ -443,13 +445,14 @@ var TeacherExamine = React.createClass({
             alert("请选中入池的教师!");
             return;
         }
-        Post({
-            url : inPondsUrl,
+        let postHead = {
+            url : `${inPondsUrl}?token=${store.get("accessToken")}`,
             data : {
                 "emails": emails,
                 "noPassReason": reason
             }
-        }).then(
+        };
+        Post(postHead).then(
             () => {
                 $(".modalInPond .modal").modal('hide');
                 $(".modalInPonds .modal").modal('hide');
@@ -470,12 +473,14 @@ var TeacherExamine = React.createClass({
             curRow : i
         });
         let curEmail = this.state.list[i].email;
-        Get({
+        let getHead = {
             url : infoUrl,
             data : {
-                email : curEmail
+                email : curEmail,
+                token : store.get("accessToken")
             }
-        }).then(
+        };
+        Get(getHead).then(
             ({data})=>{
                 if(data){
                     this.setState({
@@ -509,7 +514,7 @@ var TeacherExamine = React.createClass({
             return;
         }
         let postHead = {
-            url : updateLevelUrl,
+            url : `${updateLevelUrl}?token=${store.get("accessToken")}`,
             data : {
                 "emails": emails,
                 "changeLevel":1,

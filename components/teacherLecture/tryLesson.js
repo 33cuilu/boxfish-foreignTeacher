@@ -5,6 +5,7 @@
 
 //引入插件
 import React from 'react';
+import store from 'store';
 import {Post,getCourseTypeById,getById} from '../../util/ajax.js';
 
 //引入组件
@@ -96,7 +97,7 @@ var TryLesson = React.createClass({
         }
 
         Post({
-            url : submitUrl,
+            url : `${submitUrl}?token=${store.get("accessToken")}`,
             data : data
         }).then(
             () => {

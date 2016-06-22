@@ -4,11 +4,11 @@
  */
 
 //引入插件
-import React from 'react'
-import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
+import React from 'react';
+import store from 'store';
+import {Post} from '../../util/ajax.js';
 
 //引入组件
-import DataPicker from './../commons/dataPicker.js';
 import SelectComponent from './../commons/selectComponent.js';
 import BasicInfo from './../commons/basicInfo.js';
 
@@ -69,10 +69,10 @@ var ModalInterview = React.createClass({
                 "teachingExperience": (this.refs.teachingExperience.state.value != -100)? +this.refs.teachingExperience.state.value : null
             },
             postHead = {
-                url : submitUrl,
+                url : `${submitUrl}?token=${store.get("accessToken")}`,
                 data : content
             };
-        console.log(content);
+
         Post(postHead).then(
             () => {
                 //显示更改后的数据

@@ -10,7 +10,7 @@ import {Router, Route, browserHistory,hashHistory,IndexRoute} from 'react-router
 
 //引入组件
 import app from './components/app.js';
-import signIn from './components/signIn.js';
+import login from './components/login.js';
 import teacherManagement from './components/teacherManagement/teacherManagement.js';
 import teacherExamine from './components/teacherExamine/teacherExamine.js';
 import teacherInterview from './components/teacherInterview/teacherInterview.js';
@@ -22,13 +22,17 @@ import './less/index.less';
 
 ReactDOM.render(
     <Router history = {hashHistory}>
-        <Route path="/" component = {app} >
-            <IndexRoute component={teacherManagement} />
-            <Route path = "teacherManagement" component={teacherManagement} />
-            <Route path = "teacherExamine" component={teacherExamine} />
-            <Route path = "teacherInterview" component={teacherInterview} />
-            <Route path = "teacherLecture" component={teacherLecture} />
-            <Route path = "teacherPond" component={teacherPond} />
+        <Route path="/">
+            <IndexRoute component={login} />
+            <Route path="login" component={login} />
+            <Route path="management" component = {app} >
+                <IndexRoute component={teacherManagement} />
+                <Route path = "/teacherManagement" component={teacherManagement} />
+                <Route path = "/teacherExamine" component={teacherExamine} />
+                <Route path = "/teacherInterview" component={teacherInterview} />
+                <Route path = "/teacherLecture" component={teacherLecture} />
+                <Route path = "/teacherPond" component={teacherPond} />
+            </Route>
         </Route>
     </Router>,
     document.getElementById('app')

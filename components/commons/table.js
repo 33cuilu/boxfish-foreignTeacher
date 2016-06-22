@@ -43,7 +43,7 @@ var Table = React.createClass({
         tableData = tableData.map((v,i) => {
             let entry=null;
             entry = tbodyList.map((attr,j) =>{
-                let temp = v[attr]?v[attr]:"";
+                let temp = (v[attr] == null)?"":v[attr];
                 return (
                     <td key={`td${j}`}>
                         {temp}

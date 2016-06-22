@@ -4,11 +4,11 @@
  */
 
 //引入插件
-import React from 'react'
-import {Post,Get,transformArrayToObj} from '../../util/ajax.js';
+import React from 'react';
+import store from 'store';
+import {Post} from '../../util/ajax.js';
 
 //引入组件
-import TimePicker from './../commons/timePicker.js';
 import SelectComponent from './../commons/selectComponent.js';
 import BasicInfo from './../commons/basicInfo.js';
 
@@ -69,10 +69,10 @@ var ModalLecture = React.createClass({
                 "school": this.refs.basicInfo.state.school
             },
             postHead = {
-                url : submitUrl,
+                url : `${submitUrl}?token=${store.get("accessToken")}`,
                 data : content
             };
-        console.log(postHead);
+
         Post(postHead).then(
             ({data}) => {
                 //显示更改后的数据

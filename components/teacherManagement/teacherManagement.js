@@ -6,6 +6,7 @@
 //引入插件
 import React from 'react';
 import {Post,Get,getById} from '../../util/ajax.js';
+import store from 'store';
 
 //引入组件
 import ModalManagement from './modalManagement.js';
@@ -68,7 +69,8 @@ var TeacherManagement = React.createClass({
             data : {
                 page : 0,
                 size : this.state.pageSize,
-                stateStep : this.state.stateStep
+                stateStep : this.state.stateStep,
+                token : store.get("accessToken")
             }
         };
         Get(getHead).then(
@@ -209,7 +211,8 @@ var TeacherManagement = React.createClass({
             data = {
                 page : 0,
                 size : this.state.pageSize,
-                stateStep : this.state.stateStep
+                stateStep : this.state.stateStep,
+                token : store.get("accessToken")
             };
         (firstName.length >0) && (data.firstName = firstName);
         (lastName.length >0) && (data.lastName=lastName);
@@ -369,7 +372,7 @@ var TeacherManagement = React.createClass({
             return;
         }
         let postHead = {
-            url : batchIsActiveUrl,
+            url : `${batchIsActiveUrl}?token=${store.get("accessToken")}`,
             data : {
                 "emails": emails,
                 "stateValue": state
@@ -433,7 +436,7 @@ var TeacherManagement = React.createClass({
      */
     arrangeAccount : function (i) {
         let postHead = {
-            url : arrangeAccountUrl,
+            url : `${arrangeAccountUrl}?token=${store.get("accessToken")}`,
             data : {
                 "email": this.state.list[i].email
             }
@@ -478,8 +481,8 @@ var TeacherManagement = React.createClass({
             alert("请为每个选项打分!");
             return;
         }
-        let getHead = {
-                url : interviewScoreUrl,
+        let postHead = {
+                url : `${interviewScoreUrl}?token=${store.get("accessToken")}`,
                 data : {
                     "email" : this.state.list[this.state.curRow].email,
                     "nationalityLevel": id1,
@@ -488,7 +491,7 @@ var TeacherManagement = React.createClass({
                     "teachingExperience": id4
                 }
             };
-        Post(getHead).then(
+        Post(postHead).then(
             () => {
                 $(".interviewScore .modal").modal('hide');
                 this._getPage(this.state.curPage);
@@ -526,8 +529,8 @@ var TeacherManagement = React.createClass({
             alert("请在为每个项目打分!");
             return;
         }
-        let getHead = {
-            url: trialScoreUrl,
+        let postHead = {
+            url: `${trialScoreUrl}?token=${store.get("accessToken")}`,
             data: {
                 "email": this.state.list[this.state.curRow].email,
                 "trialScoresMap": {
@@ -537,7 +540,7 @@ var TeacherManagement = React.createClass({
             }
         };
 
-        Post(getHead).then(
+        Post(postHead).then(
             () => {
                 $(".trialScore .modal").modal('hide');
                 this._getPage(this.state.curPage);
@@ -562,7 +565,8 @@ var TeacherManagement = React.createClass({
         let getHead = {
             url : infoUrl,
             data : {
-                "email" : this.state.list[i].email
+                "email" : this.state.list[i].email,
+                "token" : store.get("accessToken")
             }
         };
         Get(getHead).then(

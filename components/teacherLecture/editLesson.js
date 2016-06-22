@@ -5,6 +5,7 @@
 
 //引入插件
 import React from 'react';
+import store from 'store';
 import {Post,getCourseTypeById,getById} from '../../util/ajax.js';
 
 //引入组件
@@ -79,18 +80,18 @@ var EditLesson = React.createClass({
             alert("请选择试讲日期!");
             return;
         }
-        console.log(data);
+
         for(let attr in data){
             if(attr!="courseType" && attr!="courseName" && !data[attr]){
                 alert(`您有未选择的信息${attr},请填写!`);
                 return;
             }
         }
-
-        Post({
-            url : submitUrl,
+        let postHead = {
+            url : `${submitUrl}?token=${store.get("accessToken")}`,
             data : data
-        }).then(
+        };
+        Post(postHead).then(
             () => {
                 //显示更改后的时间
                 $(".editLesson .modal").modal('hide');

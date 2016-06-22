@@ -5,6 +5,7 @@
 
 //引入插件
 import React from 'react';
+import store from 'store';
 import {Post,Get,getById} from '../../util/ajax.js';
 
 //引入组件
@@ -68,7 +69,8 @@ var TeacherPond = React.createClass({
             data : {
                 page : 0,
                 size : this.state.pageSize,
-                stateStep : this.state.stateStep
+                stateStep : this.state.stateStep,
+                token : store.get("accessToken")
             }
         };
         Get(getHead).then(
@@ -176,7 +178,10 @@ var TeacherPond = React.createClass({
      */
     _getCourse : function (myUrl) {
         Get({
-            url : myUrl
+            url : myUrl,
+            data : {
+                token : store.get("accessToken")
+            }
         }).then(
             ({data}) =>{
                 let newCourseArr = ["课程名称"],
@@ -235,7 +240,8 @@ var TeacherPond = React.createClass({
             data = {
                 page : 0,
                 size : this.state.pageSize,
-                stateStep : this.state.stateStep
+                stateStep : this.state.stateStep,
+                token : store.get("accessToken")
             };
 
 
@@ -416,7 +422,7 @@ var TeacherPond = React.createClass({
     fish : function () {
         let emails = [this.state.list[this.state.curRow].email];
         let postHead = {
-            url : fishUrl,
+            url : `${fishUrl}?token=${store.get("accessToken")}`,
             data : {
                 "emails" : emails
             }
@@ -448,10 +454,11 @@ var TeacherPond = React.createClass({
         let getHead = {
             url : infoUrl,
             data : {
-                email : this.state.list[i].email
+                email : this.state.list[i].email,
+                token : store.get("accessToken")
             }
         };
-        console.log(getHead);
+
         Get(getHead).then(
             ({data})=>{
                 if(data){

@@ -6,6 +6,7 @@
 
 //引入插件
 import React from 'react';
+import store from 'store';
 import {Post,Get,getById} from '../../util/ajax.js';
 
 //引入组件
@@ -26,8 +27,8 @@ import "../../less/teacherInterview.less";
 //引入配置文件
 var configData = require('../../config/config.json');
 
-var searchUrl = `http://${configData.ip}/web/teacherOralEn/teacherStepList?`;
-var infoUrl = `http://${configData.ip}/web/teacherOralEn/teacherDetail?`;
+var searchUrl = `http://${configData.ip}/web/teacherOralEn/teacherStepList`;
+var infoUrl = `http://${configData.ip}/web/teacherOralEn/teacherDetail`;
 var inPondsUrl = `http://${configData.ip}/web/teacherOralEn/putPond`;
 var passUrl = `http://${configData.ip}/web/teacherOralEn/updateStatePass`;
 var genderUrl = `http://${configData.ip}/web/teacherOralEn/updateGender`;
@@ -76,11 +77,11 @@ var TeacherInterview = React.createClass({
             data : {
                 page : 0,
                 size : this.state.pageSize,
-                stateStep : this.state.stateStep
+                stateStep : this.state.stateStep,
+                token : store.get("accessToken")
             }
         };
 
-        console.log(getHead);
         Get(getHead).then(
             ({data})=> {
                 if (data == null) {
@@ -125,7 +126,7 @@ var TeacherInterview = React.createClass({
                 "cellphoneNumber" : v.cellphoneNumber,
                 "email" : v.email,
                 "nationalityLevel" : getById(configData.nationalityLevel, v.nationalityLevel),
-                "interviewTime" : <TimePicker type="1" value={v.interviewTime} onChange={(date)=>{this.updateInterviewTime(i,date)}}/>,
+                "interviewTime" : <TimePicker type="1" value={v.interviewTime} place=".tableContainer" unclear={true} onChange={(date)=>{this.updateInterviewTime(i,date)}}/>,
                 "gender" : <SelectComponent contentData={configData.gender} value={v.gender} onChange={(value)=>{this.updateGender(i,value)}}/>,
                 "snack" : getById(configData.snack, v.snack),
                 "spokenLevel" : getById(configData.spokenLevel, v.spokenLevel),
@@ -228,7 +229,8 @@ var TeacherInterview = React.createClass({
             data = {
                 page : 0,
                 size : this.state.pageSize,
-                stateStep : this.state.stateStep
+                stateStep : this.state.stateStep,
+                token : store.get("accessToken")
             };
 
         (auditTimeStart.length >0) && (data.auditTimeStart=auditTimeStart) &&(data.auditTimeEnd=auditTimeEnd);
@@ -250,8 +252,7 @@ var TeacherInterview = React.createClass({
             url : searchUrl,
             data : data
         };
-
-        console.log(data);
+        
         Get(getHead).then(
             ({data})=> {
                 if (data == null) {
@@ -399,7 +400,7 @@ var TeacherInterview = React.createClass({
      */
     updateInterviewTime : function (i,date) {
         let postHead = {
-                url : interviewTimeUrl,
+                url : `${interviewTimeUrl}?token=${store.get("accessToken")}`,
                 data : {
                     "email": this.state.list[i].email,
                     "dateColumn": 1,
@@ -431,10 +432,10 @@ var TeacherInterview = React.createClass({
             return;
         }
         let postHead = {
-                url : genderUrl,
+                url : `${genderUrl}?token=${store.get("accessToken")}`,
                 data : {
                     "email": this.state.list[i].email,
-                    "gender": value - 0   ///////??????????????????
+                    "gender": value - 0
                 }
             };
         Post(postHead).then(
@@ -467,7 +468,7 @@ var TeacherInterview = React.createClass({
      */
     adopt : function () {
         let postHead = {
-                url : passUrl,
+                url : `${passUrl}?token=${store.get("accessToken")}`,
                 data : {
                     "email": this.state.list[this.state.curRow].email,
                     "stateStep": this.state.nextState
@@ -531,7 +532,7 @@ var TeacherInterview = React.createClass({
             return;
         }
         let postHead = {
-            url : inPondsUrl,
+            url : `${inPondsUrl}?token=${store.get("accessToken")}`,
             data : {
                 "emails": emails,
                 "noPassReason": reason
@@ -560,7 +561,8 @@ var TeacherInterview = React.createClass({
         let getHead = {
             url : infoUrl,
             data : {
-                email : this.state.list[i].email
+                email : this.state.list[i].email,
+                token : store.get("accessToken")
             }
         };
         Get(getHead).then(
@@ -594,7 +596,7 @@ var TeacherInterview = React.createClass({
             return;
         }
         let postHead = {
-            url: updateLevelUrl,
+            url: `${updateLevelUrl}?token=${store.get("accessToken")}`,
             data : {
                 "emails": emails,
                 "changeLevel":0,
