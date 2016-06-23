@@ -74,7 +74,7 @@ var ModalLecture = React.createClass({
             };
 
         Post(postHead).then(
-            ({data}) => {
+            () => {
                 //显示更改后的数据
                 $(".modalLecture .modal").modal('hide');
                 this.props.callback();

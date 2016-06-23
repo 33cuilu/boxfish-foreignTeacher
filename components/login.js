@@ -14,7 +14,7 @@ import {Post} from './../util/ajax.js';
 import '../less/login.less';
 
 var configData = require("./../config/config.json");
-//var loginUrl = 'http://192.168.77.171:8099/web/common/adminLogin';
+var loginUrl = `http://${configData.ip}/web/common/adminLogin`;
 
 var Login = React.createClass({
     contextTypes: {
@@ -53,15 +53,15 @@ var Login = React.createClass({
             });
             return;
         }
-        if(name != "admin" || password != "admin"){
-            this.setState({
-                errInfo: "用户名或密码错误",
-                showErr: true
-            });
-            return;
-        }
-        this.context.router.push("management");
-        return;
+        // if(name != "admin" || password != "admin"){
+        //     this.setState({
+        //         errInfo: "用户名或密码错误",
+        //         showErr: true
+        //     });
+        //     return;
+        // }
+        // this.context.router.push("management");
+        // return;
         let postHead = {
             url : loginUrl,
             data : {

@@ -89,7 +89,7 @@ var TeacherExamine = React.createClass({
                     });
                 }
             },
-            ()=> {
+            (err)=> {
                 alert("查询失败!");
                 this.setState({
                     getHead : getHead
@@ -384,7 +384,11 @@ var TeacherExamine = React.createClass({
             }
         };
         Post(postHead).then(
-            ({returnMsg}) => {
+            ({returnCode,returnMsg}) => {
+                if(returnCode == 401){
+                    $(".modalExamineAdopt .modal").modal('hide');
+                    return;
+                }
                 if(returnMsg !== "success"){
                     /*此处需要判断返回信息,决定提示信息*/
                     alert(returnMsg);
@@ -460,7 +464,11 @@ var TeacherExamine = React.createClass({
             },
             () => {
                 alert("入池失败,请重试!");
-            }).catch();
+            }).catch(
+            (err)=>{
+                console.log(err);
+            }
+        );
     },
 
     /**
@@ -481,7 +489,9 @@ var TeacherExamine = React.createClass({
             }
         };
         Get(getHead).then(
-            ({data})=>{
+            ({data, returnCode})=>{
+                if(returnCode == 401)
+                    return;
                 if(data){
                     this.setState({
                         curInfo : data

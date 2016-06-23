@@ -475,9 +475,12 @@ var TeacherInterview = React.createClass({
                 }
             };
         Post(postHead).then(
-            ({returnMsg}) => {
+            ({returnCode, returnMsg}) => {
+                if(returnCode == 401){
+                    $(".modalInterviewAdopt .modal").modal('hide');
+                    return;
+                }
                 if(returnMsg !== "success"){
-                    /*此处需要判断返回信息,决定提示信息*/
                     alert(returnMsg);
                     $(".modalInterviewAdopt .modal").modal('hide');
                 }else{
@@ -539,14 +542,18 @@ var TeacherInterview = React.createClass({
             }
         };
         Post(postHead).then(
-            ({code,data}) => {
+            () => {
                 $(".modalInPond .modal").modal('hide');
                 $(".modalInPonds .modal").modal('hide');
                 this._getPage(this.state.curPage);
             },
             () => {
                 alert("入池失败,请重试!");
-            }).catch();
+            }).catch(
+            (err) => {
+                console.log(err);
+            }
+        );
     },
 
     /**
@@ -566,7 +573,9 @@ var TeacherInterview = React.createClass({
             }
         };
         Get(getHead).then(
-            ({data})=>{
+            ({data,returnCode})=>{
+                if(returnCode == 401)
+                    return;
                 if(data){
                     this.setState({
                         curInfo : data

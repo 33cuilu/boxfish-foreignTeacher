@@ -79,8 +79,7 @@ var ModalExamine = React.createClass({
             data : content
         };
         Post(postHead).then(
-            ({data}) => {
-                //显示更改后的数据
+            () => {
                 $(".modalExamine .modal").modal('hide');
                 this.props.callback();
             },

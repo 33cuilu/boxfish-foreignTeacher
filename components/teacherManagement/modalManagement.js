@@ -88,7 +88,6 @@ var ModalManagement = React.createClass({
             "schoolEndYear": this.refs.basicInfo.state.schoolEndYear,
             "occupation": this.refs.basicInfo.state.occupation
         };
-        //console.log(content);
         let postHead = {
             url : `${submitUrl}?token=${store.get("accessToken")}`,
             data : content

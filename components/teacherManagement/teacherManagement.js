@@ -378,7 +378,6 @@ var TeacherManagement = React.createClass({
                 "stateValue": state
             }
         };
-        //console.log(emails);
         Post(postHead).then(
             () => {
                 $(".modalManagementFrozen .modal").modal('hide');
@@ -442,7 +441,9 @@ var TeacherManagement = React.createClass({
             }
         };
         Post(postHead).then(
-            () => {
+            ({returnCode}) => {
+                if(returnCode == 401)
+                    return;
                 alert("分配成功");
                 this._getPage(this.state.curPage);
             },
@@ -570,7 +571,9 @@ var TeacherManagement = React.createClass({
             }
         };
         Get(getHead).then(
-            ({data})=>{
+            ({data, returnCode})=>{
+                if(returnCode == 401)
+                    return;
                 if(data){
                     this.setState({
                         curInfo : data

@@ -578,7 +578,9 @@ var TeacherLecture = React.createClass({
             }
         };
         Get(getHead).then(
-            ({data})=>{
+            ({data,returnCode})=>{
+                if(returnCode == 401)
+                    return;
                 if(data.startTime.length <= 0){
                     alert("未安排试讲,系统错误,请反馈给开发人员!");
                 }else{
@@ -656,7 +658,7 @@ var TeacherLecture = React.createClass({
             curRow : i
         });
         let trialScoreMap = this.state.list[i].trialScoresMap;
-        if(trialScoreMap.adaptAndLead == 0 || trialScoreMap.creativeAndExpression == 0){
+        if( trialScoreMap == null || trialScoreMap.adaptAndLead == 0 || trialScoreMap.creativeAndExpression == 0){
             alert("该教师试讲评分某一项为0,不能通过!");
             return;
         }
@@ -676,7 +678,11 @@ var TeacherLecture = React.createClass({
             }
         };
         Post(postHead).then(
-            ({returnMsg}) => {
+            ({returnCode, returnMsg}) => {
+                if(returnCode == 401){
+                    $(".modalAdopt .modal").modal('hide');
+                    return;
+                }
                 if(returnMsg !== "success"){
                     /*此处需要判断返回信息,决定提示信息*/
                     alert(returnMsg);
@@ -744,7 +750,7 @@ var TeacherLecture = React.createClass({
             }
         };
         Post(postHead).then(
-            ({code,data}) => {
+            () => {
                 $(".modalInPond .modal").modal('hide');
                 $(".modalInPonds .modal").modal('hide');
                 this._getPage(this.state.curPage);
@@ -771,7 +777,9 @@ var TeacherLecture = React.createClass({
             }
         };
         Get(getHead).then(
-            ({data})=>{
+            ({data, returnCode})=>{
+                if(returnCode == 401)
+                    return;
                 if(data){
                     this.setState({
                         curInfo : data

@@ -12,10 +12,9 @@ export function Post({url,headers,data}) {
             data:JSON.stringify(data),
             success: resolve,
             error: reject,
-            complete : function(XMLHttpRequest){
+            complete: function(XMLHttpRequest){
                 if(XMLHttpRequest.responseJSON.returnCode == 401){
                     let hash = window.location.hash;
-                    console.log(hash);
                     if(hash.substr(0,3) == "#/?" || hash.substr(0,8) == "#/login?"){
                         return;
                     }
@@ -36,7 +35,17 @@ export function Get({url,headers,data}) {
             headers:headers,
             data:data,
             success:resolve,
-            error:reject
+            error:reject,
+            complete: function(XMLHttpRequest){
+                if(XMLHttpRequest.responseJSON.returnCode == 401){
+                    let hash = window.location.hash;
+                    if(hash.substr(0,3) == "#/?" || hash.substr(0,8) == "#/login?"){
+                        return;
+                    }
+                    alert("登录信息过期,请重新登录!");
+                    window.location.href = "/#/login";
+                }
+            }
         });
     });
 }

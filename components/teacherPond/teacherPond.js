@@ -460,7 +460,9 @@ var TeacherPond = React.createClass({
         };
 
         Get(getHead).then(
-            ({data})=>{
+            ({data, returnCode})=>{
+                if(returnCode == 401)
+                    return;
                 if(data){
                     this.setState({
                         curInfo : data
