@@ -31,18 +31,18 @@ var Table = React.createClass({
 
         //填写表头
         thList = thList.map((v, i) => {
-            return (<th key={i} >{v}</th>);
+            return (<th key={i+1} >{v}</th>);
         });
         if (tableStyle.hasCheckBox) {
-            thList = <tr> <th><input type="checkbox" checked={this.state.selectAll} onChange={(e)=>{this._selectAll(e)}}/></th> {thList}  </tr>;
+            thList.unshift(<th key={0}><input type="checkbox" checked={this.state.selectAll} onChange={(e)=>{this._selectAll(e)}}/></th>);
+            thList = (<tr>{thList}</tr>);
         }else{
-            thList = <tr>{thList}</tr>
+            thList = (<tr>{thList}</tr>)
         }
 
         //填写表体
         tableData = tableData.map((v,i) => {
-            let entry=null;
-            entry = tbodyList.map((attr,j) =>{
+            let entry = tbodyList.map((attr,j) =>{
                 let temp = (v[attr] == null)?"":v[attr];
                 return (
                     <td key={`td${j}`}>

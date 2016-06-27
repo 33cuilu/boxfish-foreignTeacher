@@ -30,6 +30,10 @@ var ModalInPond = React.createClass({
         );
     },
     _submit : function (){
+        if(!this.refs.reason.value||this.refs.reason.value.trim()==""){
+            alert("请填写入池理由!");
+            return;
+        }
         this.props.callback(1,this.refs.reason.value);
     }
 });

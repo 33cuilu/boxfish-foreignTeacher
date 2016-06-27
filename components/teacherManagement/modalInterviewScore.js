@@ -21,8 +21,25 @@ var ModalInterviewScore = React.createClass({
             nationalityLevel : -100,
             spokenLevel : -100,
             snack : -100,
-            teachingExperience : -100
+            teachingExperience : -100,
+            interviewScore : {
+                nationalityLevel : -100,
+                snack : -100,
+                spokenLevel :-100,
+                teachingExperience : -100
+            }
         }
+    },
+    componentWillReceiveProps : function(nextProps){
+        if(nextProps.defaultContent){
+            this.setState({
+                nationalityLevel : nextProps.defaultContent.nationalityLevel,
+                spokenLevel : nextProps.defaultContent.spokenLevel,
+                snack : nextProps.defaultContent.snack,
+                teachingExperience : nextProps.defaultContent.teachingExperience
+        });
+        }
+
     },
     render : function(){
         return (
@@ -32,19 +49,19 @@ var ModalInterviewScore = React.createClass({
                         <div className="modal-content">
                             <div className="modal-body">
                                     <label>国家级别:</label>
-                                    <SelectComponent contentData={configData.nationalityLevel} ref="nationalityLevel"
+                                    <SelectComponent value={this.state.nationalityLevel} contentData={configData.nationalityLevel} ref="nationalityLevel"
                                                      onChange={(value)=>{this.changeNationalityLevel(value)}}/>
                                 <span>{getScoreById(configData.nationalityLevel,+this.state.nationalityLevel)}</span>
                                     <label>零食:</label>
-                                    <SelectComponent contentData={configData.snack} ref="snack"
+                                    <SelectComponent value={this.state.snack} contentData={configData.snack} ref="snack"
                                                      onChange={(value)=>{this.changeSnack(value)}}/>
                                 <span>{getScoreById(configData.snack, +this.state.snack)}</span>
                                     <label>口语水平:</label>
-                                    <SelectComponent contentData={configData.spokenLevel} ref="spokenLevel"
+                                    <SelectComponent value={this.state.spokenLevel} contentData={configData.spokenLevel} ref="spokenLevel"
                                                      onChange={(value)=>{this.changeSpokenLevel(value)}}/>
                                 <span>{getScoreById(configData.spokenLevel, +this.state.spokenLevel)}</span>
                                     <label>教学经验:</label>
-                                    <SelectComponent ref="teachingExperience" contentData={configData.experienceDetail}
+                                    <SelectComponent value={this.state.teachingExperience} ref="teachingExperience" contentData={configData.experienceDetail}
                                                      onChange={(value)=>{this.changeExperience(value)}}/>
                                 <span>{getScoreById(configData.experienceDetail, +this.state.teachingExperience)}</span>
                             </div>

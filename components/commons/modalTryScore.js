@@ -16,6 +16,25 @@ import '../../less/modalTryScore.less';
 var configData = require("../../config/config.json");
 
 var ModalTryScore = React.createClass({
+    getInitialState : function () {
+        return {
+            creativeAndExpression : -100,
+            adaptAndLead : -100,
+            lectureScore : {
+                creativeAndExpression : -100,
+                adaptAndLead : -100
+            }
+        }
+    },
+    componentWillReceiveProps : function(nextProps){
+        if(nextProps.defaultContent){
+            this.setState({
+                creativeAndExpression : nextProps.defaultContent.creativeAndExpression,
+                adaptAndLead : nextProps.defaultContent.adaptAndLead
+            });
+        }
+
+    },
     render : function(){
         return(
             <div className="trialScore">
@@ -24,9 +43,9 @@ var ModalTryScore = React.createClass({
                         <div className="modal-content">
                             <div className="modal-body">
                                 <label>创意和表达:</label>
-                                <SelectComponent ref="creativeAndExpression" contentData={configData.creativeAndExpression} />
+                                <SelectComponent ref="creativeAndExpression" value={this.state.creativeAndExpression} contentData={configData.creativeAndExpression} />
                                 <label>适应和引导:</label>
-                                <SelectComponent ref="adaptAndLead" contentData={configData.adaptAndLead} />
+                                <SelectComponent ref="adaptAndLead" value={this.state.adaptAndLead} contentData={configData.adaptAndLead} />
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-primary" onClick={this._submit} >确定</button>

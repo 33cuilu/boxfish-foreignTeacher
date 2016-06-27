@@ -1,6 +1,18 @@
 /**
  * Created by Utopia on 2016/3/9.
  */
+import {hashHistory} from 'react-router';
+
+$.ajaxSettings.complete = function (xhr) {
+    if(xhr.status == 401 || xhr.responseJSON.returnCode == 401){
+        let hash = window.location.hash;
+        if(hash.substr(0,3) == "#/?" || hash.substr(0,8) == "#/login?"){
+            return;
+        }
+        alert("登录信息过期,请重新登录!");
+        hashHistory.push({pathname:"/login"});
+    }
+};
 
 export function Post({url,headers,data}) {
     return new Promise((resolve,reject)=>{
@@ -11,17 +23,7 @@ export function Post({url,headers,data}) {
             headers:headers,
             data:JSON.stringify(data),
             success: resolve,
-            error: reject,
-            complete: function(XMLHttpRequest){
-                if(XMLHttpRequest.responseJSON.returnCode == 401){
-                    let hash = window.location.hash;
-                    if(hash.substr(0,3) == "#/?" || hash.substr(0,8) == "#/login?"){
-                        return;
-                    }
-                    alert("登录信息过期,请重新登录!");
-                    window.location.href = "/#/login";
-                }
-            }
+            error: reject
         });
     });
 }
@@ -35,17 +37,7 @@ export function Get({url,headers,data}) {
             headers:headers,
             data:data,
             success:resolve,
-            error:reject,
-            complete: function(XMLHttpRequest){
-                if(XMLHttpRequest.responseJSON.returnCode == 401){
-                    let hash = window.location.hash;
-                    if(hash.substr(0,3) == "#/?" || hash.substr(0,8) == "#/login?"){
-                        return;
-                    }
-                    alert("登录信息过期,请重新登录!");
-                    window.location.href = "/#/login";
-                }
-            }
+            error:reject
         });
     });
 }

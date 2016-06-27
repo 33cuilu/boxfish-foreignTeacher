@@ -53,6 +53,16 @@ var TeacherManagement = React.createClass({
                 hasCheckBox : true,
                 hasOperate : true
             },
+            interviewScore : {
+                nationalityLevel : -100,
+                snack : -100,
+                spokenLevel : -100,
+                teachingExperience : -100
+            },
+            lectureScore : {
+                creativeAndExpression : -100,
+                adaptAndLead : -100
+            },
             list : [],
             selected : []
         };
@@ -140,8 +150,8 @@ var TeacherManagement = React.createClass({
                 <ModalManagement info={this.state.curInfo} callback={(e)=>{this._getPage(this.state.curPage)}}/>
                 <ModalManagementFrozen callback={this.isActive}/>
                 <ModalManagementActivation callback={this.isActive}/>
-                <ModalTryScore callback={this.trialScore}/>
-                <ModalInterviewScore callback={this.interviewScore}/>
+                <ModalTryScore defaultContent={this.state.lectureScore}  callback={this.trialScore}/>
+                <ModalInterviewScore defaultContent={this.state.interviewScore}  callback={this.interviewScore}/>
                 <div className="forms" id="forms">
                     <div className="input">
                         <div className="form row">
@@ -463,8 +473,16 @@ var TeacherManagement = React.createClass({
      * @public (子组件"表格"调用)
      */
     arrangeInterviewScore : function (i) {
+        let obj = this.state.list[i];
+        let iScore = {
+                nationalityLevel : obj.nationalityLevel||-100,
+                snack : obj.snack||-100,
+                spokenLevel : obj.spokenLevel||-100,
+                teachingExperience : obj.teachingExperience||-100
+        };
         this.setState({
-            curRow : i
+            curRow : i,
+            interviewScore : iScore
         });
         $(".interviewScore .modal").modal();
     },
@@ -513,9 +531,22 @@ var TeacherManagement = React.createClass({
      * @public (子组件"表格"调用)
      */
     arrangeTryScore : function (i) {
+        let obj = this.state.list[i];
+        let lScore = {
+            creativeAndExpression : -100,
+            adaptAndLead : -100
+        };
+        if(obj.trialScoresMap){
+            lScore = {
+                creativeAndExpression : obj.trialScoresMap.creativeAndExpression||-100,
+                adaptAndLead : obj.trialScoresMap.adaptAndLead||-100
+            };
+        }
         this.setState({
-            curRow : i
+            curRow : i,
+            lectureScore : lScore
         });
+
         $(".trialScore .modal").modal();
     },
 

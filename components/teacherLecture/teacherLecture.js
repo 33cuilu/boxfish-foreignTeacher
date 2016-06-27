@@ -78,6 +78,10 @@ var TeacherLecture = React.createClass({
                 hasCheckBox : true,
                 hasOperate : true
             },
+            lectureScore : {
+                creativeAndExpression : -100,
+                adaptAndLead : -100
+            },
             demoCourseInfo : {},
             list : [],
             selected : []
@@ -186,7 +190,7 @@ var TeacherLecture = React.createClass({
                            time={this.state.timeSlot} course={this.state.demoCourse} callback={()=>{this._getPage(this.state.curPage)}}/>
                 <EditLesson row={rowContent} info={this.state.demoCourseInfo} teacher={this.state.teacherAccounts} student={this.state.studentAccounts}
                             time={this.state.timeSlot} course={this.state.demoCourse} callback={()=>{this._getPage(this.state.curPage)}}/>
-                <ModalTryScore value={this.state.list[this.state.curRow]} callback={this.trialScore}/>
+                <ModalTryScore value={this.state.list[this.state.curRow]} callback={this.trialScore} defaultContent={this.state.lectureScore}/>
                 <ModalAdopt callback={this.adopt}/>
                 <ModalInPond callback={this.inPonds}/>
                 <ModalInPonds callback={this.inPonds}/>
@@ -607,8 +611,20 @@ var TeacherLecture = React.createClass({
      * @public: (子组件"表格"调用)
      */
     arrangeScore : function (i) {
+        let obj = this.state.list[i];
+        let lScore = {
+            creativeAndExpression : -100,
+            adaptAndLead : -100
+        };
+        if(obj.trialScoresMap){
+            lScore = {
+                creativeAndExpression : obj.trialScoresMap.creativeAndExpression||-100,
+                adaptAndLead : obj.trialScoresMap.adaptAndLead||-100
+            };
+        }
         this.setState({
-            curRow : i
+            curRow : i,
+            lectureScore : lScore
         });
         $(".trialScore .modal").modal();
     },

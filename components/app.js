@@ -22,11 +22,11 @@ var App = React.createClass({
         router : React.PropTypes.object
     },
     componentWillMount: function () {
-        /*let token = store.get("accessToken");
+        let token = store.get("accessToken");
         if(!token){
             alert("登录信息过期,请重新登录!");
-            this.context.router.push("login");
-        }*/
+            this.context.router.replace("/login");
+        }
     },
     render : function () {
         let Children = this.props.children;

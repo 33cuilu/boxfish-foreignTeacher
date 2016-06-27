@@ -1,5 +1,5 @@
 {
-  "ip" : "192.168.77.171:8099",
+  "ip" : "online-api.boxfish.cn/teacher",
   "genderUndistributed":{
     "name":"性别",
     "arr": ["性别","男","女","未指定"],
@@ -13,8 +13,8 @@
   "stateStep" :{
     "name":"不通过类型",
     "otherName":"notPass",
-    "arr": ["不通过类型","审核不通过","面试不通过","试讲不通过","授权不通过"],
-    "id": [-100,11,12,13,14]
+    "arr": ["不通过类型","审核不通过","面试不通过","试讲不通过"],
+    "id": [-100,11,12,13]
   },
   "spokenLevelUndistributed" :{
     "name":"口语水平",
