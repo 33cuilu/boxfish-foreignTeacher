@@ -81,7 +81,7 @@ var Login = React.createClass({
                     return;
                 }
                 store.set("accessToken",data);
-                this.context.router.push("management");
+                this.context.router.push("/teacherManagement");
             },
             ({data})=>{
                 let errInfo = (data)? data: "登录错误";
