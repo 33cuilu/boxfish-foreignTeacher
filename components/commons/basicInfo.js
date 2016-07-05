@@ -101,7 +101,7 @@ var BasicInfo = React.createClass({
                     <input type="text" className="form-control" ref="occupation" value={info.occupation||''} onChange={this._changeOccupation}/>
                 </div>
                 <div className="field">
-                    <label>微信:</label>
+                    <label>微信 or Skype ID:</label>
                     <input type="text" className="form-control" ref="skype" value={info.skype||''} onChange={this._changeSkype}/>
                 </div>
                 <div className="field">

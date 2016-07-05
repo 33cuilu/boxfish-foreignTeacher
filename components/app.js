@@ -6,6 +6,7 @@
 //引入插件
 import React from 'react';
 import store from 'store';
+import 'babel-polyfill';
 
 //引入组件
 import Nav from './commons/nav.js';

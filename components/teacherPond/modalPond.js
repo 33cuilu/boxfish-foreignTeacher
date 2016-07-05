@@ -56,7 +56,7 @@ var ModalPond = React.createClass({
                                         <label className="info">{info.occupation}</label>
                                     </div>
                                     <div className="field">
-                                        <label>WeChat ID:</label>
+                                        <label>微信 or Skype ID:</label>
                                         <label className="info">{info.skype}</label>
                                     </div>
                                     <div className="field">

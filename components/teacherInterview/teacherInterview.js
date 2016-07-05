@@ -126,7 +126,7 @@ var TeacherInterview = React.createClass({
                 "cellphoneNumber" : v.cellphoneNumber,
                 "email" : v.email,
                 "nationalityLevel" : getById(configData.nationalityLevel, v.nationalityLevel),
-                "interviewTime" : <TimePicker type="1" value={v.interviewTime} place=".tableContainer" unclear={true} onChange={(date)=>{this.updateInterviewTime(i,date)}}/>,
+                "interviewTime" : <TimePicker type="1" value={v.interviewTime} place=".tableContainer" unclear={true} minDay={true} onChange={(date)=>{this.updateInterviewTime(i,date)}}/>,
                 "gender" : <SelectComponent contentData={configData.gender} value={v.gender} onChange={(value)=>{this.updateGender(i,value)}}/>,
                 "snack" : getById(configData.snack, v.snack),
                 "spokenLevel" : getById(configData.spokenLevel, v.spokenLevel),

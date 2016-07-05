@@ -10,7 +10,7 @@ var TimePicker = React.createClass({
         };
     },
     componentWillReceiveProps : function (nextProps) {
-        if(nextProps.value && nextProps.value !== this.props.value){
+        if(nextProps.value !== this.props.value){
             this.setState({
                 value : nextProps.value
             });
@@ -19,6 +19,7 @@ var TimePicker = React.createClass({
     componentDidMount : function () {
         //初始化表格的日期选择控件
         let place = (this.props.place == null)? '.content' : this.props.place;
+        let minDate = (this.props.minDay)? moment() : {false};
         if(this.props.type == "1"){
             $(this.refs.dateInput).daterangepicker(
                 {
@@ -27,7 +28,8 @@ var TimePicker = React.createClass({
                     startDate: new Date(),
                     timePicker: true,
                     timePickerIncrement: 10,
-                    format: 'YYYY-MM-DD h:mm:ss'
+                    format: 'YYYY-MM-DD h:mm:ss',
+                    minDate: minDate
                 },
                 (start, end)=>{
                     this.setState({ //每次将新的日期赋给状态

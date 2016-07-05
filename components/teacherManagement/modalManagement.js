@@ -14,7 +14,6 @@ import BasicInfo from './../commons/basicInfo.js';
 
 //引入样式
 import '../../less/modalManagement.less';
-import '../../less/modalLecture.less';
 
 
 var configData = require("../../config/config.json");
@@ -45,7 +44,8 @@ var ModalManagement = React.createClass({
                                     </div>
                                     <div className="field">
                                         <label>试讲时间:</label>
-                                        <input type="text" className="readOnly" value={info.triallectureStartTime?`${info.triallectureStartTime} - ${info.triallectureEndTime}`:''} />
+                                        <input type="text" className="readOnly" readOnly={true}
+                                               value={info.triallectureStartTime?`${info.triallectureStartTime} - ${info.triallectureEndTime}`:''} />
                                     </div>
                                     <BasicInfo ref="basicInfo" value={info}/>
                                     <div className="field">

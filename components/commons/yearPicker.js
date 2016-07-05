@@ -6,7 +6,8 @@
 //引入插件
 import React from 'react';
 
-var range = 30;
+var lrange = 60;
+var rrange = 5;
 
 var YearPicker = React.createClass({
     getInitialState : function () {
@@ -32,13 +33,13 @@ var YearPicker = React.createClass({
             endYear = (this.state.start == -1) ? startYear : this.state.start ,
             startYears = [],
             endYears = [];
-        for(let i = startYear - range; i <= startYear + range ;i++){
+        for(let i = startYear - lrange; i <= startYear; i++){
             startYears.push(i);
         }
         if(this.state.start == -1){
             endYears = startYears;
         }else{
-            for(let i = endYear ; i<= endYear + range; i++){
+            for(let i = endYear ; i<= endYear + rrange; i++){
                 endYears.push(i);
             }
         }

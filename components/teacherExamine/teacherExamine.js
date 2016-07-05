@@ -259,7 +259,7 @@ var TeacherExamine = React.createClass({
      * @private
      */
     _getPage : function (page) {
-        let getHead = Object.assign({},this.state.getHead);
+        let getHead = Object.assign({},this.state.getHead); //$.extend(true,{},this.state.getHead)
         getHead.data.page = page - 1;
         //console.log(getHead);
         Get(getHead).then(

@@ -2,16 +2,50 @@
 .modalPond{
   font-size: 16px;
   line-height: 30px;
-  label{
-    margin-right: 10px;
-    max-width: 190px;
-    display: inline-block !important;
-    white-space: nowrap;
-    overflow: auto;
-  }
-  .info,.score{
-    text-indent: 1em;
-    display: inline-block !important;
-    font-size: 15px;
+  overflow: auto;
+  .modal-dialog{
+    margin: 10px auto;
+    .modal-content{
+      width: 650px;
+      .modal-body{
+        padding: 10px;
+        .modal-body-header,.modal-body-body,.modal-body-footer{
+          .field{
+            width: 48%;
+            margin: 0 1%;
+            display: inline-block;
+            label{
+              margin-right: 10px;
+              max-width: 200px;
+              display: inline-block;
+              white-space: nowrap;
+              overflow: auto;
+            }
+            .info,.score{
+              text-indent: 1em;
+              display: inline-block !important;
+              font-size: 15px;
+            }
+          }
+        }
+        .modal-body-body,.modal-body-footer{
+          border: 1px solid #ccc;
+          padding: 10px 0;
+          margin-top: 10px;
+        }
+        .modal-body-remarks{
+          margin-top: 10px;
+          label{
+            display: block;
+          }
+          textarea{
+            width: 100%;
+          }
+        }
+      }
+      .modal-footer{
+        padding: 10px;
+      }
+    }
   }
 }
