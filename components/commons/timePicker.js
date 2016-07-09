@@ -10,11 +10,9 @@ var TimePicker = React.createClass({
         };
     },
     componentWillReceiveProps : function (nextProps) {
-        if(nextProps.value !== this.props.value){
             this.setState({
                 value : nextProps.value
             });
-        }
     },
     componentDidMount : function () {
         //初始化表格的日期选择控件
