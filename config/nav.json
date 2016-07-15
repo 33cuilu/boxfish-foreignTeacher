@@ -3,26 +3,50 @@
   {
     "menuName" : "教师管理",
     "menuIcon" : "glyphicon-plus",
-    "path" : "teacherManagement"
+    "path" : "management"
   },
   {
     "menuName" : "审核",
     "menuIcon" : "glyphicon-filter",
-    "path" : "teacherExamine"
+    "path" : "examine"
   },
   {
     "menuName" : "面试",
     "menuIcon" : "glyphicon-education",
-    "path" : "teacherInterview"
+    "path" : "interview",
+    "subMenus" : [
+      {
+        "subMenuName" : "待面试",
+        "subMenuIcon": "glyphicon-earphone",
+        "path" : "preinterview"
+      },
+      {
+        "subMenuName" : "待安排",
+        "subMenuIcon" : "glyphicon-tag",
+        "path" : "postinterview"
+      }
+    ]
   },
   {
     "menuName" : "试讲",
     "menuIcon" : "glyphicon-sort",
-    "path" : "teacherLecture"
+    "path" : "lecture",
+    "subMenus" : [
+      {
+        "subMenuName" : "待安排",
+        "subMenuIcon": "glyphicon-bell",
+        "path" : "prelecture"
+      },
+      {
+        "subMenuName" : "待试讲",
+        "subMenuIcon" : "glyphicon-facetime-video",
+        "path" : "postlecture"
+      }
+    ]
   },
   {
     "menuName" : "池子",
     "menuIcon" : "glyphicon-trash",
-    "path" : "teacherPond"
+    "path" : "pond"
   }
 ]

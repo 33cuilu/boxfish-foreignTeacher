@@ -10,7 +10,9 @@ var SubNav = React.createClass({
     },
     render : function () {
         let subMenu = this.state.content;
-        let curPath = this.props.curPath;
+        //let curPath = this.props.curPath;
+        let curPath = window.location.hash.toString();
+        curPath = curPath.match(/\/[^\?]+/g)[0].slice(1);
         subMenu = subMenu.map((v,i) => {
             let linkClassName = (curPath==v.path||curPath=='')?'item active':'item';
             return (

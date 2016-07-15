@@ -9,9 +9,8 @@ import {Post,Get,getById} from '../../util/ajax.js';
 import store from 'store';
 
 //引入组件
-import ModalManagement from './modalManagement.js';
-import ContentInput from './../commons/contentInput.js';
-import DataPicker from './../commons/dataPicker.js';
+import ModalDetail from './../commons/modalDetail.js';
+import HotSearch from './../commons/hotSearch.js';
 import SelectComponent from './../commons/selectComponent.js';
 import Table from './../commons/table.js';
 import PageList from './../commons/page.js';
@@ -32,7 +31,7 @@ var arrangeAccountUrl = `http://${configData.ip}/web/common/distributeAccount`;
 var trialScoreUrl = `http://${configData.ip}/web/teacherOralEn/updateTrialScore`;
 var interviewScoreUrl = `http://${configData.ip}/web/teacherOralEn/updateInterviewScores`;
 
-var TeacherManagement = React.createClass({
+var Management = React.createClass({
     /**
      * 设置组件的状态
      * @returns {{pageSize: number, totalPages: number, curPage: number, curURL: string, curRow: number, curInfo: {}, tableStyle: {tableSize: number, hasCheckBox: boolean, hasOperate: boolean}, list: Array, selected: Array}}
@@ -147,30 +146,19 @@ var TeacherManagement = React.createClass({
         });
         return(
             <div className="teacherManagement">
-                <ModalManagement info={this.state.curInfo} callback={(e)=>{this._getPage(this.state.curPage)}}/>
+                <ModalDetail info={this.state.curInfo} callback={(e)=>{this._getPage(this.state.curPage)}}/>
                 <ModalManagementFrozen callback={this.isActive}/>
                 <ModalManagementActivation callback={this.isActive}/>
                 <ModalTryScore defaultContent={this.state.lectureScore}  callback={this.trialScore}/>
                 <ModalInterviewScore defaultContent={this.state.interviewScore}  callback={this.interviewScore}/>
+
                 <div className="forms" id="forms">
                     <div className="input">
+                        <HotSearch ref="hotSearch" type="1"/>
                         <div className="form row">
-                            <ContentInput ref="contentInput"/>
-                            <div className="field more">
-                                <span className="glyphicon glyphicon-triangle-bottom" id="btn" onClick={this._changeForm}></span>
-                            </div>
-                        </div>
-                        <div className="form row" >
-                            <DataPicker ref="createTime" name="报名日期"/>
-                            <div className="field">
-                                <input type="text" className="form-control" ref="nickName" placeholder="账号" />
-                            </div>
-                            <div className="field">
-                                <input type="text" className="form-control" ref="city" placeholder="城市"/>
-                            </div>
-                            <SelectComponent ref="gender" contentData={configData.gender} />
-                            <SelectComponent ref="snack" contentData={configData.snack} />
-                            <SelectComponent ref="isActive" contentData={configData.isActive} />
+                            <SelectComponent contentData={configData.location} ref="location" />
+                            <SelectComponent contentData={configData.channel} ref="channel" />
+                            <SelectComponent contentData={configData.timezone} ref="timezone" />
                         </div>
                     </div>
                     <div className="search">
@@ -190,14 +178,6 @@ var TeacherManagement = React.createClass({
                 <PageList curPage={this.state.curPage} totalPages={this.state.totalPages} onPre={this._prePage} onFirst={this._firstPage} onLast={this._lastPage} onNext={this._nextPage}/>
             </div>
         );
-    },
-
-    /**
-     * 查询表单的展开动画
-     * @private
-     */
-    _changeForm : function() {
-        $("#forms").toggleClass("forms-height");
     },
 
     /**
@@ -609,7 +589,7 @@ var TeacherManagement = React.createClass({
                     this.setState({
                         curInfo : data
                     });
-                    $(".modalManagement .modal").modal();
+                    $(".modalDetail .modal").modal();
                 }else{
                     alert("该用户的信息为空!");
                 }
@@ -623,4 +603,4 @@ var TeacherManagement = React.createClass({
     }
 });
 
-export default TeacherManagement;
+export default Management;

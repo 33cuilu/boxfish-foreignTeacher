@@ -10,8 +10,7 @@ import {Post,Get,getById} from '../../util/ajax.js';
 
 //引入组件
 import ModalPond from './modalPond.js';
-import ContentInput from './../commons/contentInput.js';
-import DataPicker from './../commons/dataPicker.js';
+import HotSearch from './../commons/hotSearch.js';
 import TimePicker from './../commons/timePicker.js';
 import SelectComponent from './../commons/selectComponent.js';
 import Table from './../commons/table.js';
@@ -137,26 +136,16 @@ var TeacherPond = React.createClass({
                 )
             };
         });
-        console.log(tableList);
         return(
             <div className="TeacherLecture">
                 <ModalPond info={this.state.curInfo} callback={(e)=>{this._getPage(this.state.curPage)}} course={this.state.demoCourse}/>
                 <ModalFish callback={this.fish} />
                 <div className="forms" id="forms">
                     <div className="input">
+                        <HotSearch ref="hotSearch"/>
                         <div className="form row">
-                            <ContentInput ref="contentInput"/>
-                            <div className="field more">
-                                <span className="glyphicon glyphicon-triangle-bottom" onClick={this._changeForm}></span>
-                            </div>
-                        </div>
-                        <div className="form row">
-                            <DataPicker ref="createTime" name="报名日期"/>
-                            <DataPicker ref="auditTime" name="审核日期"/>
-                            <TimePicker type="2" ref="interviewTime" name="面试时间"/>
-                            <TimePicker type="2" ref="triallectureTime" name="试讲时间"/>
-                            <SelectComponent ref="snack" contentData={configData.snack} />
-                            <SelectComponent ref="stateStep" contentData={configData.stateStep} />
+                            <SelectComponent contentData={configData.stateStep} ref="stateStep" />
+                            <SelectComponent contentData={configData.timezone} ref="timezone" />
                         </div>
                     </div>
                     <div className="search">

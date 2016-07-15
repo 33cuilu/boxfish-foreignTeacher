@@ -16,30 +16,39 @@ var ContentInput = React.createClass({
         return {
             firstName : '',
             lastName : '',
-            nationality : "-100",
-            timezone : -100,
             cellphoneNumber : '',
-            email : ''
+            email : '',
+            nickName : '',
+            nationality : "-100"
         }
     },
     render : function(){
+        let inputDOM=<div className="field">
+                        <input type="text" className="form-control" ref="email" onChange={this._getEmail} placeholder="Email"/>
+                    </div>;
+        if(this.props.type){
+            inputDOM = <div className="field">
+                        <input type="text" className="form-control" ref="nickName" onChange={this._getNickName} placeholder="账号"/>
+                    </div>;
+        }
         return(
-            <div className="contentInput">
+            <div className="form row">
                 <div className="field">
                     <input type="text" className="form-control" ref="firstName" onChange={this._getFirstName} placeholder="First Name"/>
                 </div>
                 <div className="field">
                     <input type="text" className="form-control" ref="lastName" onChange={this._getLastName} placeholder="Last Name"/>
                 </div>
-                <SelectComponent contentData={configData.nationality} ref="nationality" onChange={(value)=>{this._getNationality(value)}}/>
-                <SelectComponent contentData={configData.timezone} ref="timezone" onChange={(value)=>{this._getTimezone(value)}}/>
                 <div className="field">
                     <input type="text" className="form-control" ref="cellphoneNumber" onChange={this._getCellphoneNumber} style={{width:"150px"}} placeholder="手机号"/>
                 </div>
-                <div className="field">
-                    <input type="text" className="form-control" ref="email" onChange={this._getEmail} placeholder="邮箱"/>
+                {inputDOM}
+                <SelectComponent contentData={configData.nationality} ref="nationality" onChange={(value)=>{this._getNationality(value)}}/>
+                <div className="field more">
+                    <span className="glyphicon glyphicon-triangle-bottom" onClick={this._changeForm}></span>
                 </div>
             </div>
+            
         );
     },
     _getFirstName : function () {
@@ -52,16 +61,6 @@ var ContentInput = React.createClass({
             lastName : this.refs.lastName.value.trim()
         });
     },
-    _getNationality : function (value) {
-        this.setState({
-            nationality : value
-        });
-    },
-    _getTimezone : function (value) {
-        this.setState({
-            timezone : value - 0
-        });
-    },
     _getCellphoneNumber : function () {
         this.setState({
             cellphoneNumber : this.refs.cellphoneNumber.value.trim()
@@ -71,6 +70,23 @@ var ContentInput = React.createClass({
         this.setState({
             email : this.refs.email.value.trim()
         });
+    },
+    _getNickName : function () {
+        this.setState({
+            nickName : this.refs.nickName.value.trim()
+        });
+    },
+    _getNationality : function (value) {
+        this.setState({
+            nationality : value
+        });
+    },
+    /**
+     * 查询表单的展开动画
+     * @private
+     */
+    _changeForm : function(event) {
+        $("#forms").toggleClass("forms-height");
     }
 });
 

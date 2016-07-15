@@ -9,32 +9,37 @@
   list-style: none;
   padding-left: 0;
   overflow: hidden;
-  li{
+  >li{
     position: relative;
+    width: 163px;
+    font-size: 14px;
     &:last-child {
       border-bottom: 0;
     }
     &:hover {
       background-color: rgb(100,100,100);
-      a {
-        font-size: 16px;
+    }
+    .link {
+      i {
+        position: absolute;
+        top: 16px;
+        left: 25px;
+        font-size: 18px;
+        color: #fff;
+        -webkit-transition: all 0.4s ease;
+        -o-transition: all 0.4s ease;
+        transition: all 0.4s ease;
       }
     }
-    i{
-      position: absolute;
-      top: 16px;
-      left: 25px;
-      font-size: 18px;
-      color: #fff;
-      -webkit-transition: all 0.4s ease;
-      -o-transition: all 0.4s ease;
-      transition: all 0.4s ease;
-    }
-    width: 163px;
   }
   li.active{
     background-color: rgb(100,100,100);
-    a {
+    .link{
+      font-size: 16px;
+    }
+  }
+  li.open{
+    .link{
       font-size: 16px;
     }
   }
@@ -56,7 +61,8 @@
 .accordion li i.glyphicon-triangle-right {
   right: 12px;
   left: auto;
-  font-size: 16px;
+  top: 20px;
+  font-size: 10px;
 }
 .accordion li.open .link {
   color: #fff;
@@ -77,30 +83,39 @@
   background: #475360;
   font-size: 14px;
   list-style: none;
-  margin-left: -30px;
-}
-.submenu li{
-  position: relative;
-}
-.submenu a {
-  display: block;
-  text-decoration: none;
-  color: #d9d9d9;
-  padding: 12px;
-  padding-left: 42px;
-  -webkit-transition: all 0.25s ease;
-  -o-transition: all 0.25s ease;
-  transition: all 0.25s ease;
-}
-.submenu a:hover {
-  background: #b63b4d;
-  color: #FFF;
+  margin-left: -40px;
+  li{
+    position: relative;
+    &:hover{
+      a{
+        color: #FFF;
+      }
+    }
+    .item.active{
+      background-color: rgb(120,120,120);
+    }
+  }
+  a{
+    display: block;
+    text-decoration: none;
+    color: #d9d9d9;
+    padding: 12px;
+    padding-left: 60px;
+    -webkit-transition: all 0.25s ease;
+    -o-transition: all 0.25s ease;
+    transition: all 0.25s ease;
+  }
+  i{
+    position: absolute;
+    top: 15px;
+    left: 40px;
+    font-size: 14px;
+  }
 }
 .link a{
   color: #fff;
   text-decoration: none;
 }
-
 .nav-link{
   display: block;
   width:100%;

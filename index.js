@@ -11,11 +11,13 @@ import {Router, Route, browserHistory,hashHistory,IndexRoute} from 'react-router
 //引入组件
 import app from './components/app.js';
 import login from './components/login.js';
-import teacherManagement from './components/teacherManagement/teacherManagement.js';
-import teacherExamine from './components/teacherExamine/teacherExamine.js';
-import teacherInterview from './components/teacherInterview/teacherInterview.js';
-import teacherLecture from './components/teacherLecture/teacherLecture.js';
-import teacherPond from './components/teacherPond/teacherPond.js';
+import Management from './components/management/management.js';
+import Examine from './components/examine/examine.js';
+import preInterview from './components/interview/preInterview.js';
+import postInterview from './components/interview/postInterview.js';
+import preLecture from './components/lecture/preLecture.js';
+import postLecture from './components/lecture/postLecture.js';
+import Pond from './components/pond/pond.js';
 
 //引入样式
 import './less/index.less';
@@ -26,12 +28,20 @@ ReactDOM.render(
             <IndexRoute component={login} />
             <Route path="login" component={login} />
             <Route path="management" component = {app} >
-                <IndexRoute component={teacherManagement} />
-                <Route path = "/teacherManagement" component={teacherManagement} />
-                <Route path = "/teacherExamine" component={teacherExamine} />
-                <Route path = "/teacherInterview" component={teacherInterview} />
-                <Route path = "/teacherLecture" component={teacherLecture} />
-                <Route path = "/teacherPond" component={teacherPond} />
+                <IndexRoute component={Management} />
+                <Route path = "/management" component={Management} />
+                <Route path = "/examine" component={Examine} />
+                <Route path = "/interview" >
+                    <IndexRoute component={preInterview} />
+                    <Route path="/preinterview" component={preInterview} />
+                    <Route path="/postinterview" component={postInterview} />
+                </Route>
+                <Route path = "/lecture" >
+                    <IndexRoute component={preLecture}/>
+                    <Route path="/prelecture" component={preLecture} />
+                    <Route path="/postlecture" component={postLecture} />
+                </Route>
+                <Route path = "/pond" component={Pond} />
             </Route>
         </Route>
     </Router>,

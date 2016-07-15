@@ -64,8 +64,10 @@ var App = React.createClass({
 
     _changeMenu : function (event) {
         let sub = $(".submenu");
-        if(sub.css("display")!="none"){
-            sub.prev().trigger("click");
+        for(let i = 0; i< sub.length; i++){
+            if($(sub[i]).css("display")!="none"){
+                $(sub[i]).prev().trigger("click");
+            }
         }
         $("#left").toggleClass("slideNav_left");
         $("#right").toggleClass("slideNav_right");

@@ -49,9 +49,6 @@ var Login = React.createClass({
         e.preventDefault();
         let name = this.refs.name.value,
             password = this.refs.password.value;
-        console.log("log in");
-        console.log(name);
-        console.log(password);
         if(name.length == 0){
             this.setState({
                 errInfo: "请填写用户名",
@@ -85,7 +82,7 @@ var Login = React.createClass({
                     return false;
                 }
                 store.set("accessToken",data);
-                this.context.router.push("/teacherManagement");
+                this.context.router.push("/management");
             },
             ({data})=>{
                 let errInfo = (data)? data: "登录错误";

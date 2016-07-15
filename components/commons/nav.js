@@ -24,15 +24,14 @@ var Nav = React.createClass({
     },
     componentDidMount : function () {
         var accordion = new Accordion($('#accordion'), false);
-
     },
     render : function () {
         let menu = this.state.content;
         let curPath = this.props.curPath;
         menu = menu.map((v,i) => {
-            let liClassName = (curPath == v.path)? "active":"";
             let linkClassName = (curPath==v.path||curPath=='')?'nav-link item active':'nav-link item';
-            if(v.subMenus&&v.subMenus.length!=0){
+            if(v.subMenus && v.subMenus.length!=0){
+                let liClassName = (v.path == curPath.slice(3) || v.path == curPath.slice(4))? "active":"";
                 return (
                     <li key={i} className={liClassName}>
                         <div className="link">
@@ -44,6 +43,7 @@ var Nav = React.createClass({
                     </li>
                 );
             }else{
+                let liClassName = (curPath == v.path)? "active":"";
                 return (
                     <li key={i} className={liClassName}>
                         <div className="link">

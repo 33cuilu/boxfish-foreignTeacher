@@ -9,9 +9,9 @@ import store from 'store';
 import {Post,Get} from '../../util/ajax.js';
 
 //引入组件
-import ModalLecture from './modalLecture.js';
-import ContentInput from './../commons/contentInput.js';
-import TimePicker from './../commons/timePicker.js';
+import ModalDetail from '../commons/modalDetail.js';
+import HotSearch from './../commons/hotSearch.js';
+import OtherSearch from './../commons/otherSearch.js';
 import SelectComponent from './../commons/selectComponent.js';
 import Table from './../commons/table.js';
 import PageList from './../commons/page.js';
@@ -185,7 +185,7 @@ var TeacherLecture = React.createClass({
             });
         return(
             <div className="TeacherLecture">
-                <ModalLecture info={this.state.curInfo} callback={(e)=>{this._getPage(this.state.curPage)}}/>
+                <ModalDetail info={this.state.curInfo} callback={(e)=>{this._getPage(this.state.curPage)}}/>
                 <TryLesson row={rowContent} teacher={this.state.teacherAccounts} student={this.state.studentAccounts}
                            time={this.state.timeSlot} course={this.state.demoCourse} callback={()=>{this._getPage(this.state.curPage)}}/>
                 <EditLesson row={rowContent} info={this.state.demoCourseInfo} teacher={this.state.teacherAccounts} student={this.state.studentAccounts}
@@ -196,16 +196,10 @@ var TeacherLecture = React.createClass({
                 <ModalInPonds callback={this.inPonds}/>
                 <div className="forms" id="forms">
                     <div className="input">
+                        <HotSearch ref="hotSearch"/>
                         <div className="form row">
-                            <ContentInput ref="contentInput"/>
-                            <div className="field more">
-                                <span className="glyphicon glyphicon-triangle-bottom" onClick={this._changeForm}></span>
-                            </div>
-                        </div>
-                        <div className="form row extend">
-                            <TimePicker type="2" ref="interviewTime" name="面试时间"/>
-                            <TimePicker type="2" ref="triallectureTime" name="试讲时间"/>
-                            <SelectComponent ref="reservationTry" contentData={configData.reservationTry} />
+                            <OtherSearch ref="otherSearch" />
+                            <SelectComponent contentData={configData.gender} ref="gender" />
                         </div>
                     </div>
                     <div className="search">
@@ -800,7 +794,7 @@ var TeacherLecture = React.createClass({
                     this.setState({
                         curInfo : data
                     });
-                    $(".modalLecture .modal").modal();
+                    $(".modalDetail .modal").modal();
                 }else{
                     alert("该用户的信息为空!");
             }
