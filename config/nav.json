@@ -1,0 +1,28 @@
+
+[
+  {
+    "menuName" : "教师管理",
+    "menuIcon" : "glyphicon-plus",
+    "path" : "teacherManagement"
+  },
+  {
+    "menuName" : "审核",
+    "menuIcon" : "glyphicon-filter",
+    "path" : "teacherExamine"
+  },
+  {
+    "menuName" : "面试",
+    "menuIcon" : "glyphicon-education",
+    "path" : "teacherInterview"
+  },
+  {
+    "menuName" : "试讲",
+    "menuIcon" : "glyphicon-sort",
+    "path" : "teacherLecture"
+  },
+  {
+    "menuName" : "池子",
+    "menuIcon" : "glyphicon-trash",
+    "path" : "teacherPond"
+  }
+]

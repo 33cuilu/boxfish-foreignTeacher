@@ -1,0 +1,251 @@
+{
+  "ip" : "123.56.13.168:8099",
+  "genderUndistributed":{
+    "name":"性别",
+    "arr": ["性别","男","女","未指定"],
+    "id": [-100,1,0,10]
+  },
+  "gender" :{
+    "name":"性别",
+    "arr": ["性别","男","女"],
+    "id": [-100,1,0]
+  },
+  "stateStep" :{
+    "name":"不通过类型",
+    "otherName":"notPass",
+    "arr": ["不通过类型","审核不通过","面试不通过","试讲不通过"],
+    "id": [-100,11,12,13]
+  },
+  "spokenLevelUndistributed" :{
+    "name":"口语水平",
+    "otherName":"nativeLevel",
+    "arr": ["口语水平","母语水平","稍差","其他","未指定"],
+    "id": [-100,1,2,3,10]
+  },
+  "spokenLevel" :{
+    "name":"口语水平",
+    "otherName":"nativeLevel",
+    "arr": ["口语水平","母语水平","稍差","其他"],
+    "id": [-100,1,2,3],
+    "score": ["",100,80,0]
+  },
+  "snackUndistributed" :{
+    "name":"零食",
+    "otherName":"snacks",
+    "arr": ["零食","棉花糖","巧克力","其他","未指定"],
+    "id": [-100,1,2,3,10]
+  },
+  "snack" :{
+    "name":"零食",
+    "otherName":"snacks",
+    "arr": ["零食","棉花糖","巧克力","其他"],
+    "id": [-100,1,2,3],
+    "score": ["",100,30,0]
+  },
+  "experience" :{
+    "name":"教学经验",
+    "otherName":"experience",
+    "arr": ["教学经验","有","无"],
+    "id": [-100,1,0]
+  },
+  "experienceDetail" :{
+    "name":"教学经验",
+    "otherName":"experienceDetail",
+    "arr":["教学经验","无","1年以下","1~3年","4~8年"],
+    "id":[-100,0,1,3,8],
+    "score": ["",70,100,100,100]
+  },
+  "nationality" :{
+    "name":"国家",
+    "otherName":"nationality",
+    "arr": ["国家","Canada","US","South Africa","Britain","Australia","New Zealand","Thailand",
+      "Afghanistan", "Albania", "Algeria", "American Samoa", "Andorra", "Angola", "Anguilla", "Antarctica",
+      "Antigua and Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas",
+      "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia",
+      "Bosnia and Herzegovina", "Botswana", "Bouvet Island", "Brazil", "British Indian Ocean Territory", "Brunei Darussalam",
+      "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Cayman Islands",
+      "Central African Republic", "Chad", "Chile", "China", "Christmas Island", "Cocos (Keeling) Islands", "Colombia",
+      "Comoros", "Congo", "Congo, the Democratic Republic of the", "Cook Islands", "Costa Rica", "Cote D'Ivoire",
+      "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador",
+      "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Falkland Islands (Malvinas)",
+      "Faroe Islands", "Fiji", "Finland", "France", "French Guiana", "French Polynesia", "French Southern Territories",
+      "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guadeloupe",
+      "Guam", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Heard Island and Mcdonald Islands",
+      "Holy See (Vatican City State)", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", "Indonesia",
+      "Iran, Islamic Republic of", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan",
+      "Kenya", "Kiribati", "Korea, Democratic People's Republic of", "Korea, Republic of", "Kuwait", "Kyrgyzstan",
+      "Lao People's Democratic Republic", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libyan Arab Jamahiriya",
+      "Liechtenstein", "Lithuania", "Luxembourg", "Macao", "Macedonia, the Former Yugoslav Republic of", "Madagascar",
+      "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Martinique", "Mauritania", "Mauritius",
+      "Mayotte", "Mexico", "Micronesia, Federated States of", "Moldova, Republic of", "Monaco", "Mongolia", "Montserrat",
+      "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "Netherlands Antilles",
+      "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Niue", "Norfolk Island", "Northern Mariana Islands",
+      "Norway", "Oman", "Pakistan", "Palau", "Palestinian Territory, Occupied", "Panama", "Papua New Guinea", "Paraguay",
+      "Peru", "Philippines", "Pitcairn", "Poland", "Portugal", "Puerto Rico", "Qatar", "Reunion", "Romania",
+      "Russian Federation", "Rwanda", "Saint Helena", "Saint Kitts and Nevis", "Saint Lucia", "Saint Pierre and Miquelon",
+      "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal",
+      "Serbia and Montenegro", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands",
+      "Somalia", "South Africa", "South Georgia and the South Sandwich Islands","Spain", "Sri Lanka", "Sudan", "Suriname",
+      "Svalbard and Jan Mayen", "Swaziland", "Sweden", "Switzerland", "Syrian Arab Republic", "Taiwan, Province of China",
+      "Tajikistan", "Tanzania, United Republic of", "Thailand", "Timor-Leste", "Togo", "Tokelau", "Tonga",
+      "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Turks and Caicos Islands", "Tuvalu", "Uganda",
+      "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "United States Minor Outlying Islands",
+      "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Viet Nam", "Virgin Islands, British", "Virgin Islands, U.s.",
+      "Wallis and Futuna", "Western Sahara", "Yemen", "Zambia", "Zimbabwe", "Serbia", "Asia / Pacific Region",
+      "Montenegro", "Aland Islands", "Bonaire, Sint Eustatius and Saba", "Curacao", "Guernsey", "Isle of Man", "Jersey",
+      "Kosovo", "Saint Barthelemy", "Saint Martin", "Sint Maarten", "South Sudan"],
+    "id": ["-100", "Canada","US","South Africa","Britain","Australia","New Zealand","Thailand",
+      "Afghanistan", "Albania", "Algeria", "American Samoa", "Andorra", "Angola", "Anguilla", "Antarctica",
+      "Antigua and Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas",
+      "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia",
+      "Bosnia and Herzegovina", "Botswana", "Bouvet Island", "Brazil", "British Indian Ocean Territory", "Brunei Darussalam",
+      "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Cayman Islands",
+      "Central African Republic", "Chad", "Chile", "China", "Christmas Island", "Cocos (Keeling) Islands", "Colombia",
+      "Comoros", "Congo", "Congo, the Democratic Republic of the", "Cook Islands", "Costa Rica", "Cote D'Ivoire",
+      "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador",
+      "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Falkland Islands (Malvinas)",
+      "Faroe Islands", "Fiji", "Finland", "France", "French Guiana", "French Polynesia", "French Southern Territories",
+      "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guadeloupe",
+      "Guam", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Heard Island and Mcdonald Islands",
+      "Holy See (Vatican City State)", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", "Indonesia",
+      "Iran, Islamic Republic of", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan",
+      "Kenya", "Kiribati", "Korea, Democratic People's Republic of", "Korea, Republic of", "Kuwait", "Kyrgyzstan",
+      "Lao People's Democratic Republic", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libyan Arab Jamahiriya",
+      "Liechtenstein", "Lithuania", "Luxembourg", "Macao", "Macedonia, the Former Yugoslav Republic of", "Madagascar",
+      "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Martinique", "Mauritania", "Mauritius",
+      "Mayotte", "Mexico", "Micronesia, Federated States of", "Moldova, Republic of", "Monaco", "Mongolia", "Montserrat",
+      "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "Netherlands Antilles",
+      "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Niue", "Norfolk Island", "Northern Mariana Islands",
+      "Norway", "Oman", "Pakistan", "Palau", "Palestinian Territory, Occupied", "Panama", "Papua New Guinea", "Paraguay",
+      "Peru", "Philippines", "Pitcairn", "Poland", "Portugal", "Puerto Rico", "Qatar", "Reunion", "Romania",
+      "Russian Federation", "Rwanda", "Saint Helena", "Saint Kitts and Nevis", "Saint Lucia", "Saint Pierre and Miquelon",
+      "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal",
+      "Serbia and Montenegro", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands",
+      "Somalia", "South Africa", "South Georgia and the South Sandwich Islands","Spain", "Sri Lanka", "Sudan", "Suriname",
+      "Svalbard and Jan Mayen", "Swaziland", "Sweden", "Switzerland", "Syrian Arab Republic", "Taiwan, Province of China",
+      "Tajikistan", "Tanzania, United Republic of", "Thailand", "Timor-Leste", "Togo", "Tokelau", "Tonga",
+      "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Turks and Caicos Islands", "Tuvalu", "Uganda",
+      "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "United States Minor Outlying Islands",
+      "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Viet Nam", "Virgin Islands, British", "Virgin Islands, U.s.",
+      "Wallis and Futuna", "Western Sahara", "Yemen", "Zambia", "Zimbabwe", "Serbia", "Asia / Pacific Region",
+      "Montenegro", "Aland Islands", "Bonaire, Sint Eustatius and Saba", "Curacao", "Guernsey", "Isle of Man", "Jersey",
+      "Kosovo", "Saint Barthelemy", "Saint Martin", "Sint Maarten", "South Sudan"]
+  },
+  "nationalityLevelUndistributed" :{
+    "name":"国家级别",
+    "otherName":"nationalLevel",
+    "arr": ["国家级别","美国、加拿大","英国、澳大利亚、南非","非英语欧美国家","其他","未指定"],
+    "id": [-100,1,2,3,4,10]
+  },
+  "nationalityLevel" :{
+    "name":"国家级别",
+    "otherName":"nationalLevel",
+    "arr": ["国家级别","美国、加拿大","英国、澳大利亚、南非","非英语欧美国家","其他"],
+    "id": [-100,1,2,3,4],
+    "score": ["",100,80,50,0]
+  },
+  "timezone" :{
+  "name":"时区",
+  "otherName":"timezone",
+  "arr": ["时区","11","10","9","8","7","6","5","4","3","2","1","0","-11","-10","-9","-8","-7","-6","-5","-4","-3","-2","-1"],
+  "id": [-100,11,10,9,8,7,6,5,4,3,2,1,0,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1]
+  },
+  "degree" :{
+    "name":"学历",
+    "otherName": "degree",
+    "arr": ["学历","high school","Associate/Diploma","bachelor","master","doctor"],
+    "id": [-100,1,2,3,4,5]
+  },
+  "reservationInterview" :{
+    "name":"预约状态",
+    "otherName":"reservationInterview",
+    "arr": ["预约状态","已预约面试","未预约面试"],
+    "id": [-100,1,0]
+  },
+  "reservationTry" :{
+    "name":"预约状态",
+    "otherName":"reservationTry",
+    "arr": ["预约状态","已预约试讲","未预约试讲"],
+    "id": [-100,1,0]
+  },
+  "isActive" :{
+    "name":"账号状态",
+    "otherName":"isActive",
+    "arr": ["账号状态","正常","冻结"],
+    "id": [-100,1,0]
+  },
+  "demoTeacherId" :{
+    "name": "试讲账号",
+    "otherName": "demoTeacherID",
+    "arr": [],
+    "id": []
+  },
+  "demoStudentId" :{
+    "name": "学生账号",
+    "otherName": "demoStudentId",
+    "arr": [],
+    "id": []
+  },
+  "timeSlice" :{
+    "name":"demo课时间",
+    "otherName":"timeSlice",
+    "arr": [],
+    "id": []
+  },
+  "course" :{
+    "name":"demo课",
+    "otherName":"course",
+    "arr": [],
+    "id": []
+  },
+  "creativeAndExpression" :{
+    "name":"创意和表达",
+    "otherName":"creative",
+    "arr": ["创意和表达","60","80","100","0"],
+    "id": [-100,60,80,100,0]
+  },
+  "adaptAndLead" :{
+    "name":"适应和引导",
+    "otherName":"adaptation",
+    "arr":["适应和引导","60","80","100","0"],
+    "id":[-100,60,80,100,0]
+  },
+  "managementTable" :{
+    "thList" : ["报名日期","First Name","Last Name","账号","性别","国家","时区","手机号","邮箱","零食",
+      "城市","面试评分","试讲评分","综合评分","账户状态","操作"],
+    "tbodyList" : ["checkbox","createTime","firstName","lastName","nickName","gender","nationality","timezone","cellphoneNumber","email",
+      "snack","city","interviewScore","trialScore","markScore","isActive","operate"],
+    "nullEntry" : {"checkbox": null,"createTime":null,"firstName":null,"lastName":null,"nickName":null,"gender":null,
+      "nationality":null,"timezone":null, "cellphoneNumber":null, "email":null,"snack":null,"city":null,"interviewScore":null,
+      "trialScore":null,"markScore":null,"isActive":null,"operate":null}
+  },
+  "examineTable" :{
+    "thList" : ["报名日期","First Name","Last Name","国家","时区","手机号","邮箱","零食","教学经验","操作"],
+    "tbodyList" : ["checkbox","createTime","firstName","lastName","nationality","timezone","cellphoneNumber","email",
+      "snack","teachingExperience","operate"],
+    "nullEntry" : {"checkbox": null,"createTime":null,"firstName":null,"lastName":null, "nationality":null,"timezone":null,
+      "cellphoneNumber":null, "email":null,"snack":null,"teachingExperience":null,"operate":null}
+  },
+  "interviewTable" :{
+    "thList" : ["审核日期","First Name","Last Name","国家","时区","手机号","邮箱","国家级别","面试时间","性别","零食",
+      "口语水平","教学经验","操作"],
+    "tbodyList" : ["checkbox","auditTime","firstName","lastName","nationality","timezone","cellphoneNumber","email",
+      "nationalityLevel","interviewTime","gender","snack","spokenLevel","teachingExperience","operate"],
+    "nullEntry" : {"checkbox": null,"auditTime":null,"firstName":null,"lastName":null,"nationality":null,"timezone":null, "cellphoneNumber":null,
+      "email":null,"nationalityLevel":null,"interviewTime":null,"gender":null,"snack":null,"spokenLevel":null,"teachingExperience":null,"operate":null}
+  },
+  "lectureTable" :{
+    "thList" : ["面试时间","First Name","Last Name","国家","时区","手机号","邮箱","面试评分","试讲评分","综合评分","安排试讲","操作"],
+    "tbodyList" : ["checkbox","interviewTime","firstName","lastName","nationality","timezone","cellphoneNumber",
+      "email","interviewScore","trialScore","markScore","triallectureTime","operate"],
+    "nullEntry" : {"checkbox": null,"interviewTime":null,"firstName":null,"lastName":null,"nationality":null,"timezone":null,
+      "cellphoneNumber":null,"email":null,"interviewScore":null,"trialScore":null,"markScore":null,"triallectureTime":null,"operate":null}
+  },
+  "pondTable" :{
+    "thList" : ["报名日期","审核日期","面试时间","试讲时间","First Name","Last Name","国家","时区","手机号","邮箱","零食","面试评分","试讲评分","综合评分","不通过类型","操作"],
+    "tbodyList" : ["checkbox","createTime","auditTime","interviewTime","triallectureTime","firstName","lastName","nationality",
+      "timezone","cellphoneNumber","email","snack","interviewScore","trialScore","markScore","stepNoPassState","operate"],
+    "nullEntry" : {"checkbox": null,"createTime":null,"interviewTime":null,"firstName":null,"lastName":null,"nationality":null,"timezone":null,
+      "cellphoneNumber":null,"email":null,"interviewScore":null,"trialScore":null,"markScore":null,"stepNoPassState":null,"operate":null}
+  }
+}

@@ -1,0 +1,79 @@
+.modalManagement,
+.modalExamine,
+.modalInterview,
+.modalLecture{
+  overflow: auto;
+  .modal-dialog{
+    margin: 10px auto;
+    .modal-content{
+      width: 600px;
+      .modal-body{
+        padding: 10px;
+        .modal-body-header {
+          select {
+            max-width: 273px;
+            width: 273px;
+          }
+          .field{
+            label{
+              margin-right: 10px;
+              max-width: 190px;
+              display: inline-block;
+              white-space: nowrap;
+              overflow: auto;
+            }
+            .readOnly{
+              width:210px;
+            }
+          }
+        }
+        .modal-body-header,.modal-body-body,.modal-body-footer{
+          .field{
+            width: 48%;
+            margin: 0 1%;
+            display: inline-block;
+            label{
+              display: block;
+            }
+            .datePicker,.timePicker{
+              width: 273px;
+            }
+          }
+          .dataPicker,.timePicker{
+            width : 90%;
+          }
+        }
+        .modal-body-body,.modal-body-footer{
+          border: 1px solid #ccc;
+          padding: 10px 0;
+          margin-top: 10px;
+        }
+        .modal-body-remarks{
+          margin-top: 10px;
+          label{
+            display: block;
+          }
+          textarea{
+            width: 100%;
+          }
+        }
+        .yearPicker.field{
+          width: 100%;
+          .form-control{
+            display: inline-block;
+            width: 125px;
+          }
+          .start{
+            margin-right: 5px;
+          }
+          .end{
+            margin-left: 5px;
+          }
+        }
+      }
+      .modal-footer{
+        padding: 10px;
+      }
+    }
+  }
+}
