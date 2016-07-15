@@ -1,23 +1,7 @@
 [
   {
-    "id" : "",
-    "studentId" : "",
-    "studentName" : "",
-    "teacherId" : "",
-    "teacherName" : "",
-    "courseType" : "",
-    "courseName" : "",
-    "statusDesc" : "",
-    "startTime" : "",
-    "endTime" : "",
-    "reason" : "",
-    "orderId" : ""
-  },
-  {
-    "teacherId" : "",
-    "teachingType" : "",
-    "teacherName" : "",
-    "property" : "",
-    "score" : ""
+    "online" : "online-api.boxfish.cn/teacheradmin",
+    "test" : "123.56.13.168:8099",
+    "formal": "101.201.66.32:8099"
   }
 ]

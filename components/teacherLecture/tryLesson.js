@@ -41,7 +41,7 @@ var TryLesson = React.createClass({
                                 <div className="element" style={{height:"65px"}}>
                                     <label>试讲时间:</label>
                                     <div className="try-time">
-                                        <DataPicker type="1" ref="date" show="true"/>
+                                        <DataPicker type="1" ref="date" show="true" />
                                         <SelectComponent ref="timeSlot" contentData={this.props.time}/>
                                     </div>
                                 </div>

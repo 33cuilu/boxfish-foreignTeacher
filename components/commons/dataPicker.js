@@ -33,13 +33,16 @@ var DataPicker = React.createClass({
     componentDidMount : function () {
         //初始化表格的日期选择控件
         let place = (this.props.place == null)? '.content' : this.props.place;
+        let daterangepickerConfig = {
+            parentEl: place,
+            singleDatePicker: true,
+            startDate: new Date()
+        };
+        if(this.props.minDay){
+            daterangepickerConfig.minDate = moment();
+        }
         if(this.props.type == "1"){
-            $(this.refs.dateInput).daterangepicker(
-                {
-                    parentEl: place,
-                    singleDatePicker: true,
-                    startDate: new Date()
-                },
+            $(this.refs.dateInput).daterangepicker( daterangepickerConfig,
                 (start,end,label) => {
                     this.setState({
                         value : start.format("YYYY-MM-DD HH:mm:ss"),

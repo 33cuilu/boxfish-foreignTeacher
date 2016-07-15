@@ -31,37 +31,41 @@ var Login = React.createClass({
         errClassName += (this.state.showErr)? " show":" hiden";
         return(
             <div className="login center-block">
-                <div className="forms center-block">
+                <div className="forms form center-block">
                     <div className="login-title">
                         <span>外教管理系统</span>
                     </div>
-                    <input className="form-control" type="text" ref="name" placeholder="请输入用户名"/>
-                    <input className="form-control" type="password" ref="password" placeholder="请输入密码"/>
-                    <p className={errClassName}>{this.state.errInfo}</p>
-                    <button className="btn form-control" onClick={this._login}>登录</button>
+                    <form onSubmit={(e)=>{this._login(e);return false;}}>
+                        <input className="form-control" type="text" ref="name" placeholder="请输入用户名"/>
+                        <input className="form-control" type="password" ref="password" placeholder="请输入密码"/>
+                        <p className={errClassName}>{this.state.errInfo}</p>
+                        <input type="submit" className="btn form-control" value="登录"/>
+                    </form>
                 </div>
             </div>
         );
     },
-    _login : function () {
+    _login : function (e) {
+        e.preventDefault();
         let name = this.refs.name.value,
             password = this.refs.password.value;
-        if(name.length == 0 || password.length == 0){
+        console.log("log in");
+        console.log(name);
+        console.log(password);
+        if(name.length == 0){
             this.setState({
-                errInfo: "请填写用户名和密码",
+                errInfo: "请填写用户名",
                 showErr: true
             });
-            return;
+            return false;
         }
-        // if(name != "admin" || password != "admin"){
-        //     this.setState({
-        //         errInfo: "用户名或密码错误",
-        //         showErr: true
-        //     });
-        //     return;
-        // }
-        // this.context.router.push("management");
-        // return;
+        if(password.length == 0){
+            this.setState({
+                errInfo: "请填写密码",
+                showErr: true
+            });
+            return false;
+        }
         let postHead = {
             url : loginUrl,
             data : {
@@ -78,7 +82,7 @@ var Login = React.createClass({
                         errInfo: errInfo,
                         showErr: true
                     });
-                    return;
+                    return false;
                 }
                 store.set("accessToken",data);
                 this.context.router.push("/teacherManagement");
