@@ -238,6 +238,12 @@
     "arr": ["面试渠道","wehat","Skype"],
     "id": [-100,1,2]
   },
+  "team" : {
+    "name" : "team",
+    "otherName": "team",
+    "arr": ["ALL TEAM","TEAM ONE","TEAM TWO","TEAM THREE","TEAM FOUR"],
+    "id": [-100,1,2,3,4]
+  },
   "degree" :{
     "name":"xueli",
     "otherName": "degree",
@@ -299,41 +305,51 @@
     "id":[-100,60,80,100,0]
   },
   "managementTable" :{
-    "thList" : ["报名日期","First Name","Last Name","账号","性别","国家","时区","手机号","邮箱","零食",
-      "城市","面试评分","试讲评分","综合评分","账户状态","操作"],
-    "tbodyList" : ["checkbox","createTime","firstName","lastName","nickName","gender","nationality","timezone","cellphoneNumber","email",
-      "snack","city","interviewScore","trialScore","markScore","isActive","operate"],
-    "nullEntry" : {"checkbox": null,"createTime":null,"firstName":null,"lastName":null,"nickName":null,"gender":null,
-      "nationality":null,"timezone":null, "cellphoneNumber":null, "email":null,"snack":null,"city":null,"interviewScore":null,
-      "trialScore":null,"markScore":null,"isActive":null,"operate":null}
+    "thList" : ["First Name","Last Name","账号","手机号","邮箱","国家","常驻地","时区","渠道",
+      "面试时间","试讲时间","国家级别","零食","教学经验","口语水平","创意","拓展","总分","备注","账户状态","操作"],
+    "tbodyList" : ["checkbox","firstName","lastName","nickName","cellphoneNumber","email","nationality","location","timezone",
+      "channel","interviewTime","triallectureTime","nationalityLevel","snack","teachingExperience",
+      "spokenLevel","creative","expand","markScore","note","isActive","operate"],
+    "nullEntry" : {"checkbox": null,"firstName":null,"lastName":null,"nickName":null,"cellphoneNumber":null, "email":null,"nationality":null,
+      "location":null,"timezone":null,"channel":null,"interviewTime":null,"triallectureTime":null,
+      "nationalityLevel":null,"snack":null,"teachingExperience":null,"spokenLevel":null,"creative":null,
+      "expand":null,"markScore":null,"note":null,"isActive":null,"operate":null}
   },
   "examineTable" :{
-    "thList" : ["报名日期","First Name","Last Name","国家","时区","手机号","邮箱","零食","教学经验","操作"],
-    "tbodyList" : ["checkbox","createTime","firstName","lastName","nationality","timezone","cellphoneNumber","email",
-      "snack","teachingExperience","operate"],
-    "nullEntry" : {"checkbox": null,"createTime":null,"firstName":null,"lastName":null, "nationality":null,"timezone":null,
-      "cellphoneNumber":null, "email":null,"snack":null,"teachingExperience":null,"operate":null}
+    "thList" : ["预约面试时间","First Name","Last Name","手机号","邮箱","国家","常驻地","时区","渠道","面试渠道","面试账号","报名日期","操作"],
+    "tbodyList" : ["checkbox","interviewTime","firstName","lastName","cellphoneNumber","email","nationality","location","timezone",
+      "channel","interviewChannel","interviewAccount","createTime","operate"],
+    "nullEntry" : {"checkbox": null,"interviewTime":null,"firstName":null,"lastName":null,"cellphoneNumber":null, "email":null,"nationality":null,
+      "location":null,"timezone":null,"channel":null,"interviewChannel":null,"interviewAccount":null,"createTime":null,"operate":null}
   },
   "interviewTable" :{
-    "thList" : ["审核日期","First Name","Last Name","国家","时区","手机号","邮箱","国家级别","面试时间","性别","零食",
-      "口语水平","教学经验","操作"],
-    "tbodyList" : ["checkbox","auditTime","firstName","lastName","nationality","timezone","cellphoneNumber","email",
-      "nationalityLevel","interviewTime","gender","snack","spokenLevel","teachingExperience","operate"],
-    "nullEntry" : {"checkbox": null,"auditTime":null,"firstName":null,"lastName":null,"nationality":null,"timezone":null, "cellphoneNumber":null,
-      "email":null,"nationalityLevel":null,"interviewTime":null,"gender":null,"snack":null,"spokenLevel":null,"teachingExperience":null,"operate":null}
+    "thList" : ["报名时间","First Name","Last Name","手机号","邮箱","国家","常驻地","时区","渠道","面试渠道","面试账号","性别","TEAM","面试时间","操作"],
+    "tbodyList" : ["createTime","firstName","lastName","cellphoneNumber","email","nationality","location","timezone","channel","interviewChannel",
+      "interviewAccount","gender","team","interviewTime","operate"],
+    "nullEntry" : {"createTime":null,"firstName":null,"lastName":null,"cellphoneNumber":null,"email":null,"nationality":null,"location":null,
+      "timezone":null,"channel":null,"interviewChannel":null,"interviewAccount":null,"gender":null,"team":null,"interviewTime":null,"operate":null}
   },
-  "lectureTable" :{
-    "thList" : ["面试时间","First Name","Last Name","国家","时区","手机号","邮箱","面试评分","试讲评分","综合评分","安排试讲","操作"],
-    "tbodyList" : ["checkbox","interviewTime","firstName","lastName","nationality","timezone","cellphoneNumber",
-      "email","interviewScore","trialScore","markScore","triallectureTime","operate"],
-    "nullEntry" : {"checkbox": null,"interviewTime":null,"firstName":null,"lastName":null,"nationality":null,"timezone":null,
-      "cellphoneNumber":null,"email":null,"interviewScore":null,"trialScore":null,"markScore":null,"triallectureTime":null,"operate":null}
+  "preLectureTable" :{
+    "thList" : ["面试时间","First Name","Last Name","手机号","邮箱","国家","常驻地","时区","渠道","性别","TEAM","试讲时间","操作"],
+    "tbodyList" : ["interviewTime","firstName","lastName","cellphoneNumber","email","nationality","location","timezone",
+      "channel","gender","team","triallectureTime","operate"],
+    "nullEntry" : {"interviewTime":null,"firstName":null,"lastName":null,"cellphoneNumber":null,"email":null,"nationality":null,
+      "location":null,"timezone":null,"channel":null,"gender":null,"team":null,"triallectureTime":null,"operate":null}
+  },
+  "postLectureTable" :{
+    "thList" : ["面试时间","First Name","Last Name","手机号","邮箱","国家","常驻地","时区","渠道","性别","备注","创意","拓展",
+      "口语水平","零食","教学经验","国家级别","总分","team","试讲时间","操作"],
+    "tbodyList" : ["interviewTime","firstName","lastName","cellphoneNumber","email","nationality","location","timezone", "channel",
+      "gender","note","creative","expand","spokenLevel","snack","teachingExperience","nationalityLevel","markScore","team","triallectureTime","operate"],
+    "nullEntry" : {"interviewTime":null,"firstName":null,"lastName":null,"cellphoneNumber":null,"email":null,"nationality":null,
+      "location":null,"timezone":null,"channel":null,"gender":null,"note":null,"creative":null,"expand":null,"spokenLevel":null,
+      "snack":null,"teachingExperience":null,"nationalityLevel":null,"markScore":null,"team":null,"triallectureTime":null,"operate":null}
   },
   "pondTable" :{
-    "thList" : ["报名日期","审核日期","面试时间","试讲时间","First Name","Last Name","国家","时区","手机号","邮箱","零食","面试评分","试讲评分","综合评分","不通过类型","操作"],
-    "tbodyList" : ["checkbox","createTime","auditTime","interviewTime","triallectureTime","firstName","lastName","nationality",
-      "timezone","cellphoneNumber","email","snack","interviewScore","trialScore","markScore","stepNoPassState","operate"],
-    "nullEntry" : {"checkbox": null,"createTime":null,"interviewTime":null,"firstName":null,"lastName":null,"nationality":null,"timezone":null,
-      "cellphoneNumber":null,"email":null,"interviewScore":null,"trialScore":null,"markScore":null,"stepNoPassState":null,"operate":null}
+    "thList" : ["报名日期","审核日期","面试时间","试讲时间","First Name","Last Name","手机号","邮箱","时区","国家","不通过类型","操作"],
+    "tbodyList" : ["createTime","auditTime","interviewTime","triallectureTime","firstName","lastName",
+      "cellphoneNumber","email","timezone","nationality","stepNoPassState","operate"],
+    "nullEntry" : {"createTime":null,"auditTime":null,"interviewTime":null,"triallectureTime":null,"firstName":null,
+      "lastName":null,"cellphoneNumber":null,"email":null,"timezone":null,"nationality":null,"stepNoPassState":null,"operate":null}
   }
 }

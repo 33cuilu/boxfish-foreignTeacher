@@ -21,13 +21,7 @@ var ModalInterviewScore = React.createClass({
             nationalityLevel : -100,
             spokenLevel : -100,
             snack : -100,
-            teachingExperience : -100,
-            interviewScore : {
-                nationalityLevel : -100,
-                snack : -100,
-                spokenLevel :-100,
-                teachingExperience : -100
-            }
+            teachingExperience : -100
         }
     },
     componentWillReceiveProps : function(nextProps){
@@ -47,24 +41,7 @@ var ModalInterviewScore = React.createClass({
                 <div className="modal fade">
                     <div className="modal-dialog">
                         <div className="modal-content">
-                            <div className="modal-body">
-                                    <label>国家级别:</label>
-                                    <SelectComponent value={this.state.nationalityLevel} contentData={configData.nationalityLevel} ref="nationalityLevel"
-                                                     onChange={(value)=>{this.changeNationalityLevel(value)}}/>
-                                <span>{getScoreById(configData.nationalityLevel,+this.state.nationalityLevel)}</span>
-                                    <label>零食:</label>
-                                    <SelectComponent value={this.state.snack} contentData={configData.snack} ref="snack"
-                                                     onChange={(value)=>{this.changeSnack(value)}}/>
-                                <span>{getScoreById(configData.snack, +this.state.snack)}</span>
-                                    <label>口语水平:</label>
-                                    <SelectComponent value={this.state.spokenLevel} contentData={configData.spokenLevel} ref="spokenLevel"
-                                                     onChange={(value)=>{this.changeSpokenLevel(value)}}/>
-                                <span>{getScoreById(configData.spokenLevel, +this.state.spokenLevel)}</span>
-                                    <label>教学经验:</label>
-                                    <SelectComponent value={this.state.teachingExperience} ref="teachingExperience" contentData={configData.experienceDetail}
-                                                     onChange={(value)=>{this.changeExperience(value)}}/>
-                                <span>{getScoreById(configData.experienceDetail, +this.state.teachingExperience)}</span>
-                            </div>
+                            <div className="modal-body"></div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-primary" onClick={this._submit}>确定</button>
                                 <button type="button" className="btn btn-default" data-dismiss="modal">取消</button>

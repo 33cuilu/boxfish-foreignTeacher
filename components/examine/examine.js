@@ -12,15 +12,11 @@ import {Post,Get,getById} from '../../util/ajax.js';
 import ModalDetail from '../commons/modalDetail.js';
 import HotSearch from './../commons/hotSearch.js';
 import OtherSearch from './../commons/otherSearch.js';
-import SelectComponent from './../commons/selectComponent.js';
 import Table from './../commons/table.js';
 import PageList from './../commons/page.js';
 import ModalExamineAdopt from './modalExamineAdopt.js';
 import ModalInPond from './../commons/modalInPond.js';
 import ModalInPonds from './../commons/modalInPonds.js';
-
-//引入样式
-import "../../less/teacherExamine.less";
 
 var configData = require('../../config/config.json');
 
@@ -28,7 +24,6 @@ var searchUrl = `http://${configData.ip}/web/teacherOralEn/teacherStepList`;
 var infoUrl = `http://${configData.ip}/web/teacherOralEn/teacherDetail`;
 var inPondsUrl = `http://${configData.ip}/web/teacherOralEn/putPond`;
 var passUrl = `http://${configData.ip}/web/teacherOralEn/updateStatePass`;
-var updateLevelUrl = `http://${configData.ip}/web/teacherOralEn/updateLevel`;
 
 var TeacherExamine = React.createClass({
     /**
@@ -54,7 +49,7 @@ var TeacherExamine = React.createClass({
             },
             list : [],
             selected : [],
-            snack : -100
+            msg : ''
         };
     },
 
@@ -110,30 +105,34 @@ var TeacherExamine = React.createClass({
             let isCheck = ($.inArray(v.email,this.state.selected) != -1);
             return {
                 "checkbox" : <input type="checkbox" checked={isCheck} onChange={(e)=>{this.select(e,i)}}/>,
-                "createTime" : v.createTime,
+                "interviewTime" : v.interviewTime,
                 "firstName" : v.firstName,
                 "lastName" : v.lastName,
-                "nationality" : v.nationality,
-                "timezone" : v.timezone,
                 "cellphoneNumber" : v.cellphoneNumber,
                 "email" : v.email,
-                "snack" : getById(configData.snack, v.snack),
-                "teachingExperience" : getById(configData.experienceDetail, v.teachingExperience),
+                "nationality" : v.nationality,
+                "location" : v.location,
+                "timezone" : v.timezone,
+                "channel" : v.channel,
+                "interviewChannel" : getById(configData.interviewChannel, v.interviewChannel),
+                "interviewAccount" : v.interviewAccount,
+                "createTime" : v.createTime,
                 "operate" : (
                     <div>
-                        <button className="btn btn-success btn-xs" onClick={(e)=>{this.arangeAdopt(i)}}>通过</button>
-                        <button className="btn btn-warning btn-xs" onClick={(e)=>{this.arangeInPond(i)}}>入池</button>
-                        <button className="btn btn-link btn-xs" onClick={(e)=>{this.arangeMore(i)}}>详情</button>
+                        <i className="glyphicon glyphicon-ok" onClick={(e)=>{this.arangeAdopt(i)}}></i>
+                        <i className="glyphicon glyphicon-remove" onClick={(e)=>{this.arangeInPond(i)}}></i>
+                        <button className="btn btn-xs btn-primary" onClick={(e)=>{this.arangeMore(i)}}>详情</button>
                     </div>
                 )
             };
         });
         return(
             <div className="teacherExamine">
-                <ModalDetail info={this.state.curInfo} callback={(e)=>{this._getPage(this.state.curPage)}}/>
+                <ModalDetail info={this.state.curInfo} callback={(e)=>{this._getPage(this.state.curPage); this._showMsg("保存成功")}}/>
                 <ModalExamineAdopt callback={this.adopt}/>
                 <ModalInPond callback={this.inPonds}/>
                 <ModalInPonds callback={this.inPonds}/>
+                <div className="msg-feedback">{this.state.msg}</div>
                 <div className="forms" id="forms">
                     <div className="input">
                         <HotSearch ref="hotSearch"/>
@@ -149,20 +148,27 @@ var TeacherExamine = React.createClass({
                     <Table contentData={configData.examineTable} list={tableList} tableStyle={this.state.tableStyle} selectAll={this.selectAll}/>
                 </div>
                 <div className="main-btn">
-                    <div className="btn-right">
+                    <div className="btn-left">
                         <button className="btn btn-warning btn-sm" onClick={this._arangeInPonds}>批量入池</button>
-                        <div className="btn-right-select">
-                            <label>零食:</label>
-                            <SelectComponent ref="bottomSnack" size="small" contentData={configData.snack} onChange={(value)=>{this.setState({snack : value})}}/>
-                            <button className="btn btn-primary btn-sm" onClick={this._updateSnack}>确定</button>
-                        </div>
                     </div>
                 </div>
-                <PageList curPage={this.state.curPage} totalPages={this.state.totalPages} onPre={this._prePage} onFirst={this._firstPage} onLast={this._lastPage} onNext={this._nextPage}/>
+                <PageList curPage={this.state.curPage} totalPages={this.state.totalPages} onPre={this._prePage} onFirst={this._firstPage}
+                          onLast={this._lastPage} onNext={this._nextPage} onJump={(page)=>{this._JumpPage(page)}}/>
             </div>
         );
     },
-
+    /**
+     * 在页面顶部显示反馈的信息
+     * @param msg: 反馈的信息
+     * @private
+     */
+    _showMsg : function (msg) {
+        this.setState({
+            msg: msg
+        });
+        $('.msg-feedback').stop(true);
+        $('.msg-feedback').fadeIn(0).delay(1500).fadeOut(1000);
+    },
     /**
      * 点击"筛选"按钮,触发ajax请求,刷新列表
      * @private
@@ -170,14 +176,12 @@ var TeacherExamine = React.createClass({
     _search : function () {
         let firstName = this.refs.hotSearch.state.firstName,
             lastName = this.refs.hotSearch.state.lastName,
-            nationality = this.refs.hotSearch.state.nationality,
-            timezone = this.refs.hotSearch.state.timezone,
             cellphoneNumber = this.refs.hotSearch.state.cellphoneNumber,
             email = this.refs.hotSearch.state.email,
-            createTimeStart = this.refs.createTime.state.start,
-            createTimeEnd = this.refs.createTime.state.end,
-            snack = +this.refs.snack.state.value,
-            isHasTeachingExperience = +this.refs.experience.state.value,
+            nationality = this.refs.hotSearch.state.nationality,
+            location = this.refs.otherSearch.state.location,
+            timezone = this.refs.otherSearch.state.timezone,
+            channel = this.refs.otherSearch.state.value,
             data = {
                 page : 0,
                 size : this.state.pageSize,
@@ -186,13 +190,12 @@ var TeacherExamine = React.createClass({
             };
         (firstName.length >0) && (data.firstName = firstName);
         (lastName.length >0) && (data.lastName=lastName);
-        (nationality != -100) && (data.nationality=nationality);
-        (timezone != -100) && (data.timezone=timezone);
         (cellphoneNumber.length >0) && (data.cellphoneNumber=cellphoneNumber);
         (email.length >0) && (data.email=email);
-        (createTimeStart.length >0) && (data.createTimeStart=createTimeStart) &&(data.createTimeEnd=createTimeEnd);
-        (snack != -100 ) && (data.snack=snack);
-        (isHasTeachingExperience != -100) && (data.isHasTeachingExperience=isHasTeachingExperience);
+        (nationality != "-100") && (data.nationality=nationality);
+        (location != "-100" ) && (data.location=location);
+        (channel != -100) && (data.channel=channel);
+        (timezone != -100) && (data.timezone=timezone);
 
         let getHead = {
             url : searchUrl,
@@ -309,6 +312,17 @@ var TeacherExamine = React.createClass({
     },
 
     /**
+     * 跳转到指定页
+     * @param page: 目标页数
+     * @private
+     */
+    _JumpPage : function (page) {
+        if(this.state.curPage == page)
+            return;
+        this._getPage(page);
+    },
+
+    /**
      * 点击表格中的复选框,触发当前行选中事件
      * @param e: 点击事件
      * @param i: 选中的行在表格中的序号
@@ -381,6 +395,7 @@ var TeacherExamine = React.createClass({
                 }else {
                     $(".modalExamineAdopt .modal").modal('hide');
                     this._getPage(this.state.curPage);
+                    this._showMsg("操作成功");
                 }
             },
             () => {
@@ -420,7 +435,11 @@ var TeacherExamine = React.createClass({
      */
     inPonds : function (num,reason) {
         if(reason.length <=0){
-            alert("请填写入池理由!");
+            alert("入池理由不能为空!");
+            return;
+        }
+        if(reason.length>=50){
+            alert("字数不得超过50字!");
             return;
         }
         let emails = [];
@@ -446,6 +465,7 @@ var TeacherExamine = React.createClass({
                 $(".modalInPond .modal").modal('hide');
                 $(".modalInPonds .modal").modal('hide');
                 this._getPage(this.state.curPage);
+                this._showMsg("操作成功");
             },
             () => {
                 alert("入池失败,请重试!");
@@ -483,7 +503,7 @@ var TeacherExamine = React.createClass({
                     });
                     $(".modalDetail .modal").modal();
                 }else{
-                    alert("该用户的信息为空!");
+                    alert("该用户的详情为空!");
                 }
             },
             ()=>{
@@ -492,41 +512,6 @@ var TeacherExamine = React.createClass({
         ).catch((err)=>{
             console.log(err);
         });
-    },
-
-    /**
-     * 表格下方可以批量修改"零食".点击"确定"按钮即可提交更改,触发批量修改事件
-     * @private
-     */
-    _updateSnack : function () {
-        if(this.state.snack == -100){
-            alert("请选择一种零食!");
-            return;
-        }
-        let emails = this.state.selected;
-        if(emails.length <=0){
-            alert("请选中至少一个教师!");
-            return;
-        }
-        let postHead = {
-            url : `${updateLevelUrl}?token=${store.get("accessToken")}`,
-            data : {
-                "emails": emails,
-                "changeLevel":1,
-                "intValue": this.state.snack
-            }
-        };
-        Post(postHead).then(
-            () => {
-                this._getPage(this.state.curPage);
-            },
-            () => {
-                alert("修改失败,请重试!");
-            }).catch(
-            (err) => {
-                console.log(err);
-            }
-        );
     }
 
 });

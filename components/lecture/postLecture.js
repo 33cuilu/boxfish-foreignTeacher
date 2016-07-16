@@ -6,7 +6,7 @@
 //引入插件
 import React from 'react';
 import store from 'store';
-import {Post,Get} from '../../util/ajax.js';
+import {Post,Get,getById} from '../../util/ajax.js';
 
 //引入组件
 import ModalDetail from '../commons/modalDetail.js';
@@ -17,10 +17,9 @@ import Table from './../commons/table.js';
 import PageList from './../commons/page.js';
 import TryLesson from './tryLesson.js';
 import EditLesson from './editLesson.js';
-import ModalTryScore from './../commons/modalTryScore.js';
-import ModalAdopt from './modalAdopt.js';
+import ModalScore from './../commons/modalScore.js';
+import ModalAdopt from './../commons/modalAdopt.js';
 import ModalInPond from './../commons/modalInPond.js';
-import ModalInPonds from './../commons/modalInPonds.js';
 
 //引入样式
 import "../../less/teacherLecture.less";
@@ -37,7 +36,7 @@ var editLessonUrl = `http://${configData.ip}/web/common/triallecture/en/`;
 var infoUrl = `http://${configData.ip}/web/teacherOralEn/teacherDetail`;
 var inPondsUrl = `http://${configData.ip}/web/teacherOralEn/putPond`;
 var passUrl = `http://${configData.ip}/web/teacherOralEn/updateStatePass`;
-var trialScoreUrl = `http://${configData.ip}/web/teacherOralEn/updateTrialScore`;
+var scoreUrl = `http://${configData.ip}/web/teacherOralEn/updateScore`;
 
 var TeacherLecture = React.createClass({
     /**
@@ -75,16 +74,20 @@ var TeacherLecture = React.createClass({
             tableStyle : {
                 tableSize : 10,
                 selectAll : false,
-                hasCheckBox : true,
+                hasCheckBox : false,
                 hasOperate : true
             },
-            lectureScore : {
+            score : {
                 creativeAndExpression : -100,
-                adaptAndLead : -100
+                adaptAndLead : -100,
+                nationalityLevel : -100,
+                spokenLevel : -100,
+                snack : -100,
+                teachingExperience : -100
             },
             demoCourseInfo : {},
             list : [],
-            selected : []
+            msg : ''
         };
     },
 
@@ -108,15 +111,13 @@ var TeacherLecture = React.createClass({
             ({data})=> {
                 if (data == null) {
                     this.setState({
-                        getHead : getHead,
-                        selected : []
+                        getHead : getHead
                     });
                 } else {
                     this.setState({
                         getHead: getHead,
                         totalPages: data.totalPages,
-                        list: data.content,
-                        selected : []
+                        list: data.content
                     });
                 }
             },
@@ -159,26 +160,33 @@ var TeacherLecture = React.createClass({
                 <button key={i} className="btn btn-primary btn-xs" onClick={(e)=>{this.arrangeTryLesson(i)}}>
                     安排试讲
                 </button>;
-            let isCheck = ($.inArray(v.email,this.state.selected) != -1);
             return {
-                "checkbox" : <input type="checkbox" checked={isCheck}  onChange={(e)=>{this.select(e,i)}}/>,
                 "interviewTime" : v.interviewTime,
                 "firstName" : v.firstName,
                 "lastName" : v.lastName,
-                "nationality" : v.nationality,
-                "timezone" : v.timezone,
                 "cellphoneNumber" : v.cellphoneNumber,
                 "email" : v.email,
-                "interviewScore" : v.interviewScore,
-                "trialScore" : v.trialScore,
+                "nationality" : v.nationality,
+                "location" : v.location,
+                "timezone" : v.timezone,
+                "channel" : getById(configData.channel, v.channel),
+                "gender" : getById(configData.gender, v.gender),
+                "note" : v.note,
+                "creative" : v.creativeAndExpression,
+                "expand" : v.adaptAndLead,
+                "spokenLevel" : getById(configData.spokenLevel, v.spokenLevel),
+                "snack" : getById(configData.snack, v.snack),
+                "teachingExperience" : getById(configData.experienceDetail, v.experienceDetail),
+                "nationalityLevel" : getById(configData.nationalityLevel, v.nationalityLevel),
                 "markScore" : v.markScore,
                 "triallectureTime" : tryTime,
                 "operate" : (
                     <div>
-                        <button className="btn btn-primary btn-xs" onClick={(e)=>{this.arrangeScore(i)}}>评分</button>
-                        <button className="btn btn-success btn-xs" onClick={(e)=>{this.arangeAdopt(i)}}>通过</button>
-                        <button className="btn btn-warning btn-xs" onClick={(e)=>{this.arangeInPond(i)}}>入池</button>
-                        <button className="btn btn-link btn-xs" onClick={(e)=>{this.arangeMore(i)}}>详情</button>
+                        <i className="glyphicon glyphicon-ok" onClick={(e)=>{this.arangeAdopt(i)}}></i>
+                        <i className="glyphicon glyphicon-remove" onClick={(e)=>{this.arangeInPond(i)}}></i>
+                        <button className="btn btn-xs btn-success" onClick={(e)=>{this.arrangeScore(i)}}>评分</button>
+                        <button className="btn btn-xs btn-warning" onClick={(e)=>{this.arangeWait(i)}}>待安排</button>
+                        <button className="btn btn-xs btn-primary" onClick={(e)=>{this.arangeMore(i)}}>详情</button>
                     </div>
                 )
             };
@@ -190,10 +198,9 @@ var TeacherLecture = React.createClass({
                            time={this.state.timeSlot} course={this.state.demoCourse} callback={()=>{this._getPage(this.state.curPage)}}/>
                 <EditLesson row={rowContent} info={this.state.demoCourseInfo} teacher={this.state.teacherAccounts} student={this.state.studentAccounts}
                             time={this.state.timeSlot} course={this.state.demoCourse} callback={()=>{this._getPage(this.state.curPage)}}/>
-                <ModalTryScore value={this.state.list[this.state.curRow]} callback={this.trialScore} defaultContent={this.state.lectureScore}/>
+                <ModalScore value={this.state.list[this.state.curRow]} callback={this.score} defaultContent={this.state.score}/>
                 <ModalAdopt callback={this.adopt}/>
                 <ModalInPond callback={this.inPonds}/>
-                <ModalInPonds callback={this.inPonds}/>
                 <div className="forms" id="forms">
                     <div className="input">
                         <HotSearch ref="hotSearch"/>
@@ -208,19 +215,27 @@ var TeacherLecture = React.createClass({
                 </div>
 
                 <div className="tableContainer" ref="tableContainer">
-                    <Table contentData={configData.lectureTable} list={tableList} tableStyle={this.state.tableStyle} selectAll={this.selectAll}/>
+                    <Table contentData={configData.postLectureTable} list={tableList} tableStyle={this.state.tableStyle}/>
                 </div>
-
-                <div className="main-btn">
-                    <div className="btn-right">
-                        <button className="btn btn-warning btn-sm" onClick={this._arangeInPonds}>批量入池</button>
-                    </div>
-                </div>
-                <PageList curPage={this.state.curPage} totalPages={this.state.totalPages} onPre={this._prePage} onFirst={this._firstPage} onLast={this._lastPage} onNext={this._nextPage}/>
+                <PageList curPage={this.state.curPage} totalPages={this.state.totalPages} onPre={this._prePage} onFirst={this._firstPage}
+                          onLast={this._lastPage} onNext={this._nextPage} onJump={(page)=>{this._JumpPage(page)}}/>
             </div>
         );
     },
-
+    
+    /**
+     * 在页面顶部显示反馈的信息
+     * @param msg: 反馈的信息
+     * @private
+     */
+    _showMsg : function (msg) {
+        this.setState({
+            msg: msg
+        });
+        $('.msg-feedback').stop(true);
+        $('.msg-feedback').fadeIn(0).delay(1000).fadeOut(1000);
+    },
+    
     /**
      * 获取可分配的老师试讲账号列表
      * @param myUrl: 老师试讲账号接口地址
@@ -362,46 +377,35 @@ var TeacherLecture = React.createClass({
     },
 
     /**
-     * 查询表单的展开动画
-     * @private
-     */
-    _changeForm : function() {
-        $("#forms").toggleClass("forms-height");
-    },
-
-    /**
      * 点击"筛选"按钮,触发ajax请求,刷新列表
      * @private
      */
     _search : function () {
 
-        let firstName = this.refs.contentInput.state.firstName,
-            lastName = this.refs.contentInput.state.lastName,
-            nationality = this.refs.contentInput.state.nationality,
-            timezone = this.refs.contentInput.state.timezone,
-            cellphoneNumber = this.refs.contentInput.state.cellphoneNumber,
-            email = this.refs.contentInput.state.email,
-            interviewTimeStart = this.refs.interviewTime.state.start,
-            interviewTimeEnd = this.refs.interviewTime.state.end,
-            triallectureStartTimeStart = this.refs.triallectureTime.state.start,
-            triallectureStartTimeEnd = this.refs.triallectureTime.state.end,
-            isTrial = this.refs.reservationTry.state.value - 0,
+        let firstName = this.refs.hotSearch.state.firstName,
+            lastName = this.refs.hotSearch.state.lastName,
+            cellphoneNumber = this.refs.hotSearch.state.cellphoneNumber,
+            email = this.refs.hotSearch.state.email,
+            nationality = this.refs.hotSearch.state.nationality,
+            location = this.refs.otherSearch.state.location,
+            channel = this.refs.otherSearch.state.value,
+            timezone = this.refs.otherSearch.state.timezone,
+            gender = this.refs.otherSearch.state.gender,
             data = {
                 page : 0,
                 size : this.state.pageSize,
                 stateStep : this.state.stateStep,
                 token : store.get("accessToken")
             };
-
         (firstName.length >0) && (data.firstName = firstName);
         (lastName.length >0) && (data.lastName=lastName);
-        (nationality != -100) && (data.nationality=nationality);
-        (timezone != -100) && (data.timezone=timezone);
         (cellphoneNumber.length >0) && (data.cellphoneNumber=cellphoneNumber);
         (email.length >0) && (data.email=email);
-        (interviewTimeStart.length >0) && (data.interviewTimeStart=interviewTimeStart) &&(data.interviewTimeEnd=interviewTimeEnd);
-        (triallectureStartTimeStart.length >0) && (data.triallectureStartTimeStart=triallectureStartTimeStart) &&(data.triallectureStartTimeEnd=triallectureStartTimeEnd);
-        (isTrial != -100) && (data.isTrial=isTrial);
+        (nationality != "-100") && (data.nationality=nationality);
+        (location != "-100" ) && (data.location=location);
+        (channel != -100) && (data.channel=channel);
+        (timezone != -100) && (data.timezone=timezone);
+        (gender != -100) && (data.gender=gender);
 
         let getHead = {
             url : searchUrl,
@@ -410,25 +414,19 @@ var TeacherLecture = React.createClass({
 
         Get(getHead).then(
             ({data})=> {
-                let selectList = new Array(data.content.length);
-                for(let i=0; i<selectList.length; i++){
-                    selectList[i] = false;
-                }
                 if (data == null) {
                     this.setState({
                         curPage: 1,
                         totalPages: 1,
                         getHead : getHead,
-                        list: [],
-                        selected: selectList
+                        list: []
                     });
                 } else {
                     this.setState({
                         getHead: getHead,
                         curPage: 1,
                         totalPages: data.totalPages,
-                        list: data.content,
-                        selected : selectList
+                        list: data.content
                     });
                 }
             },
@@ -461,8 +459,7 @@ var TeacherLecture = React.createClass({
                     return;
                 this.setState({
                     curPage : page,
-                    list : data.content,
-                    selected : []
+                    list : data.content
                 });
             },
             () => {
@@ -514,38 +511,14 @@ var TeacherLecture = React.createClass({
     },
 
     /**
-     * 点击表格中的复选框,触发当前行选中事件
-     * @param e: 点击事件
-     * @param i: 选中的行在表格中的序号
-     * @public (子组件"表格"调用)
+     * 跳转到指定页
+     * @param page: 目标页数
+     * @private
      */
-    select : function (e,i) {
-        let selectList = this.state.selected;
-        if(e.target.checked){
-            selectList = this.state.selected.concat(this.state.list[i].email);
-        }else{
-            this.state.selected.splice($.inArray(this.state.list[i].email, this.state.selected),1);
-        }
-        this.setState({
-            selected : selectList
-        });
-    },
-
-    /**
-     * 点击表头中的复选框,触发全选事件
-     * @param state: 全选状态. false表示不选中,true表示选中
-     * @public (子组件"表格"调用)
-     */
-    selectAll : function (state) {
-        let selectList = [];
-        if(state){
-            for(let i=0; i< this.state.list.length; i++){
-                selectList.push(this.state.list[i].email);
-            }
-        }
-        this.setState({
-            selected : selectList
-        });
+    _JumpPage : function (page) {
+        if(this.state.curPage == page)
+            return;
+        this._getPage(page);
     },
 
     /**
@@ -586,6 +559,7 @@ var TeacherLecture = React.createClass({
                         demoCourseInfo: data
                     });
                     $(".editLesson .modal").modal();
+                    this._showMsg("操作成功");
                 }
             },
             ({returnMsg})=>{
@@ -606,41 +580,50 @@ var TeacherLecture = React.createClass({
      */
     arrangeScore : function (i) {
         let obj = this.state.list[i];
-        let lScore = {
-            creativeAndExpression : -100,
-            adaptAndLead : -100
-        };
-        if(obj.trialScoresMap){
-            lScore = {
+        let score = this.state.score;
+        if(obj.scoresMap){
+            score = {
                 creativeAndExpression : obj.trialScoresMap.creativeAndExpression||-100,
-                adaptAndLead : obj.trialScoresMap.adaptAndLead||-100
+                adaptAndLead : obj.trialScoresMap.adaptAndLead||-100,
+                nationalityLevel : obj.nationalityLevel||-100,
+                spokenLevel : obj.spokenLevel||-100,
+                snack : obj.snack||-100,
+                teachingExperience : obj.teachingExperience||-100
             };
         }
         this.setState({
             curRow : i,
-            lectureScore : lScore
+            score : score
         });
-        $(".trialScore .modal").modal();
+        $(".modalScore .modal").modal();
     },
 
     /**
      * 点击"试讲评分模态框"中"确定"按钮,触发试讲评分事件.
      * @param id1: 创意和表达选择序号
      * @param id2: 适应和引导选择序号
+     * @param id3: 国家水平选择序号
+     * @param id4: 口语水平选择序号
+     * @param id5: 零食选择序号
+     * @param id6: 教学经验选择序号
      * @public (子组件"评分模态框"调用)
      */
-    trialScore : function(id1,id2) {
-        if(id1 == -100 || id2 == -100){
+    score : function(id1,id2,id3,id4,id5,id6) {
+        if(id1 == -100 || id2 == -100 || id3 == -100 || id4 == -100 || id5 == -100 || id6 == -100){
             alert("请在为每个项目打分!");
             return;
         }
         let postHead = {
-            url: `${trialScoreUrl}?token=${store.get("accessToken")}`,
+            url: `${scoreUrl}?token=${store.get("accessToken")}`,
             data: {
                 "email": this.state.list[this.state.curRow].email,
-                "trialScoresMap": {
+                "scoresMap": {
                     "creativeAndExpression": id1,
-                    "adaptAndLead": id2
+                    "adaptAndLead": id2,
+                    "nationalityLevel" : id3,
+                    "spokenLevel" : id4,
+                    "snack" : id5,
+                    "teachingExperience" : id6
                 }
             }
         };
@@ -649,6 +632,7 @@ var TeacherLecture = React.createClass({
             () => {
                 $(".trialScore .modal").modal('hide');
                 this._getPage(this.state.curPage);
+                this._showMsg("保存成功");
             },
             () => {
                 alert("试讲评分操作失败,请重试!");
@@ -677,13 +661,23 @@ var TeacherLecture = React.createClass({
 
     /**
      * 通过模态框中点击"确定"按钮,触发通过事件.通过ajax请求将当前教师的email发送给后台,然后ajax请求重新获取教师列表
+     * @param name: 试讲考官的名字
      * @public (子组件"通过模态框"调用)
      */
-    adopt : function () {
+    adopt : function (name) {
+        if(name.length == 0){
+            alert("试讲考官姓名不能为空");
+            return;
+        }
+        if(name.length >= 10){
+            alert("试讲考官姓名超过10个汉字");
+            return;
+        }
         let postHead = {
             url : `${passUrl}?token=${store.get("accessToken")}`,
             data : {
                 "email": this.state.list[this.state.curRow].email,
+                "name" : name,
                 "stateStep": this.state.nextState
             }
         };
@@ -700,6 +694,7 @@ var TeacherLecture = React.createClass({
                 }else{
                     $(".modalAdopt .modal").modal('hide');
                     this._getPage(this.state.curPage);
+                    this._showMsg("保存成功");
                 }
             },
             () => {
@@ -724,14 +719,6 @@ var TeacherLecture = React.createClass({
     },
 
     /**
-     * 点击"批量入池"按钮,触发批量入池模态框
-     * @private
-     */
-    _arangeInPonds : function(){
-        $(".modalInPonds .modal").modal();
-    },
-
-    /**
      * 入池模态框和批量入池模态框中点击"确定"按钮,触发入池事件.通过ajax请求将选中的教师的emails数组发送给后台,然后ajax请求重新获取教师列表
      * @param num: 表明需要执行"入池"还是"批量入池"操作. 1表示"入池",2表示"批量入池".
      * @param reason: 表明"入池"或"批量入池"的原因,不能为空.
@@ -739,19 +726,16 @@ var TeacherLecture = React.createClass({
      */
     inPonds : function (num,reason) {
         if(reason.length <=0){
-            alert("请填写入池理由!");
+            alert("入池理由不能为空");
+            return;
+        }
+        if(reason.length >=50){
+            alert("入池理由超过50字");
             return;
         }
         let emails = [];
-        if(num == 1){
-            emails.push(this.state.list[this.state.curRow].email);
-        }else{
-            emails = this.state.selected;
-        }
-        if(emails.length <=0){
-            alert("请选中入池的教师!");
-            return;
-        }
+        emails.push(this.state.list[this.state.curRow].email);
+
         let postHead = {
             url : `${inPondsUrl}?token=${store.get("accessToken")}`,
             data : {
@@ -762,12 +746,16 @@ var TeacherLecture = React.createClass({
         Post(postHead).then(
             () => {
                 $(".modalInPond .modal").modal('hide');
-                $(".modalInPonds .modal").modal('hide');
                 this._getPage(this.state.curPage);
+                this._showMsg("操作成功");
             },
             () => {
                 alert("入池失败,请重试!");
-            }).catch();
+            }).catch(
+            (err) => {
+                console.log(err);
+            }
+        );
     },
 
     /**

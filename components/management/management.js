@@ -16,8 +16,7 @@ import Table from './../commons/table.js';
 import PageList from './../commons/page.js';
 import ModalManagementFrozen from "./modalManagementFrozen.js";
 import ModalManagementActivation from './modalManagementActivation.js';
-import ModalTryScore from './../commons/modalTryScore.js';
-import ModalInterviewScore from './modalInterviewScore.js';
+import ModalScore from './../commons/modalScore.js';
 
 //引入样式
 import "../../less/teacherManagement.less";
@@ -28,8 +27,7 @@ var searchUrl = `http://${configData.ip}/web/teacherOralEn/teacherStepList`;
 var batchIsActiveUrl = `http://${configData.ip}/web/teacherOralEn/batchIsActive`;
 var infoUrl = `http://${configData.ip}/web/teacherOralEn/teacherDetail`;
 var arrangeAccountUrl = `http://${configData.ip}/web/common/distributeAccount`;
-var trialScoreUrl = `http://${configData.ip}/web/teacherOralEn/updateTrialScore`;
-var interviewScoreUrl = `http://${configData.ip}/web/teacherOralEn/updateInterviewScores`;
+var scoreUrl = `http://${configData.ip}/web/teacherOralEn/updateTrialScore`;
 
 var Management = React.createClass({
     /**
@@ -52,18 +50,17 @@ var Management = React.createClass({
                 hasCheckBox : true,
                 hasOperate : true
             },
-            interviewScore : {
+            score : {
+                creativeAndExpression : -100,
+                adaptAndLead : -100,
                 nationalityLevel : -100,
                 snack : -100,
                 spokenLevel : -100,
                 teachingExperience : -100
             },
-            lectureScore : {
-                creativeAndExpression : -100,
-                adaptAndLead : -100
-            },
             list : [],
-            selected : []
+            selected : [],
+            msg : ''
         };
     },
 
@@ -118,27 +115,30 @@ var Management = React.createClass({
         let tableList = this.state.list.map((v,i) => {
             let isCheck = ($.inArray(v.email,this.state.selected) != -1);
             return {
-                "checkbox" : <input type="checkbox" checked={isCheck}  onChange={(e)=>{this.select(e,i)}}/>,
-                "createTime" : v.createTime,
+                "checkbox" : <input type="checkbox" checked={isCheck} onChange={(e)=>{this.select(e,i)}}/>,
                 "firstName" : v.firstName,
                 "lastName" : v.lastName,
-                "nickName" : v.nickName,
-                "gender" : getById(configData.gender, v.gender),
-                "nationality" : v.nationality,
-                "timezone" : v.timezone,
                 "cellphoneNumber" : v.cellphoneNumber,
                 "email" : v.email,
+                "nationality" : v.nationality,
+                "location" : v.location,
+                "timezone" : v.timezone,
+                "channel" : getById(configData.channel, v.channel),
+                "interviewTime" : v.interviewTime,
+                "triallectureTime" : v.triallectureStartTime?`${v.triallectureStartTime} - ${v.triallectureEndTime}`:'',
+                "nationalityLevel" : getById(configData.nationalityLevel, v.nationalityLevel),
                 "snack" : getById(configData.snack, v.snack),
-                "city" : v.city,
-                "interviewScore" : v.interviewScore,
-                "trialScore" : v.trialScore,
+                "spokenLevel" : getById(configData.spokenLevel, v.spokenLevel),
+                "teachingExperience" : getById(configData.experienceDetail, v.experienceDetail),
+                "creaticve" : v.creativeAndExpression,
+                "expand" : v.adaptAndLead,
                 "markScore" : v.markScore,
+                "note" : v.note,
                 "isActive" : getById(configData.isActive, v.isActive),
                 "operate" : (
                     <div>
                         <button className="btn btn-primary btn-xs" onClick={(e)=>{this.arrangeAccount(i)}}>分配账号</button>
-                        <button className="btn btn-primary btn-xs" onClick={(e)=>{this.arrangeInterviewScore(i)}}>面试评分</button>
-                        <button className="btn btn-primary btn-xs" onClick={(e)=>{this.arrangeTryScore(i)}}>试讲评分</button>
+                        <button className="btn btn-primary btn-xs" onClick={(e)=>{this.arrangeScore(i)}}>评分</button>
                         <button className="btn btn-link btn-xs" onClick={(e)=>{this.arrangeMore(i)}}>详情</button>
                     </div>
                 )
@@ -149,8 +149,7 @@ var Management = React.createClass({
                 <ModalDetail info={this.state.curInfo} callback={(e)=>{this._getPage(this.state.curPage)}}/>
                 <ModalManagementFrozen callback={this.isActive}/>
                 <ModalManagementActivation callback={this.isActive}/>
-                <ModalTryScore defaultContent={this.state.lectureScore}  callback={this.trialScore}/>
-                <ModalInterviewScore defaultContent={this.state.interviewScore}  callback={this.interviewScore}/>
+                <ModalScore defaultContent={this.state.score}  callback={this.score}/>
 
                 <div className="forms" id="forms">
                     <div className="input">
@@ -175,9 +174,23 @@ var Management = React.createClass({
                 <div className="tableContainer" ref="tableContainer">
                     <Table contentData={configData.managementTable} list={tableList} tableStyle={this.state.tableStyle} selectAll={this.selectAll}/>
                 </div>
-                <PageList curPage={this.state.curPage} totalPages={this.state.totalPages} onPre={this._prePage} onFirst={this._firstPage} onLast={this._lastPage} onNext={this._nextPage}/>
+                <PageList curPage={this.state.curPage} totalPages={this.state.totalPages} onPre={this._prePage} onFirst={this._firstPage}
+                          onLast={this._lastPage} onNext={this._nextPage} onJump={(page)=>{this._JumpPage(page)}}/>
             </div>
         );
+    },
+
+    /**
+     * 在页面顶部显示反馈的信息
+     * @param msg: 反馈的信息
+     * @private
+     */
+    _showMsg : function (msg) {
+        this.setState({
+            msg: msg
+        });
+        $('.msg-feedback').stop(true);
+        $('.msg-feedback').fadeIn(0).delay(1500).fadeOut(1000);
     },
 
     /**
@@ -185,19 +198,14 @@ var Management = React.createClass({
      * @private
      */
     _search : function () {
-        let firstName = this.refs.contentInput.state.firstName,
-            lastName = this.refs.contentInput.state.lastName,
-            nationality = this.refs.contentInput.state.nationality,
-            timezone = this.refs.contentInput.state.timezone,
-            cellphoneNumber = this.refs.contentInput.state.cellphoneNumber,
-            email = this.refs.contentInput.state.email,
-            createTimeStart = this.refs.createTime.state.start,
-            createTimeEnd = this.refs.createTime.state.end,
-            nickName = this.refs.nickName.value,
-            city = this.refs.city.value.trim(),
-            gender = this.refs.gender.state.value - 0,
-            snack = this.refs.snack.state.value - 0,
-            isActive = this.refs.isActive.state.value - 0,
+        let firstName = this.refs.hotSearch.state.firstName,
+            lastName = this.refs.hotSearch.state.lastName,
+            cellphoneNumber = this.refs.hotSearch.state.cellphoneNumber,
+            nickName = this.refs.hotSearch.state.nickName,
+            nationality = this.refs.hotSearch.state.nationality,
+            location = this.refs.otherSearch.state.location,
+            timezone = this.refs.otherSearch.state.timezone,
+            channel = this.refs.otherSearch.state.value,
             data = {
                 page : 0,
                 size : this.state.pageSize,
@@ -206,23 +214,18 @@ var Management = React.createClass({
             };
         (firstName.length >0) && (data.firstName = firstName);
         (lastName.length >0) && (data.lastName=lastName);
-        (nationality != -100) && (data.nationality=nationality);
-        (timezone != -100) && (data.timezone=timezone);
         (cellphoneNumber.length >0) && (data.cellphoneNumber=cellphoneNumber);
-        (email.length >0) && (data.email=email);
-        (createTimeStart.length >0) && (data.createTimeStart=createTimeStart) &&(data.createTimeEnd=createTimeEnd);
         (nickName.length >0) && (data.nickName=nickName);
-        (city.length >0) && (data.city=city);
-        (gender != -100) && (data.gender=gender);
-        (snack != -100) && (data.snack=snack);
-        (isActive != -100) && (data.isActive=isActive);
+        (nationality != "-100") && (data.nationality=nationality);
+        (location != "-100" ) && (data.location=location);
+        (channel != -100) && (data.channel=channel);
+        (timezone != -100) && (data.timezone=timezone);
 
         let getHead = {
             url : searchUrl,
             data : data
         };
 
-        console.log(data);
         Get(getHead).then(
             ({data})=> {
                 let selectList = new Array(data.content.length);
@@ -335,6 +338,17 @@ var Management = React.createClass({
     },
 
     /**
+     * 跳转到指定页
+     * @param page: 目标页数
+     * @private
+     */
+    _JumpPage : function (page) {
+        if(this.state.curPage == page)
+            return;
+        this._getPage(page);
+    },
+
+    /**
      * 点击"冻结"按钮,触发"冻结模态框"
      * @private
      */
@@ -373,6 +387,7 @@ var Management = React.createClass({
                 $(".modalManagementFrozen .modal").modal('hide');
                 $(".modalManagementActivation .modal").modal('hide');
                 this._getPage(this.state.curPage);
+                this._showMsg("操作成功");
             },
             () => {
                 alert("操作失败,请重试!");
@@ -434,8 +449,8 @@ var Management = React.createClass({
             ({returnCode}) => {
                 if(returnCode == 401)
                     return;
-                alert("分配成功");
                 this._getPage(this.state.curPage);
+                this._showMsg("操作成功");
             },
             () => {
                 alert("分配账号失败!");
@@ -448,106 +463,58 @@ var Management = React.createClass({
     },
 
     /**
-     * 点击表格中的"面试评分"按钮,触发"面试评分模态框".
+     * 点击表格中的"评分"按钮,触发"评分模态框".
      * @param i: 表示选择的是表格中的第i个教师,从0开始
      * @public (子组件"表格"调用)
      */
-    arrangeInterviewScore : function (i) {
+    arrangeScore : function (i) {
         let obj = this.state.list[i];
-        let iScore = {
-                nationalityLevel : obj.nationalityLevel||-100,
-                snack : obj.snack||-100,
-                spokenLevel : obj.spokenLevel||-100,
-                teachingExperience : obj.teachingExperience||-100
-        };
-        this.setState({
-            curRow : i,
-            interviewScore : iScore
-        });
-        $(".interviewScore .modal").modal();
-    },
-
-    /**
-     * 点击"面试评分模态框"中的"确定"按钮,触发面试评分事件.
-     * @param id1: 国家水平选项序号
-     * @param id2: 口语水平选项序号
-     * @param id3: 零食选项序号
-     * @param id4: 教学经验选项序号
-     * @public (子组件"评分模态框"调用)
-     */
-    interviewScore : function (id1,id2,id3,id4) {
-        if(id1 == -100 || id2 == -100 || id3 == -100 || id4 == -100){
-            alert("请为每个选项打分!");
-            return;
-        }
-        let postHead = {
-                url : `${interviewScoreUrl}?token=${store.get("accessToken")}`,
-                data : {
-                    "email" : this.state.list[this.state.curRow].email,
-                    "nationalityLevel": id1,
-                    "snack": id2,
-                    "spokenLevel": id3,
-                    "teachingExperience": id4
-                }
-            };
-        Post(postHead).then(
-            () => {
-                $(".interviewScore .modal").modal('hide');
-                this._getPage(this.state.curPage);
-            },
-            () => {
-                alert("面试评分失败,请重试");
-            }
-        ).catch(
-            (err) => {
-                concole.log(err);
-            }
-        );
-    },
-
-    /**
-     * 点击表格中的"试讲评分",触发"试讲评分模态框".
-     * @param i: 表示选择的是表格中的第i个教师,从0开始
-     * @public (子组件"表格"调用)
-     */
-    arrangeTryScore : function (i) {
-        let obj = this.state.list[i];
-        let lScore = {
-            creativeAndExpression : -100,
-            adaptAndLead : -100
-        };
-        if(obj.trialScoresMap){
-            lScore = {
+        console.log(obj);
+        let score = this.state.score;
+        if(obj.scoresMap){
+            score = {
                 creativeAndExpression : obj.trialScoresMap.creativeAndExpression||-100,
-                adaptAndLead : obj.trialScoresMap.adaptAndLead||-100
+                adaptAndLead : obj.trialScoresMap.adaptAndLead||-100,
+                nationalityLevel : obj.nationalityLevel||-100,
+                spokenLevel : obj.spokenLevel||-100,
+                snack : obj.snack||-100,
+                teachingExperience : obj.teachingExperience||-100
             };
         }
+        console.log(score);
         this.setState({
             curRow : i,
-            lectureScore : lScore
+            score : score
         });
-
-        $(".trialScore .modal").modal();
+        $(".modalScore .modal").modal();
     },
 
     /**
      * 点击"试讲评分模态框"中"确定"按钮,触发试讲评分事件.
      * @param id1: 创意和表达选择序号
      * @param id2: 适应和引导选择序号
+     * @param id3: 国家水平选择序号
+     * @param id4: 口语水平选择序号
+     * @param id5: 零食选择序号
+     * @param id6: 教学经验选择序号
      * @public (子组件"评分模态框"调用)
      */
-    trialScore : function(id1,id2) {
-        if(id1 == -100 || id2 == -100){
+    score : function(id1,id2,id3,id4,id5,id6) {
+        if(id1 == -100 || id2 == -100 || id3 == -100 || id4 == -100 || id5 == -100 || id6 == -100){
             alert("请在为每个项目打分!");
             return;
         }
         let postHead = {
-            url: `${trialScoreUrl}?token=${store.get("accessToken")}`,
+            url: `${scoreUrl}?token=${store.get("accessToken")}`,
             data: {
                 "email": this.state.list[this.state.curRow].email,
-                "trialScoresMap": {
+                "scoresMap": {
                     "creativeAndExpression": id1,
-                    "adaptAndLead": id2
+                    "adaptAndLead": id2,
+                    "nationalityLevel" : id3,
+                    "spokenLevel" : id4,
+                    "snack" : id5,
+                    "teachingExperience" : id6
                 }
             }
         };
@@ -556,6 +523,7 @@ var Management = React.createClass({
             () => {
                 $(".trialScore .modal").modal('hide');
                 this._getPage(this.state.curPage);
+                this._showMsg("保存成功");
             },
             () => {
                 alert("试讲评分操作失败,请重试!");

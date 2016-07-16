@@ -17,9 +17,6 @@ import Table from './../commons/table.js';
 import PageList from './../commons/page.js';
 import ModalFish from './modalFish.js';
 
-//引入样式
-import "../../less/teacherPond.less";
-
 var configData = require('../../config/config.json');
 
 var demoCourseUrl = `http://${configData.ip}/web/common/demoCourses/2`;
@@ -49,11 +46,11 @@ var TeacherPond = React.createClass({
             tableStyle: {
                 tableSize : 10,
                 selectAll : false,
-                hasCheckBox : true,
+                hasCheckBox : false,
                 hasOperate : true
             },
             list: [],
-            selected : []
+            msg: ''
         };
     },
 
@@ -76,15 +73,13 @@ var TeacherPond = React.createClass({
             ({data})=> {
                 if (data == null) {
                     this.setState({
-                        getHead : getHead,
-                        selected : []
+                        getHead : getHead
                     });
                 } else {
                     this.setState({
                         getHead: getHead,
                         totalPages: data.totalPages,
-                        list: data.content,
-                        selected : []
+                        list: data.content
                     });
                 }
             },
@@ -110,28 +105,22 @@ var TeacherPond = React.createClass({
     render : function(){
         let tableList = this.state.list.map((v,i) => {
             let triallectureTime = (v.triallectureStartTime !== null)? (`${v.triallectureStartTime} - ${v.triallectureEndTime}`) : '';
-            let isCheck = ($.inArray(v.email,this.state.selected) != -1);
             return {
-                "checkbox" : <input type="checkbox" checked={isCheck}  onChange={(e)=>{this.select(e,i)}}/>,
                 "createTime" : v.createTime,
                 "auditTime" : v.auditTime,
                 "interviewTime" : v.interviewTime,
                 "triallectureTime" : triallectureTime,
                 "firstName" : v.firstName,
                 "lastName" : v.lastName,
-                "nationality" : v.nationality,
-                "timezone" : v.timezone,
                 "cellphoneNumber" : v.cellphoneNumber,
                 "email" : v.email,
-                "snack" : getById(configData.snack, v.snack),
-                "interviewScore" : v.interviewScore,
-                "trialScore" : v.trialScore,
-                "markScore" : v.markScore,
+                "timezone" : v.timezone,
+                "nationality" : v.nationality,
                 "stepNoPassState" : v.stepNoPassState,
                 "operate" : (
                     <div>
-                        <button className="btn btn-primary btn-xs" onClick={(e)=>{this.arrangeFish(i)}}>捕捞</button>
-                        <button className="btn btn-link btn-xs" onClick={(e)=>{this.arangeMore(i)}}>详情</button>
+                        <button className="btn btn-success btn-xs" onClick={(e)=>{this.arrangeFish(i)}}>捕捞</button>
+                        <button className="btn btn-primary btn-xs" onClick={(e)=>{this.arangeMore(i)}}>详情</button>
                     </div>
                 )
             };
@@ -153,11 +142,25 @@ var TeacherPond = React.createClass({
                     </div>
                 </div>
                 <div className="tableContainer" ref="tableContainer">
-                    <Table contentData={configData.pondTable} list={tableList} tableStyle={this.state.tableStyle} selectAll={this.selectAll}/>
+                    <Table contentData={configData.pondTable} list={tableList} tableStyle={this.state.tableStyle}/>
                 </div>
-                <PageList curPage={this.state.curPage} totalPages={this.state.totalPages} onPre={this._prePage} onFirst={this._firstPage} onLast={this._lastPage} onNext={this._nextPage}/>
+                <PageList curPage={this.state.curPage} totalPages={this.state.totalPages} onPre={this._prePage} onFirst={this._firstPage}
+                          onLast={this._lastPage} onNext={this._nextPage} onJump={(page)=>{this._JumpPage(page)}}/>
             </div>
         );
+    },
+
+    /**
+     * 在页面顶部显示反馈的信息
+     * @param msg: 反馈的信息
+     * @private
+     */
+    _showMsg : function (msg) {
+        this.setState({
+            msg: msg
+        });
+        $('.msg-feedback').stop(true);
+        $('.msg-feedback').fadeIn(0).delay(1500).fadeOut(1000);
     },
 
     /**
@@ -198,53 +201,29 @@ var TeacherPond = React.createClass({
     },
 
     /**
-     * 查询表单的展开动画
-     * @private
-     */
-    _changeForm : function (event) {
-        $("#forms").toggleClass("forms-extern-more");
-    },
-
-    /**
      * 点击"筛选"按钮,触发ajax请求,刷新列表
      * @private
      */
     _search : function () {
-        let firstName = this.refs.contentInput.state.firstName,
-            lastName = this.refs.contentInput.state.lastName,
-            nationality = this.refs.contentInput.state.nationality,
-            timezone = this.refs.contentInput.state.timezone,
-            cellphoneNumber = this.refs.contentInput.state.cellphoneNumber,
-            email = this.refs.contentInput.state.email,
-            createTimeStart = this.refs.createTime.state.start,
-            createTimeEnd = this.refs.createTime.state.end,
-            auditTimeStart = this.refs.auditTime.state.start,
-            auditTimeEnd = this.refs.auditTime.state.end,
-            interviewTimeStart = this.refs.interviewTime.state.start,
-            interviewTimeEnd = this.refs.interviewTime.state.end,
-            triallectureStartTimeStart = this.refs.triallectureTime.state.start,
-            triallectureStartTimeEnd = this.refs.triallectureTime.state.end,
-            snack = this.refs.snack.state.value - 0,
-            stateStep = this.refs.stateStep.state.value - 0,
+        let firstName = this.refs.hotSearch.state.firstName,
+            lastName = this.refs.hotSearch.state.lastName,
+            cellphoneNumber = this.refs.hotSearch.state.cellphoneNumber,
+            email = this.refs.hotSearch.state.email,
+            nationality = this.refs.hotSearch.state.nationality,
+            timezone = this.refs.timezone.state.value,
+            stateStep = this.refs.stateStep.state.value,
             data = {
                 page : 0,
                 size : this.state.pageSize,
                 stateStep : this.state.stateStep,
                 token : store.get("accessToken")
             };
-
-
         (firstName.length >0) && (data.firstName = firstName);
         (lastName.length >0) && (data.lastName=lastName);
-        (nationality != -100) && (data.nationality=nationality);
-        (timezone != -100) && (data.timezone=timezone);
         (cellphoneNumber.length >0) && (data.cellphoneNumber=cellphoneNumber);
         (email.length >0) && (data.email=email);
-        (createTimeStart.length >0) && (data.createTimeStart=createTimeStart) &&(data.createTimeEnd=createTimeEnd);
-        (auditTimeStart.length >0) && (data.auditTimeStart=auditTimeStart) &&(data.auditTimeEnd=auditTimeEnd);
-        (interviewTimeStart.length >0) && (data.interviewTimeStart=interviewTimeStart) &&(data.interviewTimeEnd=interviewTimeEnd);
-        (triallectureStartTimeStart.length >0) && (data.triallectureStartTimeStart=triallectureStartTimeStart) &&(data.triallectureStartTimeEnd=triallectureStartTimeEnd);
-        (snack != -100 ) && (data.snack=snack);
+        (nationality != "-100") && (data.nationality=nationality);
+        (timezone != -100) && (data.timezone=timezone);
         (stateStep != -100) && (data.stateStep=stateStep);
 
         let getHead = {
@@ -252,7 +231,6 @@ var TeacherPond = React.createClass({
             data : data
         };
 
-        console.log(data);
         Get(getHead).then(
             ({data})=> {
                 if (data == null) {
@@ -260,16 +238,14 @@ var TeacherPond = React.createClass({
                         curPage: 1,
                         totalPages: 1,
                         getHead : getHead,
-                        list: [],
-                        selected: []
+                        list: []
                     });
                 } else {
                     this.setState({
                         getHead: getHead,
                         curPage: 1,
                         totalPages: data.totalPages,
-                        list: data.content,
-                        selected : []
+                        list: data.content
                     });
                 }
             },
@@ -279,8 +255,7 @@ var TeacherPond = React.createClass({
                     curPage: 1,
                     totalPages: 1,
                     getHead : getHead,
-                    list: [],
-                    selected: []
+                    list: []
                 });
             }
         ).catch((err)=>{
@@ -305,8 +280,7 @@ var TeacherPond = React.createClass({
                 }
                 this.setState({
                     curPage : page,
-                    list : data.content,
-                    selected : []
+                    list : data.content
                 });
             },
             () => {
@@ -358,38 +332,14 @@ var TeacherPond = React.createClass({
     },
 
     /**
-     * 点击表格中的复选框,触发当前行选中事件
-     * @param e: 点击事件
-     * @param i: 选中的行在表格中的序号
-     * @public (子组件"表格"调用)
+     * 跳转到指定页
+     * @param page: 目标页数
+     * @private
      */
-    select : function (e,i) {
-        let selectList = this.state.selected;
-        if(e.target.checked){
-            selectList = this.state.selected.concat(this.state.list[i].email);
-        }else{
-            this.state.selected.splice($.inArray(this.state.list[i].email, this.state.selected),1);
-        }
-        this.setState({
-            selected : selectList
-        });
-    },
-
-    /**
-     * 点击表头中的复选框,触发全选事件
-     * @param state: 全选状态. false表示不选中,true表示选中
-     * @public (子组件"表格"调用)
-     */
-    selectAll : function (state) {
-        let selectList = [];
-        if(state){
-            for(let i=0; i< this.state.list.length; i++){
-                selectList.push(this.state.list[i].email);
-            }
-        }
-        this.setState({
-            selected : selectList
-        });
+    _JumpPage : function (page) {
+        if(this.state.curPage == page)
+            return;
+        this._getPage(page);
     },
 
     /**
@@ -406,7 +356,6 @@ var TeacherPond = React.createClass({
 
     /**
      * 点击"捕捞模态框"中的"确定"按钮,触发捕捞事件
-     * @param stagestep: 表示捕捞到哪一个流程. 1表示审核,2表示面试,3表示试讲
      */
     fish : function () {
         let emails = [this.state.list[this.state.curRow].email];
@@ -420,6 +369,7 @@ var TeacherPond = React.createClass({
             () => {
                 $(".modalFish .modal").modal('hide');
                 this._getPage(this.state.curPage);
+                this._showMsg("捕捞成功");
             },
             () => {
                 alert("捕捞失败,请重试!");

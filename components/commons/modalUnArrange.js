@@ -1,6 +1,6 @@
 /**
- * Created by cuilu on 16/5/26.
- * 审核页通过模态框
+ * Created by tinna on 16/7/16.
+ * 置入待安排队列模态框
  */
 
 //引入插件
@@ -8,15 +8,15 @@ import React from 'react';
 
 //引入样式
 
-var ModalInterviewAdopt = React.createClass({
+var ModalUnArrange = React.createClass({
     render : function(){
         return(
-            <div className="modalInterviewAdopt">
+            <div className="modalUnArrange">
                 <div className="modal fade">
                     <div className="modal-dialog">
                         <div className="modal-content">
                             <div className="modal-body">
-                                <p>确认该老师通过面试?</p>
+                                <p>确认置入待安排队列?</p>
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-primary" onClick={this._submit}>确定</button>
@@ -33,4 +33,4 @@ var ModalInterviewAdopt = React.createClass({
     }
 });
 
-export default ModalInterviewAdopt;
+export default ModalUnArrange;

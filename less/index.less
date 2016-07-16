@@ -5,4 +5,19 @@ html,body{
   overflow: hidden;
 }
 
+.group:before,
+.group:after {
+  content: "";
+  display: table;
+}
+.group:after {
+  clear: both;
+}
+.group {
+  zoom: 1;
+}
+
+input,button,select,textarea{
+  outline:none
+}
 

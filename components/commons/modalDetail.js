@@ -180,12 +180,12 @@ var ModalDetail = React.createClass({
     },
     _submit : function () {
         let content = {
+                "email": this.props.info.email,
                 "firstName": this.refs.firstName,
                 "lastName": this.refs.lastName,
                 "occupation": this.refs.occupation,
                 "location": this.refs.location.state.value,
                 "timezone": +this.refs.timezone.state.value,
-                "email": this.props.info.email,
                 "interviewChannel": +this.refs.interviewChannel.state.value,
                 "interviewAccount": this.refs.interviewAccount.value,
                 "nationality": this.refs.nationality.state.value,

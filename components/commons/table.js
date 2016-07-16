@@ -37,7 +37,7 @@ var Table = React.createClass({
             thList.unshift(<th key={0}><input type="checkbox" checked={this.state.selectAll} onChange={(e)=>{this._selectAll(e)}}/></th>);
             thList = (<tr>{thList}</tr>);
         }else{
-            thList = (<tr>{thList}</tr>)
+            thList = (<tr>{thList}</tr>);
         }
 
         //填写表体
