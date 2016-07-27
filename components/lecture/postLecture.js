@@ -19,6 +19,7 @@ import TryLesson from './tryLesson.js';
 import EditLesson from './editLesson.js';
 import ModalScore from './../commons/modalScore.js';
 import ModalAdopt from './../commons/modalAdopt.js';
+import ModalUnArrange from './../commons/modalUnArrange.js';
 import ModalInPond from './../commons/modalInPond.js';
 
 //引入样式
@@ -185,7 +186,7 @@ var TeacherLecture = React.createClass({
                         <i className="glyphicon glyphicon-ok" onClick={(e)=>{this.arangeAdopt(i)}}></i>
                         <i className="glyphicon glyphicon-remove" onClick={(e)=>{this.arangeInPond(i)}}></i>
                         <button className="btn btn-xs btn-success" onClick={(e)=>{this.arrangeScore(i)}}>评分</button>
-                        <button className="btn btn-xs btn-warning" onClick={(e)=>{this.arangeWait(i)}}>待安排</button>
+                        <button className="btn btn-xs btn-warning" onClick={(e)=>{this.arrangeWait(i)}}>待安排</button>
                         <button className="btn btn-xs btn-primary" onClick={(e)=>{this.arangeMore(i)}}>详情</button>
                     </div>
                 )
@@ -200,6 +201,7 @@ var TeacherLecture = React.createClass({
                             time={this.state.timeSlot} course={this.state.demoCourse} callback={()=>{this._getPage(this.state.curPage)}}/>
                 <ModalScore value={this.state.list[this.state.curRow]} callback={this.score} defaultContent={this.state.score}/>
                 <ModalAdopt callback={this.adopt}/>
+                <ModalUnArrange callback={this.unArrange} />
                 <ModalInPond callback={this.inPonds}/>
                 <div className="forms" id="forms">
                     <div className="input">
@@ -580,17 +582,14 @@ var TeacherLecture = React.createClass({
      */
     arrangeScore : function (i) {
         let obj = this.state.list[i];
-        let score = this.state.score;
-        if(obj.scoresMap){
-            score = {
-                creativeAndExpression : obj.trialScoresMap.creativeAndExpression||-100,
-                adaptAndLead : obj.trialScoresMap.adaptAndLead||-100,
-                nationalityLevel : obj.nationalityLevel||-100,
-                spokenLevel : obj.spokenLevel||-100,
-                snack : obj.snack||-100,
-                teachingExperience : obj.teachingExperience||-100
-            };
-        }
+        let score = {
+            creativeAndExpression : (obj.trialScoresMap)?obj.trialScoresMap.creativeAndExpression:-100,
+            adaptAndLead : (obj.trialScoresMap)?obj.trialScoresMap.adaptAndLead:-100,
+            nationalityLevel : obj.nationalityLevel||-100,
+            spokenLevel : obj.spokenLevel||-100,
+            snack : obj.snack||-100,
+            teachingExperience : obj.teachingExperience||-100
+        };
         this.setState({
             curRow : i,
             score : score
@@ -610,27 +609,27 @@ var TeacherLecture = React.createClass({
      */
     score : function(id1,id2,id3,id4,id5,id6) {
         if(id1 == -100 || id2 == -100 || id3 == -100 || id4 == -100 || id5 == -100 || id6 == -100){
-            alert("请在为每个项目打分!");
+            alert("请为每个项目打分!");
             return;
         }
         let postHead = {
             url: `${scoreUrl}?token=${store.get("accessToken")}`,
             data: {
                 "email": this.state.list[this.state.curRow].email,
-                "scoresMap": {
+                "trialScoresMap": {
                     "creativeAndExpression": id1,
-                    "adaptAndLead": id2,
-                    "nationalityLevel" : id3,
-                    "spokenLevel" : id4,
-                    "snack" : id5,
-                    "teachingExperience" : id6
-                }
+                    "adaptAndLead": id2
+                },
+                "nationalityLevel" : id3,
+                "spokenLevel" : id4,
+                "snack" : id5,
+                "teachingExperience" : id6
             }
         };
 
         Post(postHead).then(
             () => {
-                $(".trialScore .modal").modal('hide');
+                $(".modalScore .modal").modal('hide');
                 this._getPage(this.state.curPage);
                 this._showMsg("保存成功");
             },
@@ -751,6 +750,43 @@ var TeacherLecture = React.createClass({
             },
             () => {
                 alert("入池失败,请重试!");
+            }).catch(
+            (err) => {
+                console.log(err);
+            }
+        );
+    },
+
+    /**
+     * 点击"待安排"按钮,触发待安排模态框,确定当前待安排的教师序号
+     * @param i: 表示选择的是表格中的第i个教师,从0开始
+     */
+    arrangeWait : function (i) {
+        this.setState({
+            curRow : i
+        });
+        $(".modalUnArrange .modal").modal();
+    },
+
+    /**
+     * 待安排模态框中点击"确定"按钮,触发进入安排队列事件.
+     */
+    unArrange : function () {
+        let postHead = {
+            url : `${unArrangeUrl}?token=${store.get("accessToken")}`,
+            data : {
+                "email": this.state.list[this.state.curRow].email,
+                "stateStep": this.state.nextState
+            }
+        };
+        Post(postHead).then(
+            () => {
+                $(".modalUnArrange .modal").modal('hide');
+                this._getPage(this.state.curPage);
+                this._showMsg("操作成功");
+            },
+            () => {
+                alert("操作失败,请重试!");
             }).catch(
             (err) => {
                 console.log(err);

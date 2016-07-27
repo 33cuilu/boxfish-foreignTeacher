@@ -469,19 +469,14 @@ var Management = React.createClass({
      */
     arrangeScore : function (i) {
         let obj = this.state.list[i];
-        console.log(obj);
-        let score = this.state.score;
-        if(obj.scoresMap){
-            score = {
-                creativeAndExpression : obj.trialScoresMap.creativeAndExpression||-100,
-                adaptAndLead : obj.trialScoresMap.adaptAndLead||-100,
+        let score = {
+                creativeAndExpression : (obj.trialScoresMap)?obj.trialScoresMap.creativeAndExpression:-100,
+                adaptAndLead : (obj.trialScoresMap)?obj.trialScoresMap.adaptAndLead:-100,
                 nationalityLevel : obj.nationalityLevel||-100,
                 spokenLevel : obj.spokenLevel||-100,
                 snack : obj.snack||-100,
                 teachingExperience : obj.teachingExperience||-100
             };
-        }
-        console.log(score);
         this.setState({
             curRow : i,
             score : score
@@ -501,27 +496,27 @@ var Management = React.createClass({
      */
     score : function(id1,id2,id3,id4,id5,id6) {
         if(id1 == -100 || id2 == -100 || id3 == -100 || id4 == -100 || id5 == -100 || id6 == -100){
-            alert("请在为每个项目打分!");
+            alert("请为每个项目打分!");
             return;
         }
         let postHead = {
             url: `${scoreUrl}?token=${store.get("accessToken")}`,
             data: {
                 "email": this.state.list[this.state.curRow].email,
-                "scoresMap": {
+                "trialScoresMap": {
                     "creativeAndExpression": id1,
-                    "adaptAndLead": id2,
-                    "nationalityLevel" : id3,
-                    "spokenLevel" : id4,
-                    "snack" : id5,
-                    "teachingExperience" : id6
-                }
+                    "adaptAndLead": id2
+                },
+                "nationalityLevel" : id3,
+                "spokenLevel" : id4,
+                "snack" : id5,
+                "teachingExperience" : id6
             }
         };
 
         Post(postHead).then(
             () => {
-                $(".trialScore .modal").modal('hide');
+                $(".modalScore .modal").modal('hide');
                 this._getPage(this.state.curPage);
                 this._showMsg("保存成功");
             },
